@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration debug="false">
+
+  <!--
+    Este archivo define la configuración del logueo de la aplicación y es interpretado por logback,
+    que recibe las llamadas de logueo del resto de las apis (log4j, commons-logging, etc) a través
+    de slf4j que hace de wrapper del resto.
+    La sintaxis para los appenders que se pueden agregar está en: http://logback.qos.ch/manual/appenders.html
+    y la sintaxis para los patrones de formateo en: http://logback.qos.ch/manual/layouts.html#conversionWord
+   -->
+
+  <!-- Output normal por consola -->
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>\(%-23d{ISO8601} | %11r\) %-5p %-100m | [%-18t] at %C.%M\(%F:%L\) %n</pattern>
+    </encoder>
+  </appender>
+
+  <!-- Log incoming requests -->
+  <logger name="ar.com.kfgodel.webbyconvention.logging" level="DEBUG"/>
+
+  <!-- Mute reflections scan measurement logging-->
+  <logger name="org.reflections.Reflections" level="WARN"/>
+
+  <!-- Mute some c3p0 verbosity -->
+  <logger name="com.mchange.v2.log.MLog" level="WARN"/>
+  <logger name="com.mchange.v2.c3p0.C3P0Registry" level="WARN"/>
+
+  <!-- Mute useless jetty log message -->
+  <logger name="org.eclipse.jetty.util.log" level="WARN"/>
+
+  <!-- Mute some hibernate version declaration -->
+  <logger name="org.hibernate.Version" level="WARN"/>
+  <logger name="org.hibernate.annotations.common.Version" level="WARN"/>
+  <logger name="org.hibernate.cfg.Environment" level="WARN"/>
+  <logger name="org.hibernate.dialect.Dialect" level="WARN"/>
+  <logger name="org.hibernate.engine.jdbc.internal.LobCreatorBuilder" level="WARN"/>
+  <logger name="org.hibernate.engine.transaction.internal.TransactionFactoryInitiator" level="WARN"/>
+  <logger name="org.hibernate.hql.internal.ast.ASTQueryTranslatorFactory" level="WARN"/>
+  <!-- Not sure if warn HHH000148 can be ignored, but the app seems to work without it -->
+  <logger name="org.hibernate.c3p0.internal.C3P0ConnectionProvider" level="ERROR"/>
+
+  <!-- Mute schema update info -->
+  <logger name="org.hibernate.tool.hbm2ddl.SchemaUpdate" level="WARN"/>
+  <logger name="org.hibernate.tool.hbm2ddl.TableMetadata" level="WARN"/>
+
+
+  <root level="info">
+    <appender-ref ref="STDOUT"/>
+  </root>
+
+</configuration>

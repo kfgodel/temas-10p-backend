@@ -1,0 +1,8 @@
+{
+  "name": "Temas roots 10P",
+  "description": "Application to manage roots topics",
+  "image": "heroku/java",
+  "addons": [
+    "heroku-postgresql"
+  ]
+}
