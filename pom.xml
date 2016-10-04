@@ -78,7 +78,7 @@
               <artifactItems>
                 <artifactItem>
                   <groupId>ar.com.kfgodel</groupId>
-                  <artifactId>ndp-10p-frontend</artifactId>
+                  <artifactId>temas-10p-frontend</artifactId>
                   <version>${version.frontend}</version>
                   <type>zip</type>
                   <overWrite>true</overWrite>

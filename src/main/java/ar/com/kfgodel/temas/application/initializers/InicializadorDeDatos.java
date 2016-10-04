@@ -1,11 +1,11 @@
-package ar.com.kfgodel.ndp.application.initializers;
+package ar.com.kfgodel.temas.application.initializers;
 
 import ar.com.kfgodel.appbyconvention.operation.api.ApplicationOperation;
 import ar.com.kfgodel.nary.api.Nary;
-import ar.com.kfgodel.ndp.application.Application;
 import ar.com.kfgodel.orm.api.TransactionContext;
 import ar.com.kfgodel.orm.api.operations.basic.FindAll;
 import ar.com.kfgodel.orm.api.operations.basic.Save;
+import ar.com.kfgodel.temas.application.Application;
 import com.google.common.collect.Lists;
 import convention.persistent.Elemento;
 

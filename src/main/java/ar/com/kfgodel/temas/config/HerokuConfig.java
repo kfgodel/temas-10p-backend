@@ -1,4 +1,4 @@
-package ar.com.kfgodel.ndp.config;
+package ar.com.kfgodel.temas.config;
 
 import ar.com.kfgodel.orm.api.config.DbCoordinates;
 import ar.com.kfgodel.orm.impl.config.ImmutableDbCoordinates;

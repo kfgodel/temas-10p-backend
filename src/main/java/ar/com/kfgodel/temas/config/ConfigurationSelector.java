@@ -1,4 +1,4 @@
-package ar.com.kfgodel.ndp.config;
+package ar.com.kfgodel.temas.config;
 
 /**
  * This type represents the object that knows wich configuration should be used in the current application

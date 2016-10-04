@@ -1,8 +1,8 @@
-package ar.com.kfgodel.ndp.application;
+package ar.com.kfgodel.temas.application;
 
 import ar.com.kfgodel.dependencies.api.DependencyInjector;
-import ar.com.kfgodel.ndp.config.NdpConfiguration;
 import ar.com.kfgodel.orm.api.HibernateOrm;
+import ar.com.kfgodel.temas.config.NdpConfiguration;
 import ar.com.kfgodel.transformbyconvention.api.TypeTransformer;
 import ar.com.kfgodel.webbyconvention.api.WebServer;
 

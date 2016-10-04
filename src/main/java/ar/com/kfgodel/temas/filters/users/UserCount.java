@@ -1,4 +1,4 @@
-package ar.com.kfgodel.ndp.filters.users;
+package ar.com.kfgodel.temas.filters.users;
 
 import ar.com.kfgodel.nary.api.Nary;
 import ar.com.kfgodel.orm.api.SessionContext;

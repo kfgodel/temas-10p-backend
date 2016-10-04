@@ -1,9 +1,9 @@
-package ar.com.kfgodel.ndp.application;
+package ar.com.kfgodel.temas.application;
 
 import ar.com.kfgodel.nary.api.Nary;
-import ar.com.kfgodel.ndp.filters.users.UserByCredentials;
-import ar.com.kfgodel.ndp.filters.users.UserCount;
 import ar.com.kfgodel.orm.api.HibernateOrm;
+import ar.com.kfgodel.temas.filters.users.UserByCredentials;
+import ar.com.kfgodel.temas.filters.users.UserCount;
 import ar.com.kfgodel.webbyconvention.api.auth.WebCredential;
 import convention.persistent.Usuario;
 

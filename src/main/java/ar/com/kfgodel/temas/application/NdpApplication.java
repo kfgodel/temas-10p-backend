@@ -1,12 +1,12 @@
-package ar.com.kfgodel.ndp.application;
+package ar.com.kfgodel.temas.application;
 
 import ar.com.kfgodel.dependencies.api.DependencyInjector;
 import ar.com.kfgodel.dependencies.impl.DependencyInjectorImpl;
-import ar.com.kfgodel.ndp.application.initializers.InicializadorDeDatos;
-import ar.com.kfgodel.ndp.config.NdpConfiguration;
 import ar.com.kfgodel.orm.api.HibernateOrm;
 import ar.com.kfgodel.orm.api.config.DbCoordinates;
 import ar.com.kfgodel.orm.impl.HibernateFacade;
+import ar.com.kfgodel.temas.application.initializers.InicializadorDeDatos;
+import ar.com.kfgodel.temas.config.NdpConfiguration;
 import ar.com.kfgodel.transformbyconvention.api.TypeTransformer;
 import ar.com.kfgodel.transformbyconvention.impl.B2BTransformer;
 import ar.com.kfgodel.transformbyconvention.impl.config.TransformerConfigurationByConvention;

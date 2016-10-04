@@ -1,4 +1,4 @@
-package ar.com.kfgodel.ndp.filters.proyectos;
+package ar.com.kfgodel.temas.filters.proyectos;
 
 import ar.com.kfgodel.nary.api.Nary;
 import ar.com.kfgodel.orm.api.SessionContext;

@@ -1,9 +1,9 @@
-package ar.com.kfgodel.ndp;
+package ar.com.kfgodel.temas;
 
-import ar.com.kfgodel.ndp.application.NdpApplication;
-import ar.com.kfgodel.ndp.config.ConfigurationSelector;
-import ar.com.kfgodel.ndp.config.HerokuPriorityConfigSelector;
-import ar.com.kfgodel.ndp.config.NdpConfiguration;
+import ar.com.kfgodel.temas.application.NdpApplication;
+import ar.com.kfgodel.temas.config.ConfigurationSelector;
+import ar.com.kfgodel.temas.config.HerokuPriorityConfigSelector;
+import ar.com.kfgodel.temas.config.NdpConfiguration;
 
 /**
  * Punto de entrada del proceso java

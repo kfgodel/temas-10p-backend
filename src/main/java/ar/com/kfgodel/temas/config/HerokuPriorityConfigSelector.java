@@ -1,4 +1,4 @@
-package ar.com.kfgodel.ndp.config;
+package ar.com.kfgodel.temas.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

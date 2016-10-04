@@ -1,6 +1,6 @@
 package convention.rest.api;
 
-import ar.com.kfgodel.ndp.application.Application;
+import ar.com.kfgodel.temas.application.Application;
 
 import javax.inject.Inject;
 import javax.ws.rs.Path;
