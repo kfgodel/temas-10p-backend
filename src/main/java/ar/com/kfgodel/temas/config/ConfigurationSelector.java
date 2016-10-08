@@ -10,5 +10,5 @@ public interface ConfigurationSelector {
    *
    * @return The configuration to use
    */
-  NdpConfiguration selectConfig();
+  TemasConfiguration selectConfig();
 }

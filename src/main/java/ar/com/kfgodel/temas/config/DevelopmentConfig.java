@@ -8,7 +8,7 @@ import ar.com.kfgodel.orm.impl.config.ImmutableDbCoordinates;
  * <p>
  * Created by kfgodel on 12/03/16.
  */
-public class DevelopmentConfig implements NdpConfiguration {
+public class DevelopmentConfig implements TemasConfiguration {
 
   public static DevelopmentConfig create() {
     DevelopmentConfig config = new DevelopmentConfig();

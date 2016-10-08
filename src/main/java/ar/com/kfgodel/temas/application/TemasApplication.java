@@ -6,7 +6,7 @@ import ar.com.kfgodel.orm.api.HibernateOrm;
 import ar.com.kfgodel.orm.api.config.DbCoordinates;
 import ar.com.kfgodel.orm.impl.HibernateFacade;
 import ar.com.kfgodel.temas.application.initializers.InicializadorDeDatos;
-import ar.com.kfgodel.temas.config.NdpConfiguration;
+import ar.com.kfgodel.temas.config.TemasConfiguration;
 import ar.com.kfgodel.transformbyconvention.api.TypeTransformer;
 import ar.com.kfgodel.transformbyconvention.impl.B2BTransformer;
 import ar.com.kfgodel.transformbyconvention.impl.config.TransformerConfigurationByConvention;
@@ -23,10 +23,10 @@ import org.slf4j.LoggerFactory;
  * <p/>
  * Created by kfgodel on 22/03/15.
  */
-public class NdpApplication implements Application {
-  public static Logger LOG = LoggerFactory.getLogger(NdpApplication.class);
+public class TemasApplication implements Application {
+  public static Logger LOG = LoggerFactory.getLogger(TemasApplication.class);
 
-  private NdpConfiguration config;
+  private TemasConfiguration config;
   private DependencyInjector injector;
 
   @Override
@@ -45,7 +45,7 @@ public class NdpApplication implements Application {
   }
 
   @Override
-  public NdpConfiguration getConfiguration() {
+  public TemasConfiguration getConfiguration() {
     return config;
   }
 
@@ -54,8 +54,8 @@ public class NdpApplication implements Application {
     return injector;
   }
 
-  public static Application create(NdpConfiguration config) {
-    NdpApplication application = new NdpApplication();
+  public static Application create(TemasConfiguration config) {
+    TemasApplication application = new TemasApplication();
     application.config = config;
     return application;
   }

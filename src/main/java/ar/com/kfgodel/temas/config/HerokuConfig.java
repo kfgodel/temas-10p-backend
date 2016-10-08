@@ -10,7 +10,7 @@ import java.net.URISyntaxException;
  * This type represents the configuration used to run in heroku with values taken from the OS environment
  * Created by kfgodel on 13/03/16.
  */
-public class HerokuConfig implements NdpConfiguration {
+public class HerokuConfig implements TemasConfiguration {
 
   public static HerokuConfig create() {
     HerokuConfig config = new HerokuConfig();

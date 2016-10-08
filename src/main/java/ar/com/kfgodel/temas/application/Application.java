@@ -2,7 +2,7 @@ package ar.com.kfgodel.temas.application;
 
 import ar.com.kfgodel.dependencies.api.DependencyInjector;
 import ar.com.kfgodel.orm.api.HibernateOrm;
-import ar.com.kfgodel.temas.config.NdpConfiguration;
+import ar.com.kfgodel.temas.config.TemasConfiguration;
 import ar.com.kfgodel.transformbyconvention.api.TypeTransformer;
 import ar.com.kfgodel.webbyconvention.api.WebServer;
 
@@ -31,7 +31,7 @@ public interface Application {
   /**
    * @return The configuration object with the parameters for this application
    */
-  NdpConfiguration getConfiguration();
+  TemasConfiguration getConfiguration();
 
   /**
    * @return The dependency injector used to wire application dependencies

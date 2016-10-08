@@ -17,7 +17,7 @@ public class HerokuPriorityConfigSelector implements ConfigurationSelector {
   }
 
   @Override
-  public NdpConfiguration selectConfig() {
+  public TemasConfiguration selectConfig() {
     if (System.getenv("PORT") != null && System.getenv("DATABASE_URL") != null) {
       LOG.info("Using Heroku configuration");
       return HerokuConfig.create();
