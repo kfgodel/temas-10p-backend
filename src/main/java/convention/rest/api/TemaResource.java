@@ -7,15 +7,12 @@ import ar.com.kfgodel.orm.api.operations.basic.DeleteById;
 import ar.com.kfgodel.orm.api.operations.basic.FindAll;
 import ar.com.kfgodel.orm.api.operations.basic.FindById;
 import ar.com.kfgodel.orm.api.operations.basic.Save;
-import ar.com.kfgodel.webbyconvention.impl.auth.adapters.JettyIdentityAdapter;
 import convention.persistent.TemaDeReunion;
 import convention.rest.api.tos.ReunionTo;
 import convention.rest.api.tos.TemaTo;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.SecurityContext;
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -42,11 +39,7 @@ public class TemaResource {
   }
 
   @POST
-  public TemaTo create(TemaTo newState, @Context SecurityContext securityContext) {
-    JettyIdentityAdapter principal = (JettyIdentityAdapter) securityContext.getUserPrincipal();
-    Long currentUserId = principal.getApplicationIdentification();
-    newState.setIdDeAutor(currentUserId);
-
+  public TemaTo create(TemaTo newState) {
     return createOperation()
       .insideATransaction()
       .taking(newState)
