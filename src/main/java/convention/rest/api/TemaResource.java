@@ -61,7 +61,6 @@ public class TemaResource {
       .convertTo(TemaTo.class);
   }
 
-
   @PUT
   @Path("/{resourceId}")
   public TemaTo update(TemaTo newState, @PathParam("resourceId") Long id) {

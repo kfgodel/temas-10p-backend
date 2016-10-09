@@ -1,16 +1,20 @@
 package convention.rest.api.tos;
 
 import ar.com.kfgodel.appbyconvention.tos.PersistableToSupport;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import convention.persistent.TemaDeReunion;
 import convention.persistent.Usuario;
 import net.sf.kfgodel.bean2bean.annotations.CopyFrom;
 import net.sf.kfgodel.bean2bean.annotations.CopyFromAndTo;
 import net.sf.kfgodel.bean2bean.annotations.MissingPropertyAction;
 
+import java.util.List;
+
 /**
  * Esta clase representa el TO de una tema para ser editado
  * Created by kfgodel on 08/10/16.
  */
+@JsonIgnoreProperties("usuarioActual")
 public class TemaTo extends PersistableToSupport {
 
   @CopyFromAndTo(TemaDeReunion.reunion_FIELD)
@@ -28,8 +32,8 @@ public class TemaTo extends PersistableToSupport {
   @CopyFromAndTo(TemaDeReunion.descripcion_FIELD)
   private String descripcion;
 
-  private Integer cantidadVotosTotales;
-  private Integer cantidadVotosPropios;
+  @CopyFromAndTo(TemaDeReunion.interesados_FIELD)
+  private List<Long> idsDeInteresados;
 
   public String getAutor() {
     return autor;
@@ -55,22 +59,6 @@ public class TemaTo extends PersistableToSupport {
     this.descripcion = descripcion;
   }
 
-  public Integer getCantidadVotosTotales() {
-    return cantidadVotosTotales;
-  }
-
-  public void setCantidadVotosTotales(Integer cantidadVotosTotales) {
-    this.cantidadVotosTotales = cantidadVotosTotales;
-  }
-
-  public Integer getCantidadVotosPropios() {
-    return cantidadVotosPropios;
-  }
-
-  public void setCantidadVotosPropios(Integer cantidadVotosPropios) {
-    this.cantidadVotosPropios = cantidadVotosPropios;
-  }
-
   public Long getIdDeReunion() {
     return idDeReunion;
   }
@@ -85,5 +73,13 @@ public class TemaTo extends PersistableToSupport {
 
   public void setIdDeAutor(Long idDeAutor) {
     this.idDeAutor = idDeAutor;
+  }
+
+  public List<Long> getIdsDeInteresados() {
+    return idsDeInteresados;
+  }
+
+  public void setIdsDeInteresados(List<Long> idsDeInteresados) {
+    this.idsDeInteresados = idsDeInteresados;
   }
 }

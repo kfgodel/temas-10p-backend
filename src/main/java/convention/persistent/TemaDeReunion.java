@@ -1,9 +1,8 @@
 package convention.persistent;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Esta clase representa uno de los temas a tratar en un reunion de roots
@@ -27,6 +26,10 @@ public class TemaDeReunion extends PersistableSupport {
   @Lob
   private String descripcion;
   public static final String descripcion_FIELD = "descripcion";
+
+  @ManyToMany
+  private List<Usuario> interesados;
+  public static final String interesados_FIELD = "interesados";
 
   public Usuario getAutor() {
     return autor;
@@ -58,5 +61,25 @@ public class TemaDeReunion extends PersistableSupport {
 
   public void setReunion(Reunion reunion) {
     this.reunion = reunion;
+  }
+
+  public List<Usuario> getInteresados() {
+    if (interesados == null) {
+      interesados = new ArrayList<>();
+    }
+    return interesados;
+  }
+
+  public void setInteresados(List<Usuario> interesados) {
+    getInteresados().clear();
+    getInteresados().addAll(interesados);
+  }
+
+  public void agregarInteresado(Usuario votante) {
+    this.getInteresados().add(votante);
+  }
+
+  public void quitarInteresado(Usuario votante) {
+    this.getInteresados().remove(votante);
   }
 }
