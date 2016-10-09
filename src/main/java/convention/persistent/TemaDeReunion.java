@@ -72,7 +72,9 @@ public class TemaDeReunion extends PersistableSupport {
 
   public void setInteresados(List<Usuario> interesados) {
     getInteresados().clear();
-    getInteresados().addAll(interesados);
+    if (interesados != null) {
+      getInteresados().addAll(interesados);
+    }
   }
 
   public void agregarInteresado(Usuario votante) {
