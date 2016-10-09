@@ -19,12 +19,9 @@ public class Reunion extends PersistableSupport {
   private LocalDate fecha;
   public static final String fecha_FIELD = "fecha";
 
-  @OneToMany(cascade = CascadeType.ALL)
+  @OneToMany(cascade = CascadeType.ALL, mappedBy = TemaDeReunion.reunion_FIELD)
   private List<TemaDeReunion> temasPropuestos;
   public static final String temasPropuestos_FIELD = "temasPropuestos";
-
-  @OneToMany(cascade = CascadeType.ALL)
-  private List<Voto> votos;
 
   public LocalDate getFecha() {
     return fecha;
@@ -44,17 +41,6 @@ public class Reunion extends PersistableSupport {
   public void setTemasPropuestos(List<TemaDeReunion> temasPropuestos) {
     getTemasPropuestos().clear();
     getTemasPropuestos().addAll(temasPropuestos);
-  }
-
-  public List<Voto> getVotos() {
-    if (votos == null) {
-      votos = new ArrayList<>();
-    }
-    return votos;
-  }
-
-  public void setVotos(List<Voto> votos) {
-    this.votos = votos;
   }
 
   public static Reunion create(LocalDate fecha) {

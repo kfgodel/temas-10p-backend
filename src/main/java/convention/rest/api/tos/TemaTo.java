@@ -13,6 +13,12 @@ import net.sf.kfgodel.bean2bean.annotations.MissingPropertyAction;
  */
 public class TemaTo extends PersistableToSupport {
 
+  @CopyFromAndTo(TemaDeReunion.reunion_FIELD)
+  private Long idDeReunion;
+
+  @CopyFromAndTo(TemaDeReunion.autor_FIELD)
+  private Long idDeAutor;
+
   @CopyFrom(value = TemaDeReunion.autor_FIELD + "." + Usuario.name_FIELD, whenMissing = MissingPropertyAction.TREAT_AS_NULL)
   private String autor;
 
@@ -63,5 +69,21 @@ public class TemaTo extends PersistableToSupport {
 
   public void setCantidadVotosPropios(Integer cantidadVotosPropios) {
     this.cantidadVotosPropios = cantidadVotosPropios;
+  }
+
+  public Long getIdDeReunion() {
+    return idDeReunion;
+  }
+
+  public void setIdDeReunion(Long idDeReunion) {
+    this.idDeReunion = idDeReunion;
+  }
+
+  public Long getIdDeAutor() {
+    return idDeAutor;
+  }
+
+  public void setIdDeAutor(Long idDeAutor) {
+    this.idDeAutor = idDeAutor;
   }
 }

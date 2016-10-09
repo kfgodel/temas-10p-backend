@@ -3,14 +3,12 @@ package convention.rest.api;
 import ar.com.kfgodel.appbyconvention.operation.api.ApplicationOperation;
 import ar.com.kfgodel.dependencies.api.DependencyInjector;
 import ar.com.kfgodel.diamond.api.types.reference.ReferenceOf;
-import ar.com.kfgodel.nary.api.Nary;
 import ar.com.kfgodel.orm.api.operations.basic.DeleteById;
 import ar.com.kfgodel.orm.api.operations.basic.FindAll;
 import ar.com.kfgodel.orm.api.operations.basic.FindById;
 import ar.com.kfgodel.orm.api.operations.basic.Save;
 import ar.com.kfgodel.webbyconvention.impl.auth.adapters.JettyIdentityAdapter;
 import convention.persistent.TemaDeReunion;
-import convention.persistent.Usuario;
 import convention.rest.api.tos.ReunionTo;
 import convention.rest.api.tos.TemaTo;
 
@@ -46,17 +44,13 @@ public class TemaResource {
   @POST
   public TemaTo create(TemaTo newState, @Context SecurityContext securityContext) {
     JettyIdentityAdapter principal = (JettyIdentityAdapter) securityContext.getUserPrincipal();
-    Long userId = principal.getApplicationIdentification();
+    Long currentUserId = principal.getApplicationIdentification();
+    newState.setIdDeAutor(currentUserId);
 
     return createOperation()
       .insideATransaction()
       .taking(newState)
       .convertingTo(TemaDeReunion.class)
-      .applyingResultOf((tema) -> (transactionContext) -> {
-        Nary<Usuario> usuarioLogueado = FindById.create(Usuario.class, userId).applyWithSessionOn(transactionContext);
-        usuarioLogueado.ifPresent(tema::setAutor);
-        return tema;
-      })
       .applyingResultOf(Save::create)
       .convertTo(TemaTo.class);
   }
