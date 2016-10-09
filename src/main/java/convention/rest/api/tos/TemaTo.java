@@ -1,15 +1,27 @@
 package convention.rest.api.tos;
 
 import ar.com.kfgodel.appbyconvention.tos.PersistableToSupport;
+import convention.persistent.TemaDeReunion;
+import convention.persistent.Usuario;
+import net.sf.kfgodel.bean2bean.annotations.CopyFrom;
+import net.sf.kfgodel.bean2bean.annotations.CopyFromAndTo;
+import net.sf.kfgodel.bean2bean.annotations.MissingPropertyAction;
 
 /**
  * Esta clase representa el TO de una tema para ser editado
  * Created by kfgodel on 08/10/16.
  */
 public class TemaTo extends PersistableToSupport {
+
+  @CopyFrom(value = TemaDeReunion.autor_FIELD + "." + Usuario.name_FIELD, whenMissing = MissingPropertyAction.TREAT_AS_NULL)
   private String autor;
+
+  @CopyFromAndTo(TemaDeReunion.titulo_FIELD)
   private String titulo;
+
+  @CopyFromAndTo(TemaDeReunion.descripcion_FIELD)
   private String descripcion;
+
   private Integer cantidadVotosTotales;
   private Integer cantidadVotosPropios;
 

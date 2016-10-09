@@ -21,7 +21,8 @@ public class ApiV1Root {
   private UserResource users;
   private ProyectoResource proyectos;
   private SessionResource session;
-  private ReunionesResource reuniones;
+  private ReunionResource reuniones;
+  private TemaResource temas;
 
   @Path("/session")
   public SessionResource session() {
@@ -48,11 +49,19 @@ public class ApiV1Root {
   }
 
   @Path("/reuniones")
-  public ReunionesResource reuniones() {
+  public ReunionResource reuniones() {
     if (reuniones == null) {
-      reuniones = application.getInjector().createInjected(ReunionesResource.class);
+      reuniones = application.getInjector().createInjected(ReunionResource.class);
     }
     return reuniones;
+  }
+
+  @Path("/temas")
+  public TemaResource temas() {
+    if (temas == null) {
+      temas = application.getInjector().createInjected(TemaResource.class);
+    }
+    return temas;
   }
 
 }

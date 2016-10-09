@@ -42,7 +42,8 @@ public class Reunion extends PersistableSupport {
   }
 
   public void setTemasPropuestos(List<TemaDeReunion> temasPropuestos) {
-    this.temasPropuestos = temasPropuestos;
+    getTemasPropuestos().clear();
+    getTemasPropuestos().addAll(temasPropuestos);
   }
 
   public List<Voto> getVotos() {

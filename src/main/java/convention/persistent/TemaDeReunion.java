@@ -14,12 +14,15 @@ public class TemaDeReunion extends PersistableSupport {
 
   @ManyToOne
   private Usuario autor;
+  public static final String autor_FIELD = "autor";
 
   @Column(length = 1024)
   private String titulo;
+  public static final String titulo_FIELD = "titulo";
 
   @Lob
   private String descripcion;
+  public static final String descripcion_FIELD = "descripcion";
 
   public Usuario getAutor() {
     return autor;

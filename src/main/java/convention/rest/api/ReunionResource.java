@@ -24,7 +24,7 @@ import java.util.List;
  */
 @Produces("application/json")
 @Consumes("application/json")
-public class ReunionesResource {
+public class ReunionResource {
 
   @Inject
   private DependencyInjector appInjector;
@@ -101,8 +101,8 @@ public class ReunionesResource {
       .apply(DeleteById.create(Reunion.class, id));
   }
 
-  public static ReunionesResource create(DependencyInjector appInjector) {
-    ReunionesResource resource = new ReunionesResource();
+  public static ReunionResource create(DependencyInjector appInjector) {
+    ReunionResource resource = new ReunionResource();
     resource.appInjector = appInjector;
     return resource;
   }
