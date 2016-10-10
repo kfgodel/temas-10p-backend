@@ -26,6 +26,9 @@ public class TemaTo extends PersistableToSupport {
   @CopyFrom(value = TemaDeReunion.autor_FIELD + "." + Usuario.name_FIELD, whenMissing = MissingPropertyAction.TREAT_AS_NULL)
   private String autor;
 
+  @CopyFrom(TemaDeReunion.prioridad_FIELD)
+  private Integer prioridad;
+
   @CopyFromAndTo(TemaDeReunion.titulo_FIELD)
   private String titulo;
 
@@ -81,5 +84,13 @@ public class TemaTo extends PersistableToSupport {
 
   public void setIdsDeInteresados(List<Long> idsDeInteresados) {
     this.idsDeInteresados = idsDeInteresados;
+  }
+
+  public Integer getPrioridad() {
+    return prioridad;
+  }
+
+  public void setPrioridad(Integer prioridad) {
+    this.prioridad = prioridad;
   }
 }

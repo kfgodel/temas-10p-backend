@@ -15,7 +15,7 @@ public class TemaDeReunion extends PersistableSupport {
   private Reunion reunion;
   public static final String reunion_FIELD = "reunion";
 
-  private Long prioridad;
+  private Integer prioridad;
   public static final String prioridad_FIELD = "prioridad";
 
   @ManyToOne
@@ -67,11 +67,11 @@ public class TemaDeReunion extends PersistableSupport {
     this.reunion = reunion;
   }
 
-  public Long getPrioridad() {
+  public Integer getPrioridad() {
     return prioridad;
   }
 
-  public void setPrioridad(Long prioridad) {
+  public void setPrioridad(Integer prioridad) {
     this.prioridad = prioridad;
   }
 

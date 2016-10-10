@@ -2,10 +2,7 @@ package convention.persistent;
 
 import ar.com.kfgodel.temas.model.OrdenarPorVotos;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -21,6 +18,11 @@ public class Reunion extends PersistableSupport {
   @NotNull
   private LocalDate fecha;
   public static final String fecha_FIELD = "fecha";
+
+  @Enumerated(EnumType.STRING)
+  private StatusDeReunion status;
+  public static final String status_FIELD = "status";
+
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = TemaDeReunion.reunion_FIELD)
   @OrderBy(TemaDeReunion.prioridad_FIELD)
@@ -42,6 +44,14 @@ public class Reunion extends PersistableSupport {
     return temasPropuestos;
   }
 
+  public StatusDeReunion getStatus() {
+    return status;
+  }
+
+  public void setStatus(StatusDeReunion status) {
+    this.status = status;
+  }
+
   public void setTemasPropuestos(List<TemaDeReunion> temasPropuestos) {
     getTemasPropuestos().clear();
     getTemasPropuestos().addAll(temasPropuestos);
@@ -50,6 +60,7 @@ public class Reunion extends PersistableSupport {
   public static Reunion create(LocalDate fecha) {
     Reunion reunion = new Reunion();
     reunion.fecha = fecha;
+    reunion.status = StatusDeReunion.PENDIENTE;
     return reunion;
   }
 
@@ -57,7 +68,8 @@ public class Reunion extends PersistableSupport {
     this.getTemasPropuestos().sort(OrdenarPorVotos.create());
     for (int i = 0; i < getTemasPropuestos().size(); i++) {
       TemaDeReunion tema = getTemasPropuestos().get(i);
-      tema.setPrioridad((long) i);
+      tema.setPrioridad(i + 1); // Queremos que empiece de 1 la prioridad
     }
+    this.status = StatusDeReunion.CERRADA;
   }
 }

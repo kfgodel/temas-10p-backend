@@ -2,6 +2,7 @@ package convention.rest.api.tos;
 
 import ar.com.kfgodel.appbyconvention.tos.PersistableToSupport;
 import convention.persistent.Reunion;
+import net.sf.kfgodel.bean2bean.annotations.CopyFrom;
 import net.sf.kfgodel.bean2bean.annotations.CopyFromAndTo;
 
 import java.util.List;
@@ -14,6 +15,9 @@ public class ReunionTo extends PersistableToSupport {
 
   @CopyFromAndTo(Reunion.fecha_FIELD)
   private String fecha;
+
+  @CopyFrom(Reunion.status_FIELD)
+  private String status;
 
   @CopyFromAndTo(Reunion.temasPropuestos_FIELD)
   private List<TemaTo> temasPropuestos;
@@ -32,5 +36,13 @@ public class ReunionTo extends PersistableToSupport {
 
   public void setTemasPropuestos(List<TemaTo> temasPropuestos) {
     this.temasPropuestos = temasPropuestos;
+  }
+
+  public String getStatus() {
+    return status;
+  }
+
+  public void setStatus(String status) {
+    this.status = status;
   }
 }
