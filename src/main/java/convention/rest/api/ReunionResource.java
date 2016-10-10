@@ -60,6 +60,20 @@ public class ReunionResource {
   }
 
   @GET
+  @Path("reabrir/{resourceId}")
+  public ReunionTo reabrir(@PathParam("resourceId") Long id) {
+    return createOperation()
+      .insideATransaction()
+      .applying((context) -> FindById.create(Reunion.class, id).applyWithSessionOn(context))
+      .mapping((encontrado) -> {
+        Reunion reunion = encontrado.orElseThrow(() -> new WebApplicationException("reunion not found", 404));
+        reunion.reabrirVotacion();
+        return reunion;
+      }).applyingResultOf(Save::create)
+      .convertTo(ReunionTo.class);
+  }
+
+  @GET
   public List<ReunionTo> getAll() {
     return createOperation()
       .insideASession()

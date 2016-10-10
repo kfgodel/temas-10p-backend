@@ -72,4 +72,8 @@ public class Reunion extends PersistableSupport {
     }
     this.status = StatusDeReunion.CERRADA;
   }
+
+  public void reabrirVotacion() {
+    this.status = StatusDeReunion.PENDIENTE;
+  }
 }
