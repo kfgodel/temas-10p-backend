@@ -44,6 +44,21 @@ public class ReunionResource {
       .convertTo(ReunionTo.class);
   }
 
+
+  @GET
+  @Path("cerrar/{resourceId}")
+  public ReunionTo cerrar(@PathParam("resourceId") Long id) {
+    return createOperation()
+      .insideATransaction()
+      .applying((context) -> FindById.create(Reunion.class, id).applyWithSessionOn(context))
+      .mapping((encontrado) -> {
+        Reunion reunion = encontrado.orElseThrow(() -> new WebApplicationException("reunion not found", 404));
+        reunion.cerrarVotacion();
+        return reunion;
+      }).applyingResultOf(Save::create)
+      .convertTo(ReunionTo.class);
+  }
+
   @GET
   public List<ReunionTo> getAll() {
     return createOperation()

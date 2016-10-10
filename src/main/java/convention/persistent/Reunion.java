@@ -1,5 +1,7 @@
 package convention.persistent;
 
+import ar.com.kfgodel.temas.model.OrdenarPorVotos;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -51,4 +53,11 @@ public class Reunion extends PersistableSupport {
     return reunion;
   }
 
+  public void cerrarVotacion() {
+    this.getTemasPropuestos().sort(OrdenarPorVotos.create());
+    for (int i = 0; i < getTemasPropuestos().size(); i++) {
+      TemaDeReunion tema = getTemasPropuestos().get(i);
+      tema.setPrioridad((long) i);
+    }
+  }
 }

@@ -96,4 +96,8 @@ public class TemaDeReunion extends PersistableSupport {
   public void quitarInteresado(Usuario votante) {
     this.getInteresados().remove(votante);
   }
+
+  public int getCantidadDeVotos() {
+    return getInteresados().size();
+  }
 }
