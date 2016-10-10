@@ -3,6 +3,7 @@ package convention.persistent;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class Reunion extends PersistableSupport {
   public static final String fecha_FIELD = "fecha";
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = TemaDeReunion.reunion_FIELD)
+  @OrderBy(TemaDeReunion.prioridad_FIELD)
   private List<TemaDeReunion> temasPropuestos;
   public static final String temasPropuestos_FIELD = "temasPropuestos";
 

@@ -15,6 +15,9 @@ public class TemaDeReunion extends PersistableSupport {
   private Reunion reunion;
   public static final String reunion_FIELD = "reunion";
 
+  private Long prioridad;
+  public static final String prioridad_FIELD = "prioridad";
+
   @ManyToOne
   private Usuario autor;
   public static final String autor_FIELD = "autor";
@@ -30,6 +33,7 @@ public class TemaDeReunion extends PersistableSupport {
   @ManyToMany
   private List<Usuario> interesados;
   public static final String interesados_FIELD = "interesados";
+
 
   public Usuario getAutor() {
     return autor;
@@ -61,6 +65,14 @@ public class TemaDeReunion extends PersistableSupport {
 
   public void setReunion(Reunion reunion) {
     this.reunion = reunion;
+  }
+
+  public Long getPrioridad() {
+    return prioridad;
+  }
+
+  public void setPrioridad(Long prioridad) {
+    this.prioridad = prioridad;
   }
 
   public List<Usuario> getInteresados() {
