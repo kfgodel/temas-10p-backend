@@ -23,6 +23,8 @@ public class ProximaReunion implements TransactionOperation<Nary<Reunion>> {
 
     Reunion proxima = queryFactory.selectFrom(reunion)
       .where(reunion.fecha.goe(LocalDate.now()))
+      .orderBy(reunion.fecha.asc())
+      .limit(1)
       .fetchOne();
     return Nary.ofNullable(proxima);
   }
