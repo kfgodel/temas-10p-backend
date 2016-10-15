@@ -22,7 +22,7 @@ public class AllReunionesUltimaPrimero implements SessionOperation<Nary<Reunion>
     QReunion reunion = QReunion.reunion;
 
     List<Reunion> reuniones = queryFactory.selectFrom(reunion)
-      .orderBy(reunion.momentoDeCreacion.desc())
+      .orderBy(reunion.fecha.desc())
       .fetch();
     return Nary.create(reuniones);
   }

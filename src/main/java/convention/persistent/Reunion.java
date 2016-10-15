@@ -20,7 +20,7 @@ public class Reunion extends PersistableSupport {
   public static final String fecha_FIELD = "fecha";
 
   @Enumerated(EnumType.STRING)
-  private StatusDeReunion status;
+  private StatusDeReunion status = StatusDeReunion.PENDIENTE;
   public static final String status_FIELD = "status";
 
 
@@ -54,7 +54,9 @@ public class Reunion extends PersistableSupport {
 
   public void setTemasPropuestos(List<TemaDeReunion> temasPropuestos) {
     getTemasPropuestos().clear();
-    getTemasPropuestos().addAll(temasPropuestos);
+    if (temasPropuestos != null) {
+      getTemasPropuestos().addAll(temasPropuestos);
+    }
   }
 
   public static Reunion create(LocalDate fecha) {
