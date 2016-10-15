@@ -3,7 +3,7 @@ package convention.rest.api;
 import ar.com.kfgodel.appbyconvention.operation.api.ApplicationOperation;
 import ar.com.kfgodel.dependencies.api.DependencyInjector;
 import ar.com.kfgodel.diamond.api.types.reference.ReferenceOf;
-import ar.com.kfgodel.orm.api.operations.basic.DeleteById;
+import ar.com.kfgodel.orm.api.operations.basic.Delete;
 import ar.com.kfgodel.orm.api.operations.basic.FindById;
 import ar.com.kfgodel.orm.api.operations.basic.Save;
 import ar.com.kfgodel.temas.acciones.CrearProximaReunion;
@@ -127,7 +127,16 @@ public class ReunionResource {
   public void delete(@PathParam("resourceId") Long id) {
     createOperation()
       .insideATransaction()
-      .apply(DeleteById.create(Reunion.class, id));
+      .taking(id)
+      .convertingTo(Reunion.class)
+      .mapping((encontrado) -> {
+        // Answer 404 if missing
+        if (encontrado == null) {
+          throw new WebApplicationException("reunion not found", 404);
+        }
+        return encontrado;
+      })
+      .applyResultOf(Delete::create);
   }
 
   public static ReunionResource create(DependencyInjector appInjector) {
