@@ -19,7 +19,6 @@ public class ApiV1Root {
   private Application application;
 
   private UserResource users;
-  private ProyectoResource proyectos;
   private SessionResource session;
   private ReunionResource reuniones;
   private TemaResource temas;
@@ -38,14 +37,6 @@ public class ApiV1Root {
       users = application.getInjector().createInjected(UserResource.class);
     }
     return users;
-  }
-
-  @Path("/proyectos")
-  public ProyectoResource proyectos() {
-    if (proyectos == null) {
-      proyectos = application.getInjector().createInjected(ProyectoResource.class);
-    }
-    return proyectos;
   }
 
   @Path("/reuniones")
