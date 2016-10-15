@@ -13,3 +13,5 @@ mvn deploy
 
 Y despues por ahi modifico este archivo para que heroku deploye nuevamente
 1
+
+- git push heroku master
