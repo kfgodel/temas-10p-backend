@@ -57,7 +57,7 @@ public class UserResource {
   public UserTo createUser() {
     return createOperation()
       .insideASession()
-      .taking(Usuario.create("Sin nombre", "", ""))
+      .taking(Usuario.create("Sin nombre", "", "", null))
       .applyingResultOf(Save::create)
       .convertTo(UserTo.class);
   }

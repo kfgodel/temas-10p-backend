@@ -50,7 +50,7 @@ public class DatabaseAuthenticator implements Function<WebCredential, Optional<O
    */
   public Usuario getProtoUser() {
     if (noUser == null) {
-      noUser = Usuario.create("Proto user", "", "");
+      noUser = Usuario.create("Proto user", "", "", null);
       noUser.setId(-1L);
     }
     return noUser;
