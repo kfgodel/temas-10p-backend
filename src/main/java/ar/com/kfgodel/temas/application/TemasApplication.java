@@ -116,6 +116,7 @@ public class TemasApplication implements Application {
         //Make application the only jetty injectable dependency
         binder.bind(this).to(Application.class);
       })
+      .withSecuredRootPaths("/api/v1")
       .authenticatingWith(DatabaseAuthenticator.create(getOrmModule()));
     return JettyWebServer.createFor(serverConfig);
   }
