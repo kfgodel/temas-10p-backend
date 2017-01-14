@@ -44,6 +44,12 @@
   <logger name="org.hibernate.tool.hbm2ddl.SchemaUpdate" level="WARN"/>
   <logger name="org.hibernate.tool.hbm2ddl.TableMetadata" level="WARN"/>
 
+  <!-- Loguear requests que recibimos -->
+  <logger name="ar.com.kfgodel.webbyconvention.impl.handlers.logging.RequestLoggerHandler" level="debug"/>
+
+  <!-- Loguear requests de contenido que devolvemos el index.html-->
+  <logger name="ar.com.kfgodel.webbyconvention.impl.handlers.ServeIndexHandler" level="debug"/>
+
 
   <root level="info">
     <appender-ref ref="STDOUT"/>
