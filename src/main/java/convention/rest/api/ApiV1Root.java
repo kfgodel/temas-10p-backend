@@ -22,7 +22,6 @@ public class ApiV1Root {
   private SessionResource session;
   private ReunionResource reuniones;
   private TemaResource temas;
-  private AuthCallbackResource authCallback;
 
   @Path("/session")
   public SessionResource session() {
@@ -54,14 +53,6 @@ public class ApiV1Root {
       temas = application.getInjector().createInjected(TemaResource.class);
     }
     return temas;
-  }
-
-  @Path("/auth_callback")
-  public AuthCallbackResource authCallback() {
-    if (authCallback == null) {
-      authCallback = application.getInjector().createInjected(AuthCallbackResource.class);
-    }
-    return authCallback;
   }
 
 }
