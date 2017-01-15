@@ -4,83 +4,23 @@ import ar.com.kfgodel.appbyconvention.operation.api.ApplicationOperation;
 import ar.com.kfgodel.dependencies.api.DependencyInjector;
 import ar.com.kfgodel.orm.api.operations.basic.Save;
 import ar.com.kfgodel.temas.filters.users.UserByBackofficeId;
-
+import convention.persistent.Usuario;
+import convention.rest.api.tos.BackofficeUserTo;
 import org.h2.util.StringUtils;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 import javax.inject.Inject;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.GET;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-
-import convention.persistent.Usuario;
+import java.net.URI;
 
 public class AuthCallbackResource {
 
   @Inject
   private DependencyInjector appInjector;
 
-  // Puse esto aca pq no sabía en donde ponerlo
-  public static class BackofficeUser {
-
-    @QueryParam("uid")
-    public String uid;
-
-    @QueryParam("email")
-    public String email;
-
-    @QueryParam("username")
-    public String username;
-
-    @QueryParam("full_name")
-    public String fullName;
-
-    @QueryParam("root")
-    public String root;
-
-    @QueryParam("denied")
-    public String denied;
-
-    @QueryParam("hmac")
-    public String hmac;
-
-    public Boolean isRoot() {
-      return root.equals("true");
-    }
-
-    public Boolean isValid() {
-      // Esto no debería estar hardcodeado. Debería venir del ambiente.
-      String key = "CHANGE_ME";
-      String algorithm = "HmacSHA256";
-      String data =
-          "uid=" + uid + "&email=" + email + "&username=" + username + "&full_name=" + fullName + "&root=" + root;
-      Mac mac;
-      try {
-        mac = Mac.getInstance(algorithm);
-        mac.init(new SecretKeySpec(key.getBytes(), algorithm));
-        byte[] generatedHmacBytes = mac.doFinal(data.getBytes("UTF-8"));
-        StringBuilder sb = new StringBuilder();
-        for (byte b : generatedHmacBytes) {
-          sb.append(String.format("%02x", b));
-        }
-        String generatedHmac = sb.toString();
-        return hmac.equals(generatedHmac);
-      } catch (UnsupportedEncodingException | NoSuchAlgorithmException | InvalidKeyException e) {
-        return false;
-      }
-    }
-  }
-
-  // Esta ruta no tendria que estar authenticada
   @GET
-  public Response getSingleUser(@BeanParam BackofficeUser backofficeUser) {
+  public Response getSingleUser(@BeanParam BackofficeUserTo backofficeUser) {
     // Si el usuario cancela, denied llega no vació con la razón. Habría que mostrarle un mensaje al usuario
     if (!StringUtils.isNullOrEmpty(backofficeUser.denied)) {
       return Response.ok("DENIED:" + backofficeUser.denied).build();
@@ -91,37 +31,33 @@ public class AuthCallbackResource {
       return Response.ok("HMAC INVALIDO").build();
     }
 
-    if (backofficeUser.isRoot()) {
-      /* Aca viene la papa
-        Primero buscamos un Usuario por backofficeId (el uid). Si existe entonces lo loggeamos a la sesión y ya
-        Si no existe, hay que crear un nuevo Usuario. Y luego logearlo.
-
-        Finalmente redirigimos al home de la app o, idealmente, si venía de otra ruta pero no estaba autenticado,
-        lo redirigimos a la ruta original de la que venía.
-      */
-
-      return createOperation()
-          .insideASession()
-          .applying(UserByBackofficeId.create(backofficeUser.uid))
-          .mapping(maybeUsuario ->
-                       maybeUsuario.orElseGet(() ->
-                                                  createOperation()
-                                                      .insideASession()
-                                                      .taking(Usuario
-                                                                  .create(backofficeUser.fullName,
-                                                                          backofficeUser.username,
-                                                                          "password",
-                                                                          backofficeUser.uid))
-                                                      .applyingResultOf(Save::create)
-                                                      .get())
-          ).mapping(usuario -> {
-            // Aca hay que hacer log in del usuario, ni puta idea
-            return Response.temporaryRedirect(URI.create("/")).build();
-          }).get();
-    } else {
+    if (!backofficeUser.isRoot()) {
       // Si no es root, no lo dejamos. Habría que también mostrar un mensaje
       return Response.ok("NOT ROOT").build();
     }
+
+    createOperation()
+      .insideASession()
+      .applying(UserByBackofficeId.create(backofficeUser.uid))
+      .mapping(usuarioExistente -> usuarioExistente.orElseGet(() -> crearUsuarioNuevo(backofficeUser)))
+      .useIn(this::autenticarEnSesion);
+
+    return Response.temporaryRedirect(URI.create("/proxima-roots")).build();
+  }
+
+  private void autenticarEnSesion(Usuario usuario) {
+
+  }
+
+  private Usuario crearUsuarioNuevo(BackofficeUserTo backofficeUser) {
+    return createOperation()
+      .insideATransaction()
+      .taking(Usuario.create(backofficeUser.fullName,
+        backofficeUser.username,
+        "password",
+        backofficeUser.uid))
+      .applyingResultOf(Save::create)
+      .get();
   }
 
   private ApplicationOperation createOperation() {
