@@ -50,10 +50,6 @@
   <!-- Loguear requests de contenido que devolvemos el index.html-->
   <logger name="ar.com.kfgodel.webbyconvention.impl.handlers.ServeIndexHandler" level="debug"/>
 
-  <!--Manejo de resources en el filesystem -->
-  <logger name="org.eclipse.jetty.server.handler.ResourceHandler" level="debug"/>
-
-
   <root level="info">
     <appender-ref ref="STDOUT"/>
   </root>

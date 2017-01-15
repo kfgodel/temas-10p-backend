@@ -5,11 +5,13 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 /**
- * This type represents a user in the database
- * Created by kfgodel on 22/03/15.
+ * This type represents a user in the database Created by kfgodel on 22/03/15.
  */
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {Usuario.login_FIELD, Usuario.password_FIELD}))
+@Table(uniqueConstraints = {
+    @UniqueConstraint(columnNames = {Usuario.login_FIELD, Usuario.password_FIELD}),
+    @UniqueConstraint(columnNames = Usuario.backofficeId_FIELD)
+})
 public class Usuario extends PersistableSupport {
 
   private String name;
@@ -21,6 +23,8 @@ public class Usuario extends PersistableSupport {
   private String password;
   public static final String password_FIELD = "password";
 
+  private String backofficeId;
+  public static final String backofficeId_FIELD = "backofficeId";
 
   public String getName() {
     return name;
@@ -46,12 +50,20 @@ public class Usuario extends PersistableSupport {
     this.password = password;
   }
 
-  public static Usuario create(String name, String login, String password) {
+  public String getBackofficeId() {
+    return backofficeId;
+  }
+
+  public void setBackofficeId(String backofficeId) {
+    this.backofficeId = backofficeId;
+  }
+
+  public static Usuario create(String name, String login, String password, String backofficeId) {
     Usuario usuario = new Usuario();
     usuario.setName(name);
     usuario.setLogin(login);
     usuario.setPassword(password);
+    usuario.setBackofficeId(backofficeId);
     return usuario;
   }
-
 }

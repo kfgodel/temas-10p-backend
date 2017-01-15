@@ -5,6 +5,7 @@ import ar.com.kfgodel.dependencies.impl.DependencyInjectorImpl;
 import ar.com.kfgodel.orm.api.HibernateOrm;
 import ar.com.kfgodel.orm.api.config.DbCoordinates;
 import ar.com.kfgodel.orm.impl.HibernateFacade;
+import ar.com.kfgodel.temas.application.auth.BackofficeCallbackAuthenticator;
 import ar.com.kfgodel.temas.application.initializers.InicializadorDeDatos;
 import ar.com.kfgodel.temas.config.TemasConfiguration;
 import ar.com.kfgodel.transformbyconvention.api.TypeTransformer;
@@ -117,7 +118,8 @@ public class TemasApplication implements Application {
         binder.bind(this).to(Application.class);
       })
       .withSecuredRootPaths("/api/v1")
-      .authenticatingWith(DatabaseAuthenticator.create(getOrmModule()));
+      .redirectingAfterAuthenticationTo("/")
+      .authenticatingWith(BackofficeCallbackAuthenticator.create(getInjector()));
     return JettyWebServer.createFor(serverConfig);
   }
 
