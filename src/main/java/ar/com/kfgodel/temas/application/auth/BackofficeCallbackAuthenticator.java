@@ -7,6 +7,7 @@ import ar.com.kfgodel.temas.filters.users.UserByBackofficeId;
 import ar.com.kfgodel.webbyconvention.api.auth.WebCredential;
 import convention.persistent.Usuario;
 import convention.rest.api.tos.BackofficeUserTo;
+import org.h2.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,12 +39,16 @@ public class BackofficeCallbackAuthenticator implements Function<WebCredential, 
   }
 
   private Optional<BackofficeUserTo> createToFrom(WebCredential webCredential) {
+    String denied = webCredential.getRequestParameter("denied");
+    if (!StringUtils.isNullOrEmpty(denied)) {
+      // Nos denegaron el acceso
+      return Optional.empty();
+    }
     String uid = webCredential.getRequestParameter("uid");
     String email = webCredential.getRequestParameter("email");
     String username = webCredential.getRequestParameter("username");
     String fullname = webCredential.getRequestParameter("full_name");
     String root = webCredential.getRequestParameter("root");
-    String denied = webCredential.getRequestParameter("denied");
     String hmac = webCredential.getRequestParameter("hmac");
     if (!isAValidHmac(uid, email, username, fullname, root, hmac)) {
       // Por alguna razon no coincide el hmac, lo rechazamos
