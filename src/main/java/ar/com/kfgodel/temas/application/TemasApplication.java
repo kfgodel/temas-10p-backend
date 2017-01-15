@@ -118,7 +118,8 @@ public class TemasApplication implements Application {
         binder.bind(this).to(Application.class);
       })
       .withSecuredRootPaths("/api/v1")
-      .redirectingAfterAuthenticationTo("/")
+      .redirectingAfterSuccessfulAuthenticationTo("/")
+      .redirectingAfterFailedAuthenticationTo("/login?failed=true")
       .authenticatingWith(BackofficeCallbackAuthenticator.create(getInjector()));
     return JettyWebServer.createFor(serverConfig);
   }
