@@ -53,15 +53,6 @@ public class UserResource {
       .convertTo(LIST_OF_USER_TOS);
   }
 
-  @POST
-  public UserTo createUser() {
-    return createOperation()
-      .insideASession()
-      .taking(Usuario.create("Sin nombre", "", "", null))
-      .applyingResultOf(Save::create)
-      .convertTo(UserTo.class);
-  }
-
   @GET
   @Path("/{userId}")
   public UserTo getSingleUser(@PathParam("userId") Long userId) {

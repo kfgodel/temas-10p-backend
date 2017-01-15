@@ -64,7 +64,7 @@ public class BackofficeCallbackAuthenticator implements Function<WebCredential, 
       LOG.error("Se produjo un error al calcular el hmac de " + data, e);
       return false;
     }
-    boolean coinciden = hmacProvisto.equals(hmacCalculado);
+    boolean coinciden = hmacCalculado.equals(hmacProvisto);
     if (!coinciden) {
       LOG.warn("No coincide el hmac calculado[{}] != provisto[{}] para la data[{}]", hmacCalculado, hmacCalculado, data);
     }

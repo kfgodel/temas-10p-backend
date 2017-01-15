@@ -17,14 +17,23 @@ public class UserTo extends PersistableToSupport {
   @CopyFromAndTo(Usuario.login_FIELD)
   private String login;
 
-  @CopyFromAndTo(Usuario.password_FIELD)
-  private String password;
+  @CopyFromAndTo(Usuario.backofficeId_FIELD)
+  private String backofficeId;
 
   @CopyFrom(Usuario.momentoDeCreacion_FIELD)
   private String creation;
 
   @CopyFrom(Usuario.momentoDeUltimaModificacion_FIELD)
   private String modification;
+
+
+  public String getBackofficeId() {
+    return backofficeId;
+  }
+
+  public void setBackofficeId(String backofficeId) {
+    this.backofficeId = backofficeId;
+  }
 
   public String getName() {
     return name;
@@ -42,14 +51,6 @@ public class UserTo extends PersistableToSupport {
     this.login = login;
   }
 
-  public String getPassword() {
-    return password;
-  }
-
-  public void setPassword(String password) {
-    this.password = password;
-  }
-
   public String getCreation() {
     return creation;
   }
@@ -64,15 +65,6 @@ public class UserTo extends PersistableToSupport {
 
   public void setModification(String modification) {
     this.modification = modification;
-  }
-
-  public static UserTo create(Long id, String name, String login, String password) {
-    UserTo userTo = new UserTo();
-    userTo.setId(id);
-    userTo.name = name;
-    userTo.login = login;
-    userTo.password = password;
-    return userTo;
   }
 
 }
