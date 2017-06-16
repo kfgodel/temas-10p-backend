@@ -2,9 +2,13 @@ package ar.com.kfgodel.temas.config;
 
 import ar.com.kfgodel.orm.api.config.DbCoordinates;
 import ar.com.kfgodel.orm.impl.config.ImmutableDbCoordinates;
+import ar.com.kfgodel.temas.application.auth.BackofficeCallbackAuthenticator;
+import ar.com.kfgodel.webbyconvention.api.auth.WebCredential;
 import com.heroku.sdk.jdbc.DatabaseUrl;
 
 import java.net.URISyntaxException;
+import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * This type represents the configuration used to run in heroku with values taken from the OS environment
@@ -34,5 +38,10 @@ public class HerokuConfig implements TemasConfiguration {
   @Override
   public int getHttpPort() {
     return Integer.valueOf(System.getenv("PORT"));
+  }
+
+  @Override
+  public Function<WebCredential, Optional<Object>> autenticador() {
+    return BackofficeCallbackAuthenticator.create(getInjector());
   }
 }
