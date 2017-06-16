@@ -5,7 +5,6 @@ import ar.com.kfgodel.dependencies.impl.DependencyInjectorImpl;
 import ar.com.kfgodel.orm.api.HibernateOrm;
 import ar.com.kfgodel.orm.api.config.DbCoordinates;
 import ar.com.kfgodel.orm.impl.HibernateFacade;
-import ar.com.kfgodel.temas.application.auth.BackofficeCallbackAuthenticator;
 import ar.com.kfgodel.temas.application.initializers.InicializadorDeDatos;
 import ar.com.kfgodel.temas.config.TemasConfiguration;
 import ar.com.kfgodel.transformbyconvention.api.TypeTransformer;
@@ -17,6 +16,8 @@ import ar.com.kfgodel.webbyconvention.impl.JettyWebServer;
 import ar.com.kfgodel.webbyconvention.impl.config.ConfigurationByConvention;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Optional;
 
 /**
  * This type represents the whole application as a single object.<br>
@@ -112,6 +113,8 @@ public class TemasApplication implements Application {
 
   private WebServer createWebServer() {
     WebServerConfiguration serverConfig = ConfigurationByConvention.create()
+      .authenticatingWith(webCredential -> Optional.of(usuarioDeMentira()))
+      //.authenticatingWith(BackofficeCallbackAuthenticator.create(getInjector()))
       .listeningHttpOn(config.getHttpPort())
       .withInjections((binder) -> {
         //Make application the only jetty injectable dependency
@@ -119,9 +122,13 @@ public class TemasApplication implements Application {
       })
       .withSecuredRootPaths("/api/v1")
       .redirectingAfterSuccessfulAuthenticationTo("/")
-      .redirectingAfterFailedAuthenticationTo("/login?failed=true")
-      .authenticatingWith(BackofficeCallbackAuthenticator.create(getInjector()));
+      .redirectingAfterFailedAuthenticationTo("/login?failed=true");
     return JettyWebServer.createFor(serverConfig);
+  }
+
+  private Long usuarioDeMentira() {
+    return 3L;
+    //BackofficeUserTo.create("43", "joaquin.azcarate@10pines.com", "jazcarate", "Joaquin Azcarate", "true", null, "9fbbef71287b1a78ae18e2fd0702ef87add2931d411df21e1766564b55d7cbf9");
   }
 
 }
