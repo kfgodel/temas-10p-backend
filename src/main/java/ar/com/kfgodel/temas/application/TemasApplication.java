@@ -1,9 +1,11 @@
 package ar.com.kfgodel.temas.application;
 
+import ar.com.kfgodel.appbyconvention.operation.api.ApplicationOperation;
 import ar.com.kfgodel.dependencies.api.DependencyInjector;
 import ar.com.kfgodel.dependencies.impl.DependencyInjectorImpl;
 import ar.com.kfgodel.orm.api.HibernateOrm;
 import ar.com.kfgodel.orm.api.config.DbCoordinates;
+import ar.com.kfgodel.orm.api.operations.basic.Save;
 import ar.com.kfgodel.orm.impl.HibernateFacade;
 import ar.com.kfgodel.temas.application.initializers.InicializadorDeDatos;
 import ar.com.kfgodel.temas.config.TemasConfiguration;
@@ -11,13 +13,21 @@ import ar.com.kfgodel.transformbyconvention.api.TypeTransformer;
 import ar.com.kfgodel.transformbyconvention.impl.B2BTransformer;
 import ar.com.kfgodel.transformbyconvention.impl.config.TransformerConfigurationByConvention;
 import ar.com.kfgodel.webbyconvention.api.WebServer;
+import ar.com.kfgodel.webbyconvention.api.auth.WebCredential;
 import ar.com.kfgodel.webbyconvention.api.config.WebServerConfiguration;
 import ar.com.kfgodel.webbyconvention.impl.JettyWebServer;
 import ar.com.kfgodel.webbyconvention.impl.config.ConfigurationByConvention;
+import convention.persistent.Reunion;
+import convention.persistent.Usuario;
+import convention.rest.api.tos.BackofficeUserTo;
+import convention.rest.api.tos.ReunionTo;
+import convention.rest.api.tos.UserTo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * This type represents the whole application as a single object.<br>
@@ -80,7 +90,7 @@ public class TemasApplication implements Application {
   }
 
   private void initialize() {
-    this.injector = DependencyInjectorImpl.create();
+    this.injector = config.getInjector();
     this.injector.bindTo(Application.class, this);
 
     this.injector.bindTo(HibernateOrm.class, createPersistenceLayer());
@@ -113,7 +123,7 @@ public class TemasApplication implements Application {
 
   private WebServer createWebServer() {
     WebServerConfiguration serverConfig = ConfigurationByConvention.create()
-      .authenticatingWith(webCredential -> Optional.of(usuarioDeMentira()))
+      .authenticatingWith(config.autenticador())
       //.authenticatingWith(BackofficeCallbackAuthenticator.create(getInjector()))
       .listeningHttpOn(config.getHttpPort())
       .withInjections((binder) -> {
@@ -126,9 +136,5 @@ public class TemasApplication implements Application {
     return JettyWebServer.createFor(serverConfig);
   }
 
-  private Long usuarioDeMentira() {
-    return 3L;
-    //BackofficeUserTo.create("43", "joaquin.azcarate@10pines.com", "jazcarate", "Joaquin Azcarate", "true", null, "9fbbef71287b1a78ae18e2fd0702ef87add2931d411df21e1766564b55d7cbf9");
-  }
 
 }

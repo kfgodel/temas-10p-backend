@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 public class HerokuPriorityConfigSelector implements ConfigurationSelector {
   public static Logger LOG = LoggerFactory.getLogger(HerokuPriorityConfigSelector.class);
 
+
   public static HerokuPriorityConfigSelector create() {
     HerokuPriorityConfigSelector selector = new HerokuPriorityConfigSelector();
     return selector;
