@@ -69,6 +69,8 @@ public class TemasApplication implements Application {
   public static Application create(TemasConfiguration config) {
     TemasApplication application = new TemasApplication();
     application.config = config;
+    //TODO
+    application.injector=config.getInjector();
     return application;
   }
 
@@ -121,7 +123,7 @@ public class TemasApplication implements Application {
     return hibernateOrm;
   }
 
-  private WebServer createWebServer() {
+  protected WebServer createWebServer() {
     WebServerConfiguration serverConfig = ConfigurationByConvention.create()
       .authenticatingWith(config.autenticador())
       .listeningHttpOn(config.getHttpPort())

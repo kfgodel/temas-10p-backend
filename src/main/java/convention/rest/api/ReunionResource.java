@@ -45,7 +45,7 @@ public class ReunionResource {
                     map(temaDeReunion -> temaDeReunion.copy()).collect(Collectors.toList());
             listaDeTemasNuevos.forEach(temaDeReunion ->
                     temaDeReunion.setInteresados(temaDeReunion.getInteresados().stream().
-                            filter(usuario -> usuario.getId() == userId).collect(Collectors.toList())));
+                            filter(usuario -> usuario.getId().equals(userId)).collect(Collectors.toList())));
             nuevaReunion.setTemasPropuestos(listaDeTemasNuevos);
             return nuevaReunion;
         }
@@ -120,7 +120,6 @@ public class ReunionResource {
   @Path("/{resourceId}")
   public ReunionTo getSingle(@PathParam("resourceId") Long id, @Context SecurityContext securityContext) {
 
-    //TODO REVISAR TODO
       Long userId = ((JettyIdentityAdapter) securityContext.getUserPrincipal()).getApplicationIdentification();
     return createOperation()
       .insideASession()

@@ -5,6 +5,7 @@ import convention.rest.api.tos.ReunionTo;
 import convention.rest.api.tos.TemaTo;
 import convention.services.ReunionService;
 import convention.services.TemaService;
+import helpers.TestConfig;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,22 +55,24 @@ public class PersistenciaTest {
         Assert.assertEquals(cantidadDeTemasAnteriores + 1, temasPersistidos.size());
     }
 
-    // No puedo hacerlo andar
-//    @Test
-//    public void test03AlObtenerUnaReunionSeTraenSoloSusTemas(){
-//        ReunionTo reunion = new ReunionTo();
-//        TemaTo temaDeLaReunion = new TemaTo();
-//        TemaTo temaDeOtraReunion = new TemaTo();
-//        reunion.setTemasPropuestos(Arrays.asList(temaDeLaReunion));
-//
-//        reunion = reunionService.save(reunion);
-//        temaService.save(temaDeLaReunion);
-//        temaService.save(temaDeOtraReunion);
-//
-//        ReunionTo reunionPersistida = reunionService.get(reunion.getId());
-//
-//        Assert.assertEquals(1, reunionPersistida.getTemasPropuestos().size());
-//    }
+   @Test
+    public void test03AlObtenerUnaReunionSeTraenSoloSusTemas(){
+       ReunionTo reunion = new ReunionTo();
+       TemaTo temaDeLaReunion = new TemaTo();
+      TemaTo temaDeOtraReunion = new TemaTo();
+
+       reunion = reunionService.save(reunion);
+
+       temaDeLaReunion.setIdDeReunion(reunion.getId());
+
+       reunion.setTemasPropuestos(Arrays.asList(temaDeLaReunion));
+
+       reunion = reunionService.save(reunion);
+
+       ReunionTo reunionPersistida = reunionService.get(reunion.getId());
+
+        Assert.assertEquals(1, reunionPersistida.getTemasPropuestos().size());
+    }
 
     private void startApplication(){
         application = TestApplication.create(TestConfig.create());
