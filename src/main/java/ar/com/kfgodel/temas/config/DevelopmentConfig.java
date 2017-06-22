@@ -71,6 +71,7 @@ public class DevelopmentConfig implements TemasConfiguration {
   private Long usuarioDeMentira() {
     List<UserTo> listOfUserTo= getUsers();
     return listOfUserTo.get(0).getId();
+
   }
 
   private List<UserTo> getUsers() {

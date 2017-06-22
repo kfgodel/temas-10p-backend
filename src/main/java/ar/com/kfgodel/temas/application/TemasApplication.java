@@ -38,8 +38,8 @@ import java.util.function.Function;
 public class TemasApplication implements Application {
   public static Logger LOG = LoggerFactory.getLogger(TemasApplication.class);
 
-  private TemasConfiguration config;
-  private DependencyInjector injector;
+  protected TemasConfiguration config;
+  protected DependencyInjector injector;
 
   @Override
   public WebServer getWebServerModule() {
@@ -103,19 +103,19 @@ public class TemasApplication implements Application {
     InicializadorDeDatos.create(this).inicializar();
   }
 
-  private TypeTransformer createTransformer() {
+  protected TypeTransformer createTransformer() {
     TransformerConfigurationByConvention configuration = TransformerConfigurationByConvention.create(this.getInjector());
     return B2BTransformer.create(configuration);
   }
 
-  private void registerCleanupHook() {
+  protected void registerCleanupHook() {
     Runtime.getRuntime().addShutdownHook(new Thread(() -> {
       LOG.info("Cleaning-up before shutdown");
       this.stop();
     }, "cleanup-thread"));
   }
 
-  private HibernateOrm createPersistenceLayer() {
+  protected HibernateOrm createPersistenceLayer() {
     DbCoordinates dbCoordinates = config.getDatabaseCoordinates();
     HibernateOrm hibernateOrm = HibernateFacade.createWithConventionsFor(dbCoordinates);
     return hibernateOrm;
