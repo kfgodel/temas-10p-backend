@@ -1,4 +1,4 @@
-package Persistance;
+package Persistence;
 
 import ar.com.kfgodel.orm.api.HibernateOrm;
 import ar.com.kfgodel.temas.application.Application;
@@ -33,8 +33,6 @@ public class TestApplication extends TemasApplication{
         this.injector.bindTo(Application.class, this);
 
         this.injector.bindTo(HibernateOrm.class, createPersistenceLayer());
-        // Web server depends on hibernate, so it needs to be created after hibernate
-//        this.injector.bindTo(WebServer.class, createWebServer());
         this.injector.bindTo(TypeTransformer.class, createTransformer());
 
         registerCleanupHook();

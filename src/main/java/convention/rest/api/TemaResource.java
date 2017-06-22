@@ -30,6 +30,7 @@ public class TemaResource {
   private static final Type LISTA_DE_TEMAS_TO = new ReferenceOf<List<TemaTo>>() {
   }.getReferencedType();
 
+  // Esto no debería funcionar, así que no se debe estar usando en ningún lado
   @GET
   public List<ReunionTo> getAll() {
     return createOperation()
