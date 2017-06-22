@@ -1,6 +1,7 @@
 package convention.rest.api;
 
 import ar.com.kfgodel.temas.application.Application;
+import ar.com.kfgodel.webbyconvention.api.auth.WebCredential;
 
 import javax.inject.Inject;
 import javax.ws.rs.Path;
@@ -34,6 +35,8 @@ public class ApiV1Root {
   @Path("/users")
   public UserResource users() {
     if (users == null) {
+
+
       users = application.getInjector().createInjected(UserResource.class);
     }
     return users;

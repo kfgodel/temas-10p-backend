@@ -100,4 +100,18 @@ public class TemaDeReunion extends PersistableSupport {
   public int getCantidadDeVotos() {
     return getInteresados().size();
   }
+  public TemaDeReunion copy(){
+    TemaDeReunion copia=new TemaDeReunion();copia.setPersistenceVersion(this.getPersistenceVersion());
+    copia.setMomentoDeUltimaModificacion(this.getMomentoDeUltimaModificacion());
+    copia.setPersistenceVersion(this.getPersistenceVersion());
+    copia.setMomentoDeCreacion(this.getMomentoDeCreacion());
+    copia.setId(this.getId());
+    copia.setTitulo(this.getTitulo());
+    copia.setDescripcion(this.getDescripcion());
+    copia.setReunion(this.getReunion());
+    copia.setPrioridad(this.getPrioridad());
+    copia.setAutor(this.getAutor());
+    copia.setInteresados(this.getInteresados());
+    return copia;
+  }
 }

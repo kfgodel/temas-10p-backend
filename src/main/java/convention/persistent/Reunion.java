@@ -78,4 +78,16 @@ public class Reunion extends PersistableSupport {
   public void reabrirVotacion() {
     this.status = StatusDeReunion.PENDIENTE;
   }
+  public Reunion copy(){
+    Reunion copia=new Reunion();
+    copia.setPersistenceVersion(this.getPersistenceVersion());
+    copia.setMomentoDeUltimaModificacion(this.getMomentoDeUltimaModificacion());
+    copia.setPersistenceVersion(this.getPersistenceVersion());
+    copia.setMomentoDeCreacion(this.getMomentoDeCreacion());
+    copia.setId(this.getId());
+    copia.setStatus(this.getStatus());
+    copia.setFecha(this.getFecha());
+    copia.setTemasPropuestos(this.getTemasPropuestos());
+    return copia;
+  }
 }
