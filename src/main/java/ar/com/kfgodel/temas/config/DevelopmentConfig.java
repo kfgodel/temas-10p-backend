@@ -68,12 +68,13 @@ public class DevelopmentConfig implements TemasConfiguration {
     }
     return null;
   }
-  private Long usuarioDeMentira() {
+  protected Long usuarioDeMentira() {
     List<UserTo> listOfUserTo= getUsers();
-    return listOfUserTo.stream().filter(user -> user.getId() == 1).findFirst().get().getId();
+    return listOfUserTo.get(0).getId();
+
   }
 
-  private List<UserTo> getUsers() {
+  protected List<UserTo> getUsers() {
     return ApplicationOperation.createFor(getInjector()).
             insideASession().
             applying(FindAllUsersOrderedByName.create())

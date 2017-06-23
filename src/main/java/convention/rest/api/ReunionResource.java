@@ -10,13 +10,19 @@ import ar.com.kfgodel.temas.acciones.CrearProximaReunion;
 import ar.com.kfgodel.temas.acciones.UsarExistente;
 import ar.com.kfgodel.temas.filters.reuniones.AllReunionesUltimaPrimero;
 import ar.com.kfgodel.temas.filters.reuniones.ProximaReunion;
+import ar.com.kfgodel.webbyconvention.impl.auth.adapters.JettyIdentityAdapter;
 import convention.persistent.Reunion;
+import convention.persistent.StatusDeReunion;
+import convention.persistent.TemaDeReunion;
 import convention.rest.api.tos.ReunionTo;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.SecurityContext;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * This type is the resource API for users
@@ -32,6 +38,21 @@ public class ReunionResource {
   private static final Type LISTA_DE_REUNIONES_TO = new ReferenceOf<List<ReunionTo>>() {
   }.getReferencedType();
 
+    private Reunion filtrarVotosDeReunionPendiente(Reunion reunion, Long userId){
+        if(reunion.getStatus()== StatusDeReunion.PENDIENTE) {
+            Reunion nuevaReunion = reunion.copy();
+            List<TemaDeReunion> listaDeTemasNuevos = reunion.getTemasPropuestos().stream().
+                    map(temaDeReunion -> temaDeReunion.copy()).collect(Collectors.toList());
+            listaDeTemasNuevos.forEach(temaDeReunion ->
+                    temaDeReunion.setInteresados(temaDeReunion.getInteresados().stream().
+                            filter(usuario -> usuario.getId().equals(userId)).collect(Collectors.toList())));
+            nuevaReunion.setTemasPropuestos(listaDeTemasNuevos);
+            return nuevaReunion;
+        }
+        else{
+            return reunion;
+        }
+    }
   @GET
   @Path("proxima")
   public ReunionTo getProxima() {
@@ -74,10 +95,14 @@ public class ReunionResource {
   }
 
   @GET
-  public List<ReunionTo> getAll() {
-    return createOperation()
+  public List<ReunionTo> getAll(@Context SecurityContext securityContext) {
+      Long userId = ((JettyIdentityAdapter) securityContext.getUserPrincipal()).getApplicationIdentification();
+      return createOperation()
       .insideASession()
       .applying(AllReunionesUltimaPrimero.create())
+       .mapping(reuniones ->
+        reuniones.map(reunion -> filtrarVotosDeReunionPendiente(reunion,userId)).collect(Collectors.toList())
+       )
       .convertTo(LISTA_DE_REUNIONES_TO);
   }
 
@@ -93,14 +118,17 @@ public class ReunionResource {
 
   @GET
   @Path("/{resourceId}")
-  public ReunionTo getSingle(@PathParam("resourceId") Long id) {
+  public ReunionTo getSingle(@PathParam("resourceId") Long id, @Context SecurityContext securityContext) {
+
+      Long userId = ((JettyIdentityAdapter) securityContext.getUserPrincipal()).getApplicationIdentification();
     return createOperation()
       .insideASession()
       .applying(FindById.create(Reunion.class, id))
       .mapping((encontrado) -> {
         // Answer 404 if missing
-        return encontrado.orElseThrowRuntime(() -> new WebApplicationException("reunion not found", 404));
-      })
+        Reunion reunion= encontrado.orElseThrowRuntime(() -> new WebApplicationException("reunion not found", 404));
+        return filtrarVotosDeReunionPendiente(reunion,userId);
+    })
       .convertTo(ReunionTo.class);
   }
 
