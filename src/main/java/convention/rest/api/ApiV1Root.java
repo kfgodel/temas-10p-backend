@@ -23,7 +23,7 @@ public class ApiV1Root {
   private SessionResource session;
   private ReunionResource reuniones;
   private TemaResource temas;
-
+  private DuracionesResource duraciones;
   @Path("/session")
   public SessionResource session() {
     if (session == null) {
@@ -31,7 +31,13 @@ public class ApiV1Root {
     }
     return session;
   }
-
+  @Path("/duraciones")
+  public DuracionesResource duraciones() {
+    if (duraciones == null) {
+      duraciones = DuracionesResource.create();
+    }
+    return duraciones;
+  }
   @Path("/users")
   public UserResource users() {
     if (users == null) {

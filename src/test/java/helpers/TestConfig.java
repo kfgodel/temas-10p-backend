@@ -5,6 +5,7 @@ import ar.com.kfgodel.orm.api.config.DbCoordinates;
 import ar.com.kfgodel.orm.api.operations.basic.Save;
 import ar.com.kfgodel.orm.impl.config.ImmutableDbCoordinates;
 import ar.com.kfgodel.temas.config.DevelopmentConfig;
+import convention.persistent.DuracionDeTema;
 import convention.persistent.Usuario;
 import convention.rest.api.tos.UserTo;
 

@@ -7,6 +7,7 @@ import ar.com.kfgodel.orm.api.operations.basic.DeleteById;
 import ar.com.kfgodel.orm.api.operations.basic.FindAll;
 import ar.com.kfgodel.orm.api.operations.basic.FindById;
 import ar.com.kfgodel.orm.api.operations.basic.Save;
+import convention.persistent.DuracionDeTema;
 import convention.persistent.TemaDeReunion;
 import convention.rest.api.tos.ReunionTo;
 import convention.rest.api.tos.TemaTo;
@@ -14,6 +15,7 @@ import convention.rest.api.tos.TemaTo;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.List;
 
 /**

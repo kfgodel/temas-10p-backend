@@ -34,7 +34,17 @@ public class TemaDeReunion extends PersistableSupport {
   private List<Usuario> interesados;
   public static final String interesados_FIELD = "interesados";
 
+  @Enumerated(EnumType.STRING)
+  private DuracionDeTema duracion;
+  public static final String duracion_FIELD = "duracion";
 
+
+  public DuracionDeTema getDuracion(){
+    return duracion;
+  }
+  public void setDuracion(DuracionDeTema duracion) {
+    this.duracion=duracion;
+  }
   public Usuario getAutor() {
     return autor;
   }

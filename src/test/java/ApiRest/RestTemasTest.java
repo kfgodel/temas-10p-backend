@@ -1,6 +1,9 @@
 package ApiRest;
 
 import Persistence.TestApplication;
+import ar.com.kfgodel.appbyconvention.operation.api.ApplicationOperation;
+import convention.persistent.DuracionDeTema;
+import convention.persistent.TemaDeReunion;
 import helpers.TestConfig;
 import ar.com.kfgodel.temas.application.Application;
 import convention.rest.api.ReunionResource;
@@ -47,11 +50,10 @@ public class RestTemasTest {
         TemaTo temaDeLaReunion = new TemaTo();
 
         reunion = reunionResource.create(reunion);
-
+        temaDeLaReunion.setDuracion(DuracionDeTema.LARGO);
         temaDeLaReunion.setIdDeReunion(reunion.getId());
         temaDeLaReunion.setIdDeAutor(userId);
         temaDeLaReunion.setIdsDeInteresados(Arrays.asList(userId,otherUserId,otherUserId));
-
         reunion.setTemasPropuestos(Arrays.asList(temaDeLaReunion));
 
         reunion= reunionResource.update(reunion,reunion.getId());
@@ -60,4 +62,11 @@ public class RestTemasTest {
 
         Assert.assertEquals(reunionSolicitada.getTemasPropuestos().get(0).getIdsDeInteresados().size(),1);
     }
+    @Test
+    public void test001(){
+        TemaDeReunion temaDeLaReunion = new TemaDeReunion();
+        temaDeLaReunion.setDuracion(DuracionDeTema.CORTO);
+        TemaDeReunion tema=ApplicationOperation.createFor(app.getInjector()).insideATransaction().taking(temaDeLaReunion).convertTo(TemaDeReunion.class);
+
+  }
 }

@@ -2,6 +2,8 @@ package convention.rest.api.tos;
 
 import ar.com.kfgodel.appbyconvention.tos.PersistableToSupport;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import convention.persistent.DuracionDeTema;
+import convention.persistent.Reunion;
 import convention.persistent.TemaDeReunion;
 import convention.persistent.Usuario;
 import net.sf.kfgodel.bean2bean.annotations.CopyFrom;
@@ -16,12 +18,15 @@ import java.util.List;
  */
 @JsonIgnoreProperties("usuarioActual")
 public class TemaTo extends PersistableToSupport {
+  @CopyFromAndTo(TemaDeReunion.duracion_FIELD)
+  private DuracionDeTema duracion;
+
+  @CopyFromAndTo(TemaDeReunion.autor_FIELD)
+  private Long idDeAutor;
 
   @CopyFromAndTo(TemaDeReunion.reunion_FIELD)
   private Long idDeReunion;
 
-  @CopyFromAndTo(TemaDeReunion.autor_FIELD)
-  private Long idDeAutor;
 
   @CopyFrom(value = TemaDeReunion.autor_FIELD + "." + Usuario.name_FIELD, whenMissing = MissingPropertyAction.TREAT_AS_NULL)
   private String autor;
@@ -62,13 +67,6 @@ public class TemaTo extends PersistableToSupport {
     this.descripcion = descripcion;
   }
 
-  public Long getIdDeReunion() {
-    return idDeReunion;
-  }
-
-  public void setIdDeReunion(Long idDeReunion) {
-    this.idDeReunion = idDeReunion;
-  }
 
   public Long getIdDeAutor() {
     return idDeAutor;
@@ -92,5 +90,22 @@ public class TemaTo extends PersistableToSupport {
 
   public void setPrioridad(Integer prioridad) {
     this.prioridad = prioridad;
+  }
+
+
+  public DuracionDeTema getDuracion() {
+    return duracion;
+  }
+
+  public void setDuracion(DuracionDeTema duracion) {
+    this.duracion = duracion;
+  }
+
+  public Long getIdDeReunion() {
+    return idDeReunion;
+  }
+
+  public void setIdDeReunion(Long idDeReunion) {
+    this.idDeReunion = idDeReunion;
   }
 }

@@ -119,7 +119,7 @@ public class ReunionResource {
   @GET
   @Path("/{resourceId}")
   public ReunionTo getSingle(@PathParam("resourceId") Long id, @Context SecurityContext securityContext) {
-
+            //esta identificacion podria caer en el userResource
       Long userId = ((JettyIdentityAdapter) securityContext.getUserPrincipal()).getApplicationIdentification();
     return createOperation()
       .insideASession()
