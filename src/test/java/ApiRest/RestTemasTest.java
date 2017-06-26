@@ -62,7 +62,7 @@ public class RestTemasTest {
         Assert.assertEquals(reunionSolicitada.getTemasPropuestos().get(0).getIdsDeInteresados().size(),1);
     }
     @Test
-    public void test001(){
+    public void sePersistenCorrectamenteLasDuracionesDeLosTemas(){
         TemaDeReunion temaDeLaReunion = new TemaDeReunion();
         temaDeLaReunion.setDuracion(DuracionDeTema.CORTO);
         TemaTo tema=ApplicationOperation.createFor(app.getInjector())
