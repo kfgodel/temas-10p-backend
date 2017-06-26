@@ -122,6 +122,7 @@ public class TemaDeReunion extends PersistableSupport {
     copia.setPrioridad(this.getPrioridad());
     copia.setAutor(this.getAutor());
     copia.setInteresados(this.getInteresados());
+    copia.setDuracion(this.getDuracion());
     return copia;
   }
 }

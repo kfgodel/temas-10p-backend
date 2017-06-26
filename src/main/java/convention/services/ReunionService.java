@@ -32,6 +32,7 @@ public class ReunionService {
     }
 
     public ReunionTo save(ReunionTo nuevaReunion){
+
         return ApplicationOperation.createFor(appInjector)
                 .insideATransaction()
                 .taking(nuevaReunion)

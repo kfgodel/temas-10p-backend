@@ -48,7 +48,6 @@ public class RestTemasTest {
     public void alTraerUnaReunionConLaSeccionDeUnUsuarioNoTraeLosVotosDeOtros(){
         ReunionTo reunion = new ReunionTo();
         TemaTo temaDeLaReunion = new TemaTo();
-
         reunion = reunionResource.create(reunion);
         temaDeLaReunion.setDuracion(DuracionDeTema.LARGO);
         temaDeLaReunion.setIdDeReunion(reunion.getId());
@@ -66,7 +65,12 @@ public class RestTemasTest {
     public void test001(){
         TemaDeReunion temaDeLaReunion = new TemaDeReunion();
         temaDeLaReunion.setDuracion(DuracionDeTema.CORTO);
-        TemaDeReunion tema=ApplicationOperation.createFor(app.getInjector()).insideATransaction().taking(temaDeLaReunion).convertTo(TemaDeReunion.class);
-
+        TemaTo tema=ApplicationOperation.createFor(app.getInjector())
+                .insideATransaction()
+                .taking(temaDeLaReunion)
+                .convertTo(TemaTo.class);
+        tema=temaResource.create(tema);
+         tema=temaResource.getSingle(tema.getId());
+        Assert.assertEquals(tema.getDuracion(),DuracionDeTema.CORTO);
   }
 }

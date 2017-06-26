@@ -34,7 +34,7 @@ public class ApiV1Root {
   @Path("/duraciones")
   public DuracionesResource duraciones() {
     if (duraciones == null) {
-      duraciones = DuracionesResource.create();
+      duraciones = application.getInjector().createInjected(DuracionesResource.class);;
     }
     return duraciones;
   }
