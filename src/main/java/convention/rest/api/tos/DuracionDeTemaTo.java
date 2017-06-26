@@ -1,12 +1,8 @@
 package convention.rest.api.tos;
 
-import ar.com.kfgodel.appbyconvention.tos.PersistableToSupport;
 import convention.persistent.DuracionDeTema;
-import convention.persistent.Reunion;
 import net.sf.kfgodel.bean2bean.annotations.CopyFrom;
 import net.sf.kfgodel.bean2bean.annotations.CopyFromAndTo;
-
-import java.util.List;
 
 /**
  * Created by fede on 23/06/17.
@@ -19,7 +15,8 @@ public class DuracionDeTemaTo {
     @CopyFrom(DuracionDeTema.cantidadDeMinutos_FIELD)
     private int cantidadDeMinutos;
 
-    private DuracionDeTema duracion;
+    @CopyFromAndTo(DuracionDeTema.nombre_GETTER)
+    private String nombre;
 
     public int getCantidadDeMinutos() {
         return cantidadDeMinutos;
@@ -37,19 +34,12 @@ public class DuracionDeTemaTo {
         this.descripcion = descripcion;
     }
 
-    public static DuracionDeTemaTo create(DuracionDeTema duracionDeTema){
-        DuracionDeTemaTo nuevoTo=new DuracionDeTemaTo();
-        nuevoTo.setDescripcion(duracionDeTema.getDescripcion());
-        nuevoTo.setCantidadDeMinutos(duracionDeTema.getCantidadDeMinutos());
-        nuevoTo.setDuracion(duracionDeTema);
-        return nuevoTo;
+
+    public String getNombre() {
+        return nombre;
     }
 
-    public DuracionDeTema getDuracion() {
-        return duracion;
-    }
-
-    public void setDuracion(DuracionDeTema duracion) {
-        this.duracion = duracion;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 }

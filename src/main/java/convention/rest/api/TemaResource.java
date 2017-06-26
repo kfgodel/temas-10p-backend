@@ -7,15 +7,14 @@ import ar.com.kfgodel.orm.api.operations.basic.DeleteById;
 import ar.com.kfgodel.orm.api.operations.basic.FindAll;
 import ar.com.kfgodel.orm.api.operations.basic.FindById;
 import ar.com.kfgodel.orm.api.operations.basic.Save;
-import convention.persistent.DuracionDeTema;
 import convention.persistent.TemaDeReunion;
 import convention.rest.api.tos.ReunionTo;
+import convention.rest.api.tos.TemaEnCreacionTo;
 import convention.rest.api.tos.TemaTo;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import java.lang.reflect.Type;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -42,7 +41,7 @@ public class TemaResource {
   }
 
   @POST
-  public TemaTo create(TemaTo newState) {
+  public TemaTo create(TemaEnCreacionTo newState) {
     return createOperation()
       .insideATransaction()
       .taking(newState)
@@ -67,9 +66,11 @@ public class TemaResource {
   @PUT
   @Path("/{resourceId}")
   public TemaTo update(TemaTo newState, @PathParam("resourceId") Long id) {
+    TemaTo temaAActualizar=getSingle(id);
+      temaAActualizar.agregarIdDeInteresado(newState.getIdsDeInteresados().get(0));
     return createOperation()
       .insideATransaction()
-      .taking(newState)
+      .taking(temaAActualizar)
       .convertingTo(TemaDeReunion.class)
       .mapping((encontrado) -> {
         // Answer 404 if missing

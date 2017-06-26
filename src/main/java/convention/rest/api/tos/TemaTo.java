@@ -16,17 +16,16 @@ import java.util.List;
  * Esta clase representa el TO de una tema para ser editado
  * Created by kfgodel on 08/10/16.
  */
-@JsonIgnoreProperties("usuarioActual")
+@JsonIgnoreProperties({"usuarioActual"})
 public class TemaTo extends PersistableToSupport {
-  @CopyFromAndTo(TemaDeReunion.duracion_FIELD)
-  private DuracionDeTema duracion;
+  @CopyFrom(TemaDeReunion.duracion_FIELD)
+  private String duracion;
 
   @CopyFromAndTo(TemaDeReunion.autor_FIELD)
   private Long idDeAutor;
 
   @CopyFromAndTo(TemaDeReunion.reunion_FIELD)
   private Long idDeReunion;
-
 
   @CopyFrom(value = TemaDeReunion.autor_FIELD + "." + Usuario.name_FIELD, whenMissing = MissingPropertyAction.TREAT_AS_NULL)
   private String autor;
@@ -42,6 +41,7 @@ public class TemaTo extends PersistableToSupport {
 
   @CopyFromAndTo(TemaDeReunion.interesados_FIELD)
   private List<Long> idsDeInteresados;
+
 
   public String getAutor() {
     return autor;
@@ -93,11 +93,11 @@ public class TemaTo extends PersistableToSupport {
   }
 
 
-  public DuracionDeTema getDuracion() {
+  public String getDuracion() {
     return duracion;
   }
 
-  public void setDuracion(DuracionDeTema duracion) {
+  public void String (String duracion) {
     this.duracion = duracion;
   }
 
@@ -107,5 +107,9 @@ public class TemaTo extends PersistableToSupport {
 
   public void setIdDeReunion(Long idDeReunion) {
     this.idDeReunion = idDeReunion;
+  }
+
+  public void agregarIdDeInteresado(Long id){
+    this.getIdsDeInteresados().add(id);
   }
 }

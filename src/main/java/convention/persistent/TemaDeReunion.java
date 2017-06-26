@@ -39,6 +39,7 @@ public class TemaDeReunion extends PersistableSupport {
   public static final String duracion_FIELD = "duracion";
 
 
+
   public DuracionDeTema getDuracion(){
     return duracion;
   }

@@ -4,10 +4,18 @@ import ar.com.kfgodel.appbyconvention.operation.api.ApplicationOperation;
 import ar.com.kfgodel.appbyconvention.tos.PersistableToSupport;
 import ar.com.kfgodel.dependencies.api.DependencyInjector;
 import ar.com.kfgodel.diamond.api.types.reference.ReferenceOf;
+import ar.com.kfgodel.nary.api.Nary;
+import ar.com.kfgodel.orm.api.operations.SessionOperation;
+import ar.com.kfgodel.orm.api.operations.basic.FindAll;
+import ar.com.kfgodel.orm.api.operations.basic.Save;
 import ar.com.kfgodel.temas.filters.reuniones.AllReunionesUltimaPrimero;
 import convention.persistent.DuracionDeTema;
+import convention.persistent.TemaDeReunion;
+import convention.persistent.Usuario;
 import convention.rest.api.tos.DuracionDeTemaTo;
 import convention.rest.api.tos.ReunionTo;
+import convention.rest.api.tos.TemaTo;
+import convention.rest.api.tos.UserTo;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -37,8 +45,14 @@ public class DuracionesResource {
 
     @GET
     public List<DuracionDeTemaTo> getAll() {
-       return Arrays.stream(DuracionDeTema.values())
-               .map(duracionDeTema -> DuracionDeTemaTo.create(duracionDeTema)).collect(Collectors.toList());
+       //Arrays.stream(DuracionDeTema.values())
+         //      .map(duracionDeTema -> DuracionDeTemaTo.create(duracionDeTema)).collect(Collectors.toList());
+
+        return   createOperation().
+                insideASession()
+                .taking(Arrays.asList(DuracionDeTema.values()))
+                .convertTo(new ReferenceOf<List<DuracionDeTemaTo>>() {
+                }.getReferencedType());
     }
 
     static  DuracionesResource create(DependencyInjector appInjector){

@@ -70,7 +70,7 @@ public class DevelopmentConfig implements TemasConfiguration {
   }
   protected Long usuarioDeMentira() {
     List<UserTo> listOfUserTo= getUsers();
-    return listOfUserTo.get(0).getId();
+    return listOfUserTo.get(1).getId();
 
   }
 

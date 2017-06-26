@@ -9,9 +9,15 @@ public enum DuracionDeTema {
     private int cantidadDeMinutos;
     public static final String cantidadDeMinutos_FIELD = "cantidadDeMinutos";
 
+    public static final String nombre_GETTER = "nombre";
+
+    public String getNombre(){
+        return this.name();
+    }
     DuracionDeTema(String descripcion, int cantidadDeMinutos) {
         this.descripcion = descripcion;
         this.cantidadDeMinutos = cantidadDeMinutos;
+
     }
 
     public int getCantidadDeMinutos() {
