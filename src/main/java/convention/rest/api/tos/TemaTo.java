@@ -112,4 +112,8 @@ public class TemaTo extends PersistableToSupport {
   public void agregarIdDeInteresado(Long id){
     this.getIdsDeInteresados().add(id);
   }
+
+  public void quitarIdDeInteresado(Long id){
+    this.getIdsDeInteresados().remove(id);
+  }
 }
