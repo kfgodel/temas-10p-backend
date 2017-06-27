@@ -99,8 +99,7 @@ public class TemaResource extends Resource {
             .taking(temaAActualizar)
             .convertingTo(TemaDeReunion.class)
             .mapping((encontrado) -> {
-              // Answer 404 if missing
-              if (encontrado == null) {
+             if (encontrado == null) {
                 throw new WebApplicationException("tema not found", 404);
               }
               long cantidadDeVotos=encontrado.getInteresados().stream()
