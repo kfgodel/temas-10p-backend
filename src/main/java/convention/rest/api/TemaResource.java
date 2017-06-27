@@ -7,14 +7,21 @@ import ar.com.kfgodel.orm.api.operations.basic.DeleteById;
 import ar.com.kfgodel.orm.api.operations.basic.FindAll;
 import ar.com.kfgodel.orm.api.operations.basic.FindById;
 import ar.com.kfgodel.orm.api.operations.basic.Save;
+import ar.com.kfgodel.webbyconvention.impl.auth.adapters.JettyIdentityAdapter;
+import convention.persistent.Reunion;
 import convention.persistent.TemaDeReunion;
+import convention.persistent.Usuario;
 import convention.rest.api.tos.ReunionTo;
+import convention.rest.api.tos.TemaEnCreacionTo;
 import convention.rest.api.tos.TemaTo;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.SecurityContext;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.stream.Collector;
 
 /**
  * Esta clase representa el recurso rest para modificar temas
@@ -40,7 +47,7 @@ public class TemaResource {
   }
 
   @POST
-  public TemaTo create(TemaTo newState) {
+  public TemaTo create(TemaEnCreacionTo newState) {
     return createOperation()
       .insideATransaction()
       .taking(newState)
@@ -62,9 +69,11 @@ public class TemaResource {
       .convertTo(TemaTo.class);
   }
 
-  @PUT
+  //este put ya no se usa, queda reservado por si en algun futuro se quiere modificar un tema
+ /* @PUT
   @Path("/{resourceId}")
   public TemaTo update(TemaTo newState, @PathParam("resourceId") Long id) {
+
     return createOperation()
       .insideATransaction()
       .taking(newState)
@@ -77,8 +86,70 @@ public class TemaResource {
         return encontrado;
       }).applyingResultOf(Save::create)
       .convertTo(TemaTo.class);
-  }
+  }*/
+  @GET
+  @Path("votar/{resourceId}")
+  public TemaTo votar(@PathParam("resourceId") Long id, @Context SecurityContext securityContext) {
 
+    Long userId = ((JettyIdentityAdapter) securityContext.getUserPrincipal()).getApplicationIdentification();
+    TemaTo temaAActualizar=getSingle(id);
+    Usuario usuarioActual=createOperation()
+            .insideASession()
+            .applying(FindById.create(Usuario.class, userId))
+            .mapping((encontrado) -> encontrado.orElse(null)).get();
+
+    return createOperation()
+            .insideATransaction()
+            .taking(temaAActualizar)
+            .convertingTo(TemaDeReunion.class)
+            .mapping((encontrado) -> {
+              // Answer 404 if missing
+              if (encontrado == null) {
+                throw new WebApplicationException("tema not found", 404);
+              }
+              long cantidadDeVotos=encontrado.getInteresados().stream()
+                      .filter(usuario ->
+                              usuario.getId().equals(usuarioActual.getId())).count();
+              if (cantidadDeVotos>=3) {
+                throw new WebApplicationException("excede la cantidad de votos permitidos", 409);
+              }
+              encontrado.agregarInteresado(usuarioActual);
+              return encontrado;
+            }).applyingResultOf(Save::create)
+            .convertTo(TemaTo.class);
+  }
+  @GET
+  @Path("desvotar/{resourceId}")
+  public TemaTo desvotar(@PathParam("resourceId") Long id, @Context SecurityContext securityContext) {
+
+
+    Long userId = ((JettyIdentityAdapter) securityContext.getUserPrincipal()).getApplicationIdentification();
+    Usuario usuarioActual=createOperation()
+            .insideASession()
+            .applying(FindById.create(Usuario.class, userId))
+            .mapping((encontrado) -> encontrado.orElse(null)).get();
+    TemaTo temaAActualizar=getSingle(id);
+
+    return createOperation()
+            .insideATransaction()
+            .taking(temaAActualizar)
+            .convertingTo(TemaDeReunion.class)
+            .mapping((encontrado) -> {
+              // Answer 404 if missing
+              if (encontrado == null) {
+                throw new WebApplicationException("tema not found", 404);
+              }
+              long cantidadDeVotos=encontrado.getInteresados().stream()
+                      .filter(usuario ->
+                              usuario.getId().equals(usuarioActual.getId())).count();
+              if (cantidadDeVotos<=0) {
+                throw new WebApplicationException("el usuario no tiene votos en el tema", 409);
+              }
+              encontrado.quitarInteresado(usuarioActual);
+              return encontrado;
+            }).applyingResultOf(Save::create)
+            .convertTo(TemaTo.class);
+  }
   @DELETE
   @Path("/{resourceId}")
   public void delete(@PathParam("resourceId") Long id) {

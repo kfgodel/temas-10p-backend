@@ -1,8 +1,9 @@
 package Persistence;
 
 import ar.com.kfgodel.temas.application.Application;
-import convention.rest.api.tos.ReunionTo;
-import convention.rest.api.tos.TemaTo;
+import convention.persistent.Reunion;
+import convention.persistent.TemaDeReunion;
+
 import convention.services.ReunionService;
 import convention.services.TemaService;
 import helpers.TestConfig;
@@ -31,47 +32,51 @@ public class PersistenciaTest {
 
     @Test
     public void test01SePuedePersistirCorrectamenteUnaReunion(){
-        ReunionTo nuevaReunion = new ReunionTo();
+        Reunion nuevaReunion = new Reunion();
 
         int cantidadDeReunionesAnteriores = reunionService.getAll().size();
 
         reunionService.save(nuevaReunion);
 
-        List<ReunionTo> reunionesPersistidas = reunionService.getAll();
+        List<Reunion> reunionesPersistidas = reunionService.getAll();
 
         Assert.assertEquals(cantidadDeReunionesAnteriores + 1, reunionesPersistidas.size());
     }
 
     @Test
     public void test02SePuedePersistirCorrectamenteUnTema(){
-        TemaTo nuevoTema = new TemaTo();
+        TemaDeReunion nuevoTema = new TemaDeReunion();
 
         int cantidadDeTemasAnteriores = temaService.getAll().size();
 
         temaService.save(nuevoTema);
 
-        List<TemaTo> temasPersistidos = temaService.getAll();
+        List<TemaDeReunion> temasPersistidos = temaService.getAll();
 
         Assert.assertEquals(cantidadDeTemasAnteriores + 1, temasPersistidos.size());
     }
 
    @Test
     public void test03AlObtenerUnaReunionSeTraenSoloSusTemas(){
-       ReunionTo reunion = new ReunionTo();
-       TemaTo temaDeLaReunion = new TemaTo();
-      TemaTo temaDeOtraReunion = new TemaTo();
+
+       Reunion reunion = new Reunion();
+       TemaDeReunion temaDeLaReunion = new TemaDeReunion();
+       TemaDeReunion temaDeOtraReunion = new TemaDeReunion();
 
        reunion = reunionService.save(reunion);
 
-       temaDeLaReunion.setIdDeReunion(reunion.getId());
+       temaDeLaReunion.setReunion(reunion);
+
 
        reunion.setTemasPropuestos(Arrays.asList(temaDeLaReunion));
 
        reunion = reunionService.save(reunion);
 
-       ReunionTo reunionPersistida = reunionService.get(reunion.getId());
 
-        Assert.assertEquals(1, reunionPersistida.getTemasPropuestos().size());
+       Reunion reunionPersistida = reunionService.get(reunion.getId());
+
+       Assert.assertEquals(1, reunionPersistida.getTemasPropuestos().size());
+
     }
 
     private void startApplication(){

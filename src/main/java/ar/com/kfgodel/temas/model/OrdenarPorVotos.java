@@ -13,13 +13,11 @@ import java.util.Comparator;
 public class OrdenarPorVotos implements Comparator<TemaDeReunion> {
 
   @Override
-  public int compare(TemaDeReunion o1, TemaDeReunion o2) {
-    int diferenciaDeVotos = o2.getCantidadDeVotos() - o1.getCantidadDeVotos();
-    if (diferenciaDeVotos == 0) {
-      // Misma cantidad de votos, ordenamos por creacion
-      return o1.getMomentoDeCreacion().compareTo(o2.getMomentoDeCreacion());
-    }
-    return diferenciaDeVotos;
+  public int compare(TemaDeReunion tema1, TemaDeReunion tema2) {
+    if(tema1.tieneMayorPrioridadQue(tema2))
+      return -1;
+    else
+      return 1;
   }
 
   public static OrdenarPorVotos create() {

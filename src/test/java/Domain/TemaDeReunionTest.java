@@ -27,4 +27,10 @@ public class TemaDeReunionTest {
         Assert.assertEquals(0, unTema.getCantidadDeVotos());
     }
 
+//    @Test
+//    public void test03NoSePuedeAgregarUnInteresadoAUnTemaObligatorio(){
+//        TemaDeReunion unTemaObligatorio = new TemaDeReunionObligatorio();
+//        Assert.assertFalse(unTemaObligatorio.puedeSerVotado());
+//    }
+
 }

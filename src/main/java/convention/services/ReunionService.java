@@ -7,7 +7,6 @@ import ar.com.kfgodel.orm.api.operations.basic.FindById;
 import ar.com.kfgodel.orm.api.operations.basic.Save;
 import ar.com.kfgodel.temas.filters.reuniones.AllReunionesUltimaPrimero;
 import convention.persistent.Reunion;
-import convention.rest.api.tos.ReunionTo;
 
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
@@ -22,25 +21,26 @@ public class ReunionService {
     @Inject
     private DependencyInjector appInjector;
 
-    private static final Type LISTA_DE_REUNIONES_TO = new ReferenceOf<List<ReunionTo>>() {}.getReferencedType();
+    private static final Type LISTA_DE_REUNIONES = new ReferenceOf<List<Reunion>>() {}.getReferencedType();
 
-    public List<ReunionTo> getAll(){
+    public List<Reunion> getAll(){
         return ApplicationOperation.createFor(appInjector)
                 .insideASession()
                 .applying(AllReunionesUltimaPrimero.create())
-                .convertTo(LISTA_DE_REUNIONES_TO);
+                .convertTo(LISTA_DE_REUNIONES);
     }
 
-    public ReunionTo save(ReunionTo nuevaReunion){
+
+    public Reunion save(Reunion nuevaReunion){
         return ApplicationOperation.createFor(appInjector)
                 .insideATransaction()
                 .taking(nuevaReunion)
-                .convertingTo(Reunion.class)
+//                .convertingTo(Reunion.class)
                 .applyingResultOf(Save::create)
-                .convertTo(ReunionTo.class);
+                .convertTo(Reunion.class);
     }
 
-    public ReunionTo get(Long id) {
+    public Reunion get(Long id) {
         return ApplicationOperation.createFor(appInjector)
                 .insideASession()
                 .applying(FindById.create(Reunion.class, id))
@@ -48,6 +48,21 @@ public class ReunionService {
                     // Answer 404 if missing
                     return encontrado.orElseThrowRuntime(() -> new WebApplicationException("reunion not found", 404));
                 })
-                .convertTo(ReunionTo.class);
+                .convertTo(Reunion.class);
+    }
+
+    public Reunion update(Reunion reunion){ //, Long id) {
+        return ApplicationOperation.createFor(appInjector)
+                .insideATransaction()
+                .taking(reunion)
+                .convertingTo(Reunion.class)
+                .mapping((encontrado) -> {
+                    // Answer 404 if missing
+                    if (encontrado == null) {
+                        throw new WebApplicationException("reunion not found", 404);
+                    }
+                    return encontrado;
+                }).applyingResultOf(Save::create)
+                .convertTo(Reunion.class);
     }
 }
