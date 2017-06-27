@@ -31,10 +31,8 @@ import java.util.stream.Collectors;
  */
 @Produces("application/json")
 @Consumes("application/json")
-public class ReunionResource {
+public class ReunionResource extends Resource {
 
-  @Inject
-  private DependencyInjector appInjector;
   @Inject
   private ReunionService reunionService;
 
@@ -98,7 +96,7 @@ public class ReunionResource {
 
   @GET
   public List<ReunionTo> getAll(@Context SecurityContext securityContext) {
-      Long userId = ((JettyIdentityAdapter) securityContext.getUserPrincipal()).getApplicationIdentification();
+      Long userId = idDeUsuarioActual(securityContext);
       return createOperation()
       .insideASession()
       .applying(AllReunionesUltimaPrimero.create())
@@ -183,8 +181,5 @@ public class ReunionResource {
     return resource;
   }
 
-  private ApplicationOperation createOperation() {
-    return ApplicationOperation.createFor(appInjector);
-  }
 
 }
