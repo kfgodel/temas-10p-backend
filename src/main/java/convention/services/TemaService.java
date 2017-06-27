@@ -4,10 +4,13 @@ import ar.com.kfgodel.appbyconvention.operation.api.ApplicationOperation;
 import ar.com.kfgodel.dependencies.api.DependencyInjector;
 import ar.com.kfgodel.diamond.api.types.reference.ReferenceOf;
 import ar.com.kfgodel.orm.api.operations.basic.FindAll;
+import ar.com.kfgodel.orm.api.operations.basic.FindById;
 import ar.com.kfgodel.orm.api.operations.basic.Save;
 import convention.persistent.TemaDeReunion;
+import convention.rest.api.tos.TemaTo;
 
 import javax.inject.Inject;
+import javax.ws.rs.WebApplicationException;
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -35,5 +38,16 @@ public class TemaService {
                 .convertingTo(TemaDeReunion.class)
                 .applyingResultOf(Save::create)
                 .convertTo(TemaDeReunion.class);
+    }
+
+    public TemaDeReunion getSingle(Long id){
+        return ApplicationOperation.createFor(appInjector)
+            .insideASession()
+            .applying(FindById.create(TemaDeReunion.class, id))
+            .mapping((encontrado) -> {
+                // Answer 404 if missing
+                return encontrado.orElseThrowRuntime(() -> new WebApplicationException("tema not found", 404));
+            })
+            .convertTo(TemaDeReunion.class);
     }
 }

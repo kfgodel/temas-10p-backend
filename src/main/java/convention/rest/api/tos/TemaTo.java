@@ -42,6 +42,8 @@ public class TemaTo extends PersistableToSupport {
   @CopyFromAndTo(TemaDeReunion.interesados_FIELD)
   private List<Long> idsDeInteresados;
 
+  @CopyFromAndTo(TemaDeReunion.obligatoriedad_FIELD)
+  private String obligatoriedad;
 
   public String getAutor() {
     return autor;

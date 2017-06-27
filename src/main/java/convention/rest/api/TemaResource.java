@@ -113,8 +113,12 @@ public class TemaResource {
               if (cantidadDeVotos>=3) {
                 throw new WebApplicationException("excede la cantidad de votos permitidos", 409);
               }
-              encontrado.agregarInteresado(usuarioActual);
-              return encontrado;
+                try {
+                    encontrado.agregarInteresado(usuarioActual);
+                } catch (Exception exception) {
+                    throw new WebApplicationException(TemaDeReunion.mensajeDeErrorAlAgregarInteresado(), 409);
+                }
+                return encontrado;
             }).applyingResultOf(Save::create)
             .convertTo(TemaTo.class);
   }

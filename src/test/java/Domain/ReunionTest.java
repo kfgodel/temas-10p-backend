@@ -33,7 +33,7 @@ public class ReunionTest {
     }
 
     @Test
-    public void test04AlCerrarUnaReunionLosTemasPropuestosSeOrdenanPorCantidadDeVotos(){
+    public void test04AlCerrarUnaReunionLosTemasPropuestosSeOrdenanPorCantidadDeVotos() throws Exception {
         Reunion unaReunion = Reunion.create(LocalDate.of(2017, 06, 16));
         Usuario unUsuario = new Usuario();
         TemaDeReunion tema1 = new TemaDeReunion();

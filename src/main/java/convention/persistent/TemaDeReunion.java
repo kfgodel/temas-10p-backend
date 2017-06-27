@@ -39,6 +39,17 @@ public class TemaDeReunion extends PersistableSupport {
   private DuracionDeTema duracion;
   public static final String duracion_FIELD = "duracion";
 
+  @Enumerated(EnumType.STRING)
+  private ObligatoriedadDeReunion obligatoriedad;
+  public static final String obligatoriedad_FIELD = "obligatoriedad";
+
+  public ObligatoriedadDeReunion getObligatoriedad(){
+    return obligatoriedad;
+  }
+
+  public void setObligatoriedad(ObligatoriedadDeReunion unaObligatoriedad){
+    this.obligatoriedad = unaObligatoriedad;
+  }
 
   public DuracionDeTema getDuracion(){
     return duracion;
@@ -101,8 +112,15 @@ public class TemaDeReunion extends PersistableSupport {
     }
   }
 
-  public void agregarInteresado(Usuario votante) {
-    this.getInteresados().add(votante);
+  public void agregarInteresado(Usuario votante) throws Exception {
+    if(obligatoriedad != ObligatoriedadDeReunion.OBLIGATORIO)
+      this.getInteresados().add(votante);
+    else
+      throw new Exception(mensajeDeErrorAlAgregarInteresado());
+  }
+
+  public static String mensajeDeErrorAlAgregarInteresado() {
+    return "No se puede agregar un interesado a un tema obligatorio";
   }
 
   public void quitarInteresado(Usuario votante) {
@@ -150,5 +168,9 @@ public class TemaDeReunion extends PersistableSupport {
               .stream()
               .filter(usuario -> usuario.getId().equals(userId))
               .collect(Collectors.toList()));
+  }
+
+  public boolean puedeSerVotado() {
+    return obligatoriedad.permiteRecibirVotos();
   }
 }
