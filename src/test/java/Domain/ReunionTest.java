@@ -1,9 +1,6 @@
 package Domain;
 
-import convention.persistent.Reunion;
-import convention.persistent.StatusDeReunion;
-import convention.persistent.TemaDeReunion;
-import convention.persistent.Usuario;
+import convention.persistent.*;
 import org.junit.Assert;
 import org.junit.Test;
 

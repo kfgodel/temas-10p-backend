@@ -24,7 +24,7 @@ public class Reunion extends PersistableSupport {
   public static final String status_FIELD = "status";
 
 
-  @OneToMany(cascade = CascadeType.ALL, mappedBy = TemaDeReunion.reunion_FIELD)
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = TemaDeReunion.reunion_FIELD)
   @OrderBy(TemaDeReunion.prioridad_FIELD)
   private List<TemaDeReunion> temasPropuestos;
   public static final String temasPropuestos_FIELD = "temasPropuestos";

@@ -3,6 +3,7 @@ package convention.persistent;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Esta clase representa uno de los temas a tratar en un reunion de roots
@@ -39,13 +40,13 @@ public class TemaDeReunion extends PersistableSupport {
   public static final String duracion_FIELD = "duracion";
 
 
-
   public DuracionDeTema getDuracion(){
     return duracion;
   }
   public void setDuracion(DuracionDeTema duracion) {
     this.duracion=duracion;
   }
+
   public Usuario getAutor() {
     return autor;
   }
@@ -111,10 +112,13 @@ public class TemaDeReunion extends PersistableSupport {
   public int getCantidadDeVotos() {
     return getInteresados().size();
   }
+
+
   public TemaDeReunion copy(){
-    TemaDeReunion copia=new TemaDeReunion();copia.setPersistenceVersion(this.getPersistenceVersion());
-    copia.setMomentoDeUltimaModificacion(this.getMomentoDeUltimaModificacion());
+    TemaDeReunion copia = new TemaDeReunion();
+    copia.setInteresados(this.getInteresados());
     copia.setPersistenceVersion(this.getPersistenceVersion());
+    copia.setMomentoDeUltimaModificacion(this.getMomentoDeUltimaModificacion());
     copia.setMomentoDeCreacion(this.getMomentoDeCreacion());
     copia.setId(this.getId());
     copia.setTitulo(this.getTitulo());
@@ -122,8 +126,29 @@ public class TemaDeReunion extends PersistableSupport {
     copia.setReunion(this.getReunion());
     copia.setPrioridad(this.getPrioridad());
     copia.setAutor(this.getAutor());
-    copia.setInteresados(this.getInteresados());
     copia.setDuracion(this.getDuracion());
     return copia;
+  }
+
+
+    public boolean tieneMayorPrioridadQue(TemaDeReunion otroTema) {
+      int cantidadDeVotos = this.getCantidadDeVotos();
+      int otraCantidadDeVotos = otroTema.getCantidadDeVotos();
+
+      if(cantidadDeVotos == otraCantidadDeVotos)
+          return otroTema.seCreoDespuesDe(this);
+
+      return cantidadDeVotos > otraCantidadDeVotos;
+    }
+
+  protected boolean seCreoDespuesDe(TemaDeReunion otroTema) {
+      return this.getMomentoDeCreacion().isAfter(otroTema.getMomentoDeCreacion());
+  }
+
+  public void ocultarVotosPara(Long userId) {
+      this.setInteresados(this.getInteresados()
+              .stream()
+              .filter(usuario -> usuario.getId().equals(userId))
+              .collect(Collectors.toList()));
   }
 }

@@ -15,6 +15,7 @@ import convention.persistent.Reunion;
 import convention.persistent.StatusDeReunion;
 import convention.persistent.TemaDeReunion;
 import convention.rest.api.tos.ReunionTo;
+import convention.services.ReunionService;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -34,18 +35,19 @@ public class ReunionResource {
 
   @Inject
   private DependencyInjector appInjector;
+  @Inject
+  private ReunionService reunionService;
 
   private static final Type LISTA_DE_REUNIONES_TO = new ReferenceOf<List<ReunionTo>>() {
   }.getReferencedType();
 
     private Reunion filtrarVotosDeReunionPendiente(Reunion reunion, Long userId){
-        if(reunion.getStatus()== StatusDeReunion.PENDIENTE) {
+
+        if(reunion.getStatus() == StatusDeReunion.PENDIENTE) {
             Reunion nuevaReunion = reunion.copy();
             List<TemaDeReunion> listaDeTemasNuevos = reunion.getTemasPropuestos().stream().
                     map(temaDeReunion -> temaDeReunion.copy()).collect(Collectors.toList());
-            listaDeTemasNuevos.forEach(temaDeReunion ->
-                    temaDeReunion.setInteresados(temaDeReunion.getInteresados().stream().
-                            filter(usuario -> usuario.getId().equals(userId)).collect(Collectors.toList())));
+            listaDeTemasNuevos.forEach(temaDeReunion -> temaDeReunion.ocultarVotosPara(userId));
             nuevaReunion.setTemasPropuestos(listaDeTemasNuevos);
             return nuevaReunion;
         }
@@ -108,12 +110,17 @@ public class ReunionResource {
 
   @POST
   public ReunionTo create(ReunionTo newState) {
-    return createOperation()
-      .insideATransaction()
-      .taking(newState)
-      .convertingTo(Reunion.class)
-      .applyingResultOf(Save::create)
-      .convertTo(ReunionTo.class);
+      Reunion reunion = createOperation()
+                            .insideATransaction()
+                            .taking(newState)
+                            .convertingTo(ReunionTo.class)
+                            .convertTo(Reunion.class);
+      reunionService.save(reunion);
+      return createOperation()
+              .insideATransaction()
+              .taking(newState)
+              .convertingTo(Reunion.class)
+              .convertTo(ReunionTo.class);
   }
 
   @GET
@@ -130,6 +137,8 @@ public class ReunionResource {
         return filtrarVotosDeReunionPendiente(reunion,userId);
     })
       .convertTo(ReunionTo.class);
+
+
   }
 
 
@@ -170,6 +179,7 @@ public class ReunionResource {
   public static ReunionResource create(DependencyInjector appInjector) {
     ReunionResource resource = new ReunionResource();
     resource.appInjector = appInjector;
+    resource.reunionService = resource.appInjector.createInjected(ReunionService.class);
     return resource;
   }
 

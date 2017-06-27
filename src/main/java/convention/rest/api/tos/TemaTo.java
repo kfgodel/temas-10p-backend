@@ -76,14 +76,6 @@ public class TemaTo extends PersistableToSupport {
     this.idDeAutor = idDeAutor;
   }
 
-  public List<Long> getIdsDeInteresados() {
-    return idsDeInteresados;
-  }
-
-  public void setIdsDeInteresados(List<Long> idsDeInteresados) {
-    this.idsDeInteresados = idsDeInteresados;
-  }
-
   public Integer getPrioridad() {
     return prioridad;
   }
@@ -91,6 +83,7 @@ public class TemaTo extends PersistableToSupport {
   public void setPrioridad(Integer prioridad) {
     this.prioridad = prioridad;
   }
+
 
 
   public String getDuracion() {
@@ -109,11 +102,11 @@ public class TemaTo extends PersistableToSupport {
     this.idDeReunion = idDeReunion;
   }
 
-  public void agregarIdDeInteresado(Long id){
-    this.getIdsDeInteresados().add(id);
+  public List<Long> getIdsDeInteresados() {
+    return idsDeInteresados;
   }
 
-  public void quitarIdDeInteresado(Long id){
-    this.getIdsDeInteresados().remove(id);
+  public void setIdsDeInteresados(List<Long> idsDeInteresados) {
+    this.idsDeInteresados = idsDeInteresados;
   }
 }
