@@ -145,6 +145,7 @@ public class TemaDeReunion extends PersistableSupport {
     copia.setPrioridad(this.getPrioridad());
     copia.setAutor(this.getAutor());
     copia.setDuracion(this.getDuracion());
+    copia.setObligatoriedad(this.getObligatoriedad());
     return copia;
   }
 

@@ -42,7 +42,7 @@ public class TemaTo extends PersistableToSupport {
   @CopyFromAndTo(TemaDeReunion.interesados_FIELD)
   private List<Long> idsDeInteresados;
 
-  @CopyFromAndTo(TemaDeReunion.obligatoriedad_FIELD)
+  @CopyFrom(TemaDeReunion.obligatoriedad_FIELD)
   private String obligatoriedad;
 
   public String getAutor() {
@@ -110,5 +110,13 @@ public class TemaTo extends PersistableToSupport {
 
   public void setIdsDeInteresados(List<Long> idsDeInteresados) {
     this.idsDeInteresados = idsDeInteresados;
+  }
+
+  public String getObligatoriedad() {
+    return obligatoriedad;
+  }
+
+  public void setObligatoriedad(String unaObligatoriedad) {
+    this.obligatoriedad = unaObligatoriedad;
   }
 }
