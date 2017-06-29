@@ -37,26 +37,26 @@ public class UserResource extends Resource{
   @Path("current")
   public UserTo getCurrent(@Context SecurityContext securityContext) {
     Long currentUserId =idDeUsuarioActual(securityContext);
-    return convertir(userService.get(currentUserId),Usuario.class,UserTo.class);
+    return convertir(userService.get(currentUserId),UserTo.class);
   }
 
   @GET
   public List<UserTo> getAllUsers() {
-    return convertir(userService.getAll(),userService.getList_Type(),LIST_OF_USER_TOS);
+    return convertir(userService.getAll(),LIST_OF_USER_TOS);
   }
 
   @GET
   @Path("/{userId}")
   public UserTo getSingleUser(@PathParam("userId") Long userId) {
-    return convertir(userService.get(userId),Usuario.class,UserTo.class);
+    return convertir(userService.get(userId),UserTo.class);
   }
 
 
   @PUT
   @Path("/{userId}")
   public UserTo updateUser(UserTo newUserState, @PathParam("userId") Long userId) {
-    Usuario usuarioUpdateado=userService.update(convertir(newUserState,UserTo.class,Usuario.class));
-     return convertir(usuarioUpdateado,Usuario.class,UserTo.class);
+    Usuario usuarioUpdateado=userService.update(convertir(newUserState,Usuario.class));
+     return convertir(usuarioUpdateado,UserTo.class);
   }
 
   @DELETE

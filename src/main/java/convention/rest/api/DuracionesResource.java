@@ -37,15 +37,18 @@ import java.util.stream.Collectors;
 
 public class DuracionesResource extends Resource {
 
+    public List<DuracionDeTema> getAllDuraciones(){
+            List<DuracionDeTema> listaOrdenada=Arrays.asList(DuracionDeTema.values());
+            listaOrdenada.sort((duracion1, duracion2) ->duracion1.getCantidadDeMinutos()-duracion2.getCantidadDeMinutos() );
+            return   createOperation().
+                    insideASession()
+                    .taking(listaOrdenada)
+                    .convertTo(new ReferenceOf<List<DuracionDeTema>>(){}.getReferencedType());
 
+    }
     @GET
     public List<DuracionDeTemaTo> getAll() {
-
-        return   createOperation().
-                insideASession()
-                .taking(Arrays.asList(DuracionDeTema.values()))
-                .convertTo(new ReferenceOf<List<DuracionDeTemaTo>>() {
-                }.getReferencedType());
+         return  convertir(getAllDuraciones(), new ReferenceOf<List<DuracionDeTemaTo>>(){}.getReferencedType());
     }
 
     static  DuracionesResource create(DependencyInjector appInjector){

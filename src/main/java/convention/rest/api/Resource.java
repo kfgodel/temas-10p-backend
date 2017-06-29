@@ -37,13 +37,13 @@ public abstract class Resource {
                 .mapping((encontrado) -> encontrado.orElse(null)).get();
     }
 
-    protected <T> T convertir(Object objetoAConvertir, Class claseDesde, Class<T> claseHacia){
+    protected <T> T convertir(Object objetoAConvertir, Class<T> claseHacia){
         return (T) createOperation()
                 .insideATransaction()
                 .taking(objetoAConvertir)
                 .convertTo(claseHacia);
     }
-    protected <T> T convertir(Object objetoAConvertir, Type claseDesde, Type claseHacia){
+    protected <T> T convertir(Object objetoAConvertir, Type claseHacia){
         return (T) createOperation()
                 .insideATransaction()
                 .taking(objetoAConvertir)
