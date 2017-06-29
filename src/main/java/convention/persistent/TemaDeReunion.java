@@ -1,5 +1,8 @@
 package convention.persistent;
 
+import org.hibernate.FetchMode;
+import org.hibernate.annotations.Fetch;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +34,8 @@ public class TemaDeReunion extends PersistableSupport {
   private String descripcion;
   public static final String descripcion_FIELD = "descripcion";
 
-  @ManyToMany
+  @Fetch(org.hibernate.annotations.FetchMode.SELECT)
+  @ManyToMany(fetch = FetchType.EAGER)
   private List<Usuario> interesados;
   public static final String interesados_FIELD = "interesados";
 

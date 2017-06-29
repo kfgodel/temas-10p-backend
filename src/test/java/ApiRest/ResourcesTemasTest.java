@@ -14,13 +14,16 @@ import convention.rest.api.UserResource;
 import convention.rest.api.tos.ReunionTo;
 import convention.rest.api.tos.TemaTo;
 import convention.services.ReunionService;
+import convention.services.TemaService;
 import convention.services.UsuarioService;
 import helpers.TestConfig;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.omg.PortableInterceptor.LOCATION_FORWARD;
 
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.SecurityContext;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
@@ -36,12 +39,12 @@ public class ResourcesTemasTest {
 
     ReunionService reunionService;
     UsuarioService usuarioService;
+    TemaService temaService;
     ReunionResource reunionResource;
-    TemaResource temaResource;
-    UserResource userResource;
-    SecurityContext testContextUserFeche;
+     SecurityContext testContextUserFeche;
     Long userId;
     Long otherUserId;
+    Usuario otherUser;
    @Before
     public void setUp(){
         app= TestApplication.create(TestConfig.create());
@@ -49,13 +52,18 @@ public class ResourcesTemasTest {
 
         reunionService=app.getInjector().createInjected(ReunionService.class);
         usuarioService=app.getInjector().createInjected(UsuarioService.class);
+        temaService=app.getInjector().createInjected(TemaService.class);
         reunionResource=app.getInjector().createInjected(ReunionResource.class);
-        temaResource=app.getInjector().createInjected(TemaResource.class);
-        userResource=app.getInjector().createInjected(UserResource.class);
-        testContextUserFeche=new SecurityContextTest();
+          testContextUserFeche=new SecurityContextTest();
 
         userId=((JettyIdentityAdapterTest) testContextUserFeche.getUserPrincipal()).getApplicationIdentification();
-        otherUserId=userResource.getAllUsers().stream().filter(userTo -> !userTo.getId().equals(userId)).findFirst().get().getId();
+        otherUser=usuarioService.getAll().stream().filter(userTo -> !userTo.getId().equals(userId)).findFirst().get();
+        otherUserId=otherUser.getId();
+
+    }
+    @After
+    public void drop(){
+        app.stop();
     }
 
     @Test
@@ -66,8 +74,8 @@ public class ResourcesTemasTest {
 
         reunion = reunionService.save(reunion);
 
-        Usuario unUsuario = usuarioService.getSingleUser(userId);
-        Usuario otroUsuario = usuarioService.getSingleUser(otherUserId);
+        Usuario unUsuario = usuarioService.get(userId);
+        Usuario otroUsuario = usuarioService.get(otherUserId);
 
         temaDeLaReunion.setReunion(reunion);
         temaDeLaReunion.setAutor(unUsuario);
@@ -90,8 +98,8 @@ public class ResourcesTemasTest {
         reunion.setStatus(StatusDeReunion.CERRADA);
         reunion = reunionService.save(reunion);
 
-        Usuario unUsuario = usuarioService.getSingleUser(userId);
-        Usuario otroUsuario = usuarioService.getSingleUser(otherUserId);
+        Usuario unUsuario = usuarioService.get(userId);
+        Usuario otroUsuario = usuarioService.get(otherUserId);
 
         temaDeLaReunion.setReunion(reunion);
         temaDeLaReunion.setAutor(unUsuario);
@@ -135,7 +143,57 @@ public class ResourcesTemasTest {
         Assert.assertEquals(proximaRoot,LocalDate.of(2017,7,21));
     }
     @Test
+    public void crearProximaReunionDevuelveHoySiEsElTercerViernesDelMes(){
+        LocalDate diaDeHoy=LocalDate.of(2017,6,16);
+        LocalDate proximaRoot=CrearProximaReunion.create().
+                calcularFechaDeRoots(diaDeHoy);
+        Assert.assertEquals(proximaRoot,diaDeHoy);
+
+    }
+    @Test
+    public void votarUnTemaNoLoVuelveACrearPeroSiGuardaLosVotos(){
+        TemaDeReunion unTema=new TemaDeReunion();
+            unTema.setDuracion(DuracionDeTema.MEDIO);
+            unTema=temaService.save(unTema);
+            Assert.assertEquals(temaService.getAll().size(),1);
+            temaService.updateAndMapping(unTema.getId(),temaDeReunion -> {temaDeReunion.agregarInteresado(otherUser);
+                                                                         return temaDeReunion;}   );
+            Assert.assertEquals(temaService.getAll().size(),1);
+        temaService.updateAndMapping(unTema.getId(),temaDeReunion -> {temaDeReunion.agregarInteresado(otherUser);
+            return temaDeReunion;}   );
+        Assert.assertEquals(temaService.getAll().size(),1);
+        Assert.assertEquals(temaService.get(unTema.getId()).getInteresados().size(),2);
+    }
+    @Test
     public void sePuedeAgregarUnVotoEnUnTemaConMenosDe3VotosDelUsuario(){
+        TemaDeReunion unTema=temaService.save(new TemaDeReunion());
+        temaService.updateAndMapping(unTema.getId(),temaDeReunion -> new TemaResource().votarTema(otherUser,temaDeReunion));
+        Assert.assertEquals(temaService.get(unTema.getId()).getInteresados().size(),1);
+    }
+    @Test(expected = WebApplicationException.class)
+    public void NosePuedeAgregarUnVotoEnUnTemaConMasDe3VotosDelUsuario(){
+        TemaDeReunion unTema=temaService.save(new TemaDeReunion());
+        temaService.updateAndMapping(unTema.getId(),temaDeReunion -> new TemaResource().votarTema(otherUser,temaDeReunion));
+        temaService.updateAndMapping(unTema.getId(),temaDeReunion -> new TemaResource().votarTema(otherUser,temaDeReunion));
+        temaService.updateAndMapping(unTema.getId(),temaDeReunion -> new TemaResource().votarTema(otherUser,temaDeReunion));
+        temaService.updateAndMapping(unTema.getId(),temaDeReunion -> new TemaResource().votarTema(otherUser,temaDeReunion));
+
+
+    }
+    @Test
+    public void sePuedeQuitarUnVotoEnUnTemaConVotosDelUsuario(){
+        TemaDeReunion unTema=temaService.save(new TemaDeReunion());
+        temaService.updateAndMapping(unTema.getId(),temaDeReunion -> new TemaResource().votarTema(otherUser,temaDeReunion));
+        temaService.updateAndMapping(unTema.getId(),temaDeReunion -> new TemaResource().desvotarTema(otherUser,temaDeReunion));
+
+        Assert.assertEquals(temaService.get(unTema.getId()).getInteresados().size(),0);
+    }
+
+    @Test(expected = WebApplicationException.class)
+    public void NoSePuedeQuitarUnVotoEnUnTemaSinVotosDelUsuario(){
+        TemaDeReunion unTema=temaService.save(new TemaDeReunion());
+        temaService.updateAndMapping(unTema.getId(),temaDeReunion -> new TemaResource().desvotarTema(otherUser,temaDeReunion));
+
 
     }
     }

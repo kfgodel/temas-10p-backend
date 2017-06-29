@@ -1,17 +1,8 @@
 package convention.rest.api;
 
-import ar.com.kfgodel.appbyconvention.operation.api.ApplicationOperation;
 import ar.com.kfgodel.dependencies.api.DependencyInjector;
 import ar.com.kfgodel.diamond.api.types.reference.ReferenceOf;
-import ar.com.kfgodel.orm.api.operations.basic.Delete;
-import ar.com.kfgodel.orm.api.operations.basic.FindById;
-import ar.com.kfgodel.orm.api.operations.basic.Save;
-import ar.com.kfgodel.temas.acciones.CrearProximaReunion;
-import ar.com.kfgodel.temas.acciones.UsarExistente;
 import ar.com.kfgodel.temas.filters.reuniones.AllReunionesUltimaPrimero;
-import ar.com.kfgodel.temas.filters.reuniones.ProximaReunion;
-import ar.com.kfgodel.webbyconvention.impl.auth.adapters.JettyIdentityAdapter;
-import com.sun.org.apache.regexp.internal.RE;
 import convention.persistent.Reunion;
 import convention.persistent.StatusDeReunion;
 import convention.persistent.TemaDeReunion;
@@ -59,27 +50,27 @@ public class ReunionResource extends Resource {
     }
   @GET
   @Path("proxima")
-  public ReunionTo getProxima() {
-    return conversor(reunionService.getProxima(),Reunion.class,ReunionTo.class);
-
+  public ReunionTo getProxima(@Context SecurityContext securityContext) {
+    Reunion proxima=reunionService.getProxima();
+    return getSingle(proxima.getId(),securityContext);
   }
 
   @GET
   @Path("cerrar/{resourceId}")
   public ReunionTo cerrar(@PathParam("resourceId") Long id) {
-    Reunion reunionCerrada=reunionService.update(id,
+    Reunion reunionCerrada=reunionService.updateAndMapping(id,
             reunion ->{reunion.cerrarVotacion();
                         return reunion;});
-      return conversor(reunionCerrada,Reunion.class,ReunionTo.class);
+      return convertir(reunionCerrada,Reunion.class,ReunionTo.class);
   }
 
   @GET
   @Path("reabrir/{resourceId}")
   public ReunionTo reabrir(@PathParam("resourceId") Long id) {
-    Reunion reunionAbierta=reunionService.update(id,
+    Reunion reunionAbierta=reunionService.updateAndMapping(id,
             reunion -> {reunion.reabrirVotacion();
                         return reunion;});
-   return conversor(reunionAbierta,Reunion.class,ReunionTo.class);
+   return convertir(reunionAbierta,Reunion.class,ReunionTo.class);
   }
 
   @GET
@@ -88,23 +79,23 @@ public class ReunionResource extends Resource {
       List<Reunion> reuniones=reunionService.getAll();
       List<Reunion> reunionesFiltradas= reuniones.stream()
       .map(reunion -> filtrarVotosDeReunionPendiente(reunion,userId)).collect(Collectors.toList());
-        return conversor(reunionesFiltradas,LISTA_DE_REUNIONES,LISTA_DE_REUNIONES_TO);
+        return convertir(reunionesFiltradas,LISTA_DE_REUNIONES,LISTA_DE_REUNIONES_TO);
 
     }
 
   @POST
   public ReunionTo create(ReunionTo reunionNueva) {
 
-      Reunion reunionCreada=reunionService.save(conversor(reunionNueva,ReunionTo.class,Reunion.class));
-      return conversor(reunionCreada,Reunion.class,ReunionTo.class);
+      Reunion reunionCreada=reunionService.save(convertir(reunionNueva,ReunionTo.class,Reunion.class));
+      return convertir(reunionCreada,Reunion.class,ReunionTo.class);
   }
 
   @GET
   @Path("/{resourceId}")
   public ReunionTo getSingle(@PathParam("resourceId") Long id, @Context SecurityContext securityContext) {
         Long userId = idDeUsuarioActual(securityContext);
-       Reunion reunionFiltrada= reunionService.get(id,reunion -> filtrarVotosDeReunionPendiente(reunion,userId));
-      return conversor(reunionFiltrada,Reunion.class,ReunionTo.class);
+       Reunion reunionFiltrada= reunionService.getAndMapping(id, reunion -> filtrarVotosDeReunionPendiente(reunion,userId));
+      return convertir(reunionFiltrada,Reunion.class,ReunionTo.class);
 
   }
 
@@ -112,8 +103,8 @@ public class ReunionResource extends Resource {
   @PUT
   @Path("/{resourceId}")
   public ReunionTo update(ReunionTo newState, @PathParam("resourceId") Long id) {
-    Reunion reunionActualizada= reunionService.update(conversor(newState,ReunionTo.class,Reunion.class));
-      return conversor(reunionActualizada,Reunion.class,ReunionTo.class);
+    Reunion reunionActualizada= reunionService.update(convertir(newState,ReunionTo.class,Reunion.class));
+      return convertir(reunionActualizada,Reunion.class,ReunionTo.class);
   }
 
   @DELETE
@@ -125,7 +116,7 @@ public class ReunionResource extends Resource {
   public static ReunionResource create(DependencyInjector appInjector) {
     ReunionResource resource = new ReunionResource();
     resource.appInjector = appInjector;
-    resource.reunionService = resource.appInjector.createInjected(ReunionService.class);
+    resource.reunionService = appInjector.createInjected(ReunionService.class);
     return resource;
   }
 
