@@ -2,7 +2,6 @@ package convention.rest.api;
 
 import ar.com.kfgodel.dependencies.api.DependencyInjector;
 import ar.com.kfgodel.diamond.api.types.reference.ReferenceOf;
-import ar.com.kfgodel.temas.filters.reuniones.AllReunionesUltimaPrimero;
 import convention.persistent.Reunion;
 import convention.persistent.StatusDeReunion;
 import convention.persistent.TemaDeReunion;
@@ -33,20 +32,20 @@ public class ReunionResource extends Resource {
 
     private static final Type LISTA_DE_REUNIONES = new ReferenceOf<List<Reunion>>() {
     }.getReferencedType();
-    private Reunion filtrarVotosDeReunionPendiente(Reunion reunion, Long userId){
+    public Reunion muestreoDeReunion(Reunion reunion, Long userId){
+        Reunion nuevaReunion = reunion.copy();
 
         if(reunion.getStatus() == StatusDeReunion.PENDIENTE) {
-            Reunion nuevaReunion = reunion.copy();
             List<TemaDeReunion> listaDeTemasNuevos = reunion.getTemasPropuestos().stream().
                     map(temaDeReunion ->
                             temaDeReunion.copy()).collect(Collectors.toList());
             listaDeTemasNuevos.forEach(temaDeReunion -> temaDeReunion.ocultarVotosPara(userId));
             nuevaReunion.setTemasPropuestos(listaDeTemasNuevos);
-            return nuevaReunion;
         }
         else{
-            return reunion;
+            nuevaReunion.getTemasPropuestos().sort((tema1, tema2) ->tema2.getPrioridad()-tema1.getPrioridad() );
         }
+        return  nuevaReunion;
     }
   @GET
   @Path("proxima")
@@ -61,7 +60,7 @@ public class ReunionResource extends Resource {
     Reunion reunionCerrada=reunionService.updateAndMapping(id,
             reunion ->{reunion.cerrarVotacion();
                         return reunion;});
-      return convertir(reunionCerrada,Reunion.class,ReunionTo.class);
+      return convertir(reunionCerrada,ReunionTo.class);
   }
 
   @GET
@@ -70,7 +69,7 @@ public class ReunionResource extends Resource {
     Reunion reunionAbierta=reunionService.updateAndMapping(id,
             reunion -> {reunion.reabrirVotacion();
                         return reunion;});
-   return convertir(reunionAbierta,Reunion.class,ReunionTo.class);
+   return convertir(reunionAbierta,ReunionTo.class);
   }
 
   @GET
@@ -78,24 +77,24 @@ public class ReunionResource extends Resource {
       Long userId = idDeUsuarioActual(securityContext);
       List<Reunion> reuniones=reunionService.getAll();
       List<Reunion> reunionesFiltradas= reuniones.stream()
-      .map(reunion -> filtrarVotosDeReunionPendiente(reunion,userId)).collect(Collectors.toList());
-        return convertir(reunionesFiltradas,LISTA_DE_REUNIONES,LISTA_DE_REUNIONES_TO);
+      .map(reunion -> muestreoDeReunion(reunion,userId)).collect(Collectors.toList());
+        return convertir(reunionesFiltradas,LISTA_DE_REUNIONES_TO);
 
     }
 
   @POST
   public ReunionTo create(ReunionTo reunionNueva) {
 
-      Reunion reunionCreada=reunionService.save(convertir(reunionNueva,ReunionTo.class,Reunion.class));
-      return convertir(reunionCreada,Reunion.class,ReunionTo.class);
+      Reunion reunionCreada=reunionService.save(convertir(reunionNueva,Reunion.class));
+      return convertir(reunionCreada,ReunionTo.class);
   }
 
   @GET
   @Path("/{resourceId}")
   public ReunionTo getSingle(@PathParam("resourceId") Long id, @Context SecurityContext securityContext) {
         Long userId = idDeUsuarioActual(securityContext);
-       Reunion reunionFiltrada= reunionService.getAndMapping(id, reunion -> filtrarVotosDeReunionPendiente(reunion,userId));
-      return convertir(reunionFiltrada,Reunion.class,ReunionTo.class);
+       Reunion reunionFiltrada= reunionService.getAndMapping(id, reunion -> muestreoDeReunion(reunion,userId));
+      return convertir(reunionFiltrada,ReunionTo.class);
 
   }
 
@@ -103,8 +102,8 @@ public class ReunionResource extends Resource {
   @PUT
   @Path("/{resourceId}")
   public ReunionTo update(ReunionTo newState, @PathParam("resourceId") Long id) {
-    Reunion reunionActualizada= reunionService.update(convertir(newState,ReunionTo.class,Reunion.class));
-      return convertir(reunionActualizada,Reunion.class,ReunionTo.class);
+    Reunion reunionActualizada= reunionService.update(convertir(newState,Reunion.class));
+      return convertir(reunionActualizada,ReunionTo.class);
   }
 
   @DELETE

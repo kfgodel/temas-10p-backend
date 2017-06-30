@@ -8,9 +8,10 @@ import ar.com.kfgodel.temas.acciones.CrearProximaReunion;
 import ar.com.kfgodel.temas.application.Application;
 import convention.persistent.*;
 
+import convention.rest.api.DuracionesResource;
 import convention.rest.api.ReunionResource;
 import convention.rest.api.TemaResource;
-import convention.rest.api.UserResource;
+import convention.rest.api.tos.DuracionDeTemaTo;
 import convention.rest.api.tos.ReunionTo;
 import convention.rest.api.tos.TemaTo;
 import convention.services.ReunionService;
@@ -21,13 +22,12 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.omg.PortableInterceptor.LOCATION_FORWARD;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.SecurityContext;
 import java.time.LocalDate;
-import java.time.temporal.TemporalAdjusters;
 import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -41,6 +41,7 @@ public class ResourcesTemasTest {
     UsuarioService usuarioService;
     TemaService temaService;
     ReunionResource reunionResource;
+    DuracionesResource duracionResource;
      SecurityContext testContextUserFeche;
     Long userId;
     Long otherUserId;
@@ -54,7 +55,9 @@ public class ResourcesTemasTest {
         usuarioService=app.getInjector().createInjected(UsuarioService.class);
         temaService=app.getInjector().createInjected(TemaService.class);
         reunionResource=app.getInjector().createInjected(ReunionResource.class);
-          testContextUserFeche=new SecurityContextTest();
+        duracionResource=app.getInjector().createInjected(DuracionesResource.class);
+
+       testContextUserFeche=new SecurityContextTest();
 
         userId=((JettyIdentityAdapterTest) testContextUserFeche.getUserPrincipal()).getApplicationIdentification();
         otherUser=usuarioService.getAll().stream().filter(userTo -> !userTo.getId().equals(userId)).findFirst().get();
@@ -196,5 +199,30 @@ public class ResourcesTemasTest {
 
 
     }
+    @Test
+    public void siUnaReunionEstaCerradaSeRecuperaConOrdenDePrioridad(){
+        TemaDeReunion temaDeMayorPrioridad=new TemaDeReunion();
+        temaDeMayorPrioridad.setPrioridad(4);
+        TemaDeReunion temaDeMenorPrioridad=new TemaDeReunion();
+        temaDeMenorPrioridad.setPrioridad(1);
+        TemaDeReunion temaDePrioridadMedia=new TemaDeReunion();
+        temaDePrioridadMedia.setPrioridad(2);
+        Reunion unaReunion=Reunion.create(LocalDate.now());
+        unaReunion.setTemasPropuestos(Arrays.asList(temaDeMenorPrioridad,temaDeMayorPrioridad,temaDePrioridadMedia));
+        unaReunion.setStatus(StatusDeReunion.CERRADA);
+        unaReunion=reunionService.save(unaReunion);
+        temaDeMayorPrioridad.setReunion(unaReunion);
+        temaDeMenorPrioridad.setReunion(unaReunion);
+        temaDePrioridadMedia.setReunion(unaReunion);
+        unaReunion=reunionService.update(unaReunion);
+        unaReunion=reunionService.getAndMapping(unaReunion.getId(),reunion -> reunionResource.muestreoDeReunion(reunion,userId));
+        Assert.assertArrayEquals(unaReunion.getTemasPropuestos().toArray(),Arrays.asList(temaDeMayorPrioridad,temaDePrioridadMedia,temaDeMenorPrioridad).toArray());
+    }
+    @Test
+    public void lasDuracionesDeTemasSeDevuelvenOrdenadasEnElResource(){
+        List<DuracionDeTema> listaOrdenada=Arrays.asList(DuracionDeTema.values());
+        listaOrdenada.sort((duracion1, duracion2) ->duracion1.getCantidadDeMinutos()-duracion2.getCantidadDeMinutos() );
+        Assert.assertArrayEquals(duracionResource.getAllDuraciones().toArray(),listaOrdenada.toArray());
+          }
     }
 

@@ -1,6 +1,8 @@
 package convention.persistent;
 
 import ar.com.kfgodel.temas.model.OrdenarPorVotos;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

@@ -15,9 +15,9 @@ public class OrdenarPorVotos implements Comparator<TemaDeReunion> {
   @Override
   public int compare(TemaDeReunion tema1, TemaDeReunion tema2) {
     if(tema1.tieneMayorPrioridadQue(tema2))
-      return -1;
-    else
       return 1;
+    else
+      return -1;
   }
 
   public static OrdenarPorVotos create() {

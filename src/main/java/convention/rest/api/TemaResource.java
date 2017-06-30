@@ -27,14 +27,14 @@ public class TemaResource extends Resource {
 
   @POST
   public TemaTo create(TemaEnCreacionTo newState) {
-        TemaDeReunion temaCreado=temaService.save(convertir(newState,TemaEnCreacionTo.class,TemaDeReunion.class));
-    return convertir(temaCreado,TemaDeReunion.class,TemaTo.class);
+        TemaDeReunion temaCreado=temaService.save(convertir(newState,TemaDeReunion.class));
+    return convertir(temaCreado,TemaTo.class);
   }
 
   @GET
   @Path("/{resourceId}")
   public TemaTo getSingle(@PathParam("resourceId") Long id) {
-    return convertir(temaService.get(id),TemaDeReunion.class,TemaTo.class);
+    return convertir(temaService.get(id),TemaTo.class);
   }
 
   @GET
@@ -45,7 +45,7 @@ public class TemaResource extends Resource {
 
     TemaDeReunion temaVotado= temaService.updateAndMapping(id,
             temaDeReunion -> votarTema(usuarioActual, temaDeReunion));
-          return convertir(temaVotado,TemaDeReunion.class,TemaTo.class);
+          return convertir(temaVotado,TemaTo.class);
   }
 
     public TemaDeReunion votarTema(Usuario usuarioActual, TemaDeReunion temaDeReunion) {
@@ -68,7 +68,7 @@ public class TemaResource extends Resource {
       TemaDeReunion temaVotado= temaService.updateAndMapping(id,
               temaDeReunion -> desvotarTema(usuarioActual, temaDeReunion)
               );
-      return convertir(temaVotado,TemaDeReunion.class,TemaTo.class);
+      return convertir(temaVotado,TemaTo.class);
 
   }
 
