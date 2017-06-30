@@ -59,4 +59,12 @@ public class TemaEnCreacionTo {
     public void setTitulo(String titulo) {
         this.titulo = titulo;
     }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 }
