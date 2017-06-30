@@ -1,7 +1,9 @@
 package Domain;
 
 import convention.persistent.*;
+import helpers.TestHelper;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -12,6 +14,13 @@ import java.util.List;
  * Created by sandro on 19/06/17.
  */
 public class ReunionTest {
+
+    private TestHelper helper;
+
+    @Before
+    public void setUp(){
+        helper = new TestHelper();
+    }
 
     @Test
     public void test01AlCrearUnaReunionSuEstadoEsPendiente(){
@@ -36,12 +45,9 @@ public class ReunionTest {
     public void test04AlCerrarUnaReunionLosTemasPropuestosSeOrdenanPorCantidadDeVotos() throws Exception {
         Reunion unaReunion = Reunion.create(LocalDate.of(2017, 06, 16));
         Usuario unUsuario = new Usuario();
-        TemaDeReunion tema1 = new TemaDeReunion();
-        tema1.setObligatoriedad(ObligatoriedadDeReunion.NO_OBLIGATORIO);
-        TemaDeReunion tema2 = new TemaDeReunion();
-        tema2.setObligatoriedad(ObligatoriedadDeReunion.NO_OBLIGATORIO);
-        TemaDeReunion tema3 = new TemaDeReunion();
-        tema3.setObligatoriedad(ObligatoriedadDeReunion.NO_OBLIGATORIO);
+        TemaDeReunion tema1 = helper.nuevoTemaNoObligatorio();
+        TemaDeReunion tema2 = helper.nuevoTemaNoObligatorio();
+        TemaDeReunion tema3 = helper.nuevoTemaNoObligatorio();
         List<TemaDeReunion> temasDeLaReunion = Arrays.asList(tema1, tema2, tema3);
         unaReunion.setTemasPropuestos(temasDeLaReunion);
 

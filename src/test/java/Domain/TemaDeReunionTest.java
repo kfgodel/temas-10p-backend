@@ -3,7 +3,9 @@ package Domain;
 import convention.persistent.ObligatoriedadDeReunion;
 import convention.persistent.TemaDeReunion;
 import convention.persistent.Usuario;
+import helpers.TestHelper;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -16,6 +18,13 @@ import static org.hamcrest.core.Is.is;
  * Created by sandro on 19/06/17.
  */
 public class TemaDeReunionTest {
+
+    private TestHelper helper;
+
+    @Before
+    public void setUp(){
+        helper = new TestHelper();
+    }
 
     @Test
     public void test01AlAgregarUnInteresadoAlTemaLaCantidadDeVotosAumentaEn1() throws Exception {
@@ -36,22 +45,19 @@ public class TemaDeReunionTest {
 
     @Test
     public void test03UnTemaObligatorioNoPuedeSerVotado(){
-        TemaDeReunion unTemaObligatorio = new TemaDeReunion();
-        unTemaObligatorio.setObligatoriedad(ObligatoriedadDeReunion.OBLIGATORIO);
+        TemaDeReunion unTemaObligatorio = helper.nuevoTemaObligatorio();
         Assert.assertFalse(unTemaObligatorio.puedeSerVotado());
     }
 
     @Test
     public void test04UnTemaNoObligatorioPuedeSerVotado(){
-        TemaDeReunion unTemaObligatorio = new TemaDeReunion();
-        unTemaObligatorio.setObligatoriedad(ObligatoriedadDeReunion.NO_OBLIGATORIO);
-        Assert.assertTrue(unTemaObligatorio.puedeSerVotado());
+        TemaDeReunion unTemaNoObligatorio = helper.nuevoTemaNoObligatorio();
+        Assert.assertTrue(unTemaNoObligatorio.puedeSerVotado());
     }
 
     @Test
     public void test05NoSePuedenAgregarInteresadosAUnTemaObligatorio(){
-        TemaDeReunion unTemaObligatorio = new TemaDeReunion();
-        unTemaObligatorio.setObligatoriedad(ObligatoriedadDeReunion.OBLIGATORIO);
+        TemaDeReunion unTemaObligatorio = helper.nuevoTemaObligatorio();
         Usuario unUsuario = new Usuario();
         try{
             unTemaObligatorio.agregarInteresado(unUsuario);
@@ -63,34 +69,26 @@ public class TemaDeReunionTest {
 
     @Test
     public void test06UnTemaObligatorioTieneMayorPrioridadQueUnoNoObligatorio(){
-        TemaDeReunion unTemaObligatorio = new TemaDeReunion();
-        unTemaObligatorio.setObligatoriedad(ObligatoriedadDeReunion.OBLIGATORIO);
-
-        TemaDeReunion unTemaNoObligatorio = new TemaDeReunion();
-        unTemaNoObligatorio.setObligatoriedad(ObligatoriedadDeReunion.NO_OBLIGATORIO);
+        TemaDeReunion unTemaObligatorio = helper.nuevoTemaObligatorio();
+        TemaDeReunion unTemaNoObligatorio = helper.nuevoTemaNoObligatorio();
 
         Assert.assertTrue(unTemaObligatorio.tieneMayorPrioridadQue(unTemaNoObligatorio));
     }
 
     @Test
     public void test07UnTemaNoObligatorioNoTieneMayorPrioridadQueUnoObligatorio(){
-        TemaDeReunion unTemaObligatorio = new TemaDeReunion();
-        unTemaObligatorio.setObligatoriedad(ObligatoriedadDeReunion.OBLIGATORIO);
-
-        TemaDeReunion unTemaNoObligatorio = new TemaDeReunion();
-        unTemaNoObligatorio.setObligatoriedad(ObligatoriedadDeReunion.NO_OBLIGATORIO);
+        TemaDeReunion unTemaObligatorio = helper.nuevoTemaObligatorio();
+        TemaDeReunion unTemaNoObligatorio = helper.nuevoTemaNoObligatorio();
 
         Assert.assertFalse(unTemaNoObligatorio.tieneMayorPrioridadQue(unTemaObligatorio));
     }
 
     @Test
     public void test08UnTemaObligatorioTieneMayorPrioridadQueOtroSiFueCreadoAntes(){
-        TemaDeReunion primerTemaObligatorio = new TemaDeReunion();
-        primerTemaObligatorio.setObligatoriedad(ObligatoriedadDeReunion.OBLIGATORIO);
+        TemaDeReunion primerTemaObligatorio = helper.nuevoTemaObligatorio();
         primerTemaObligatorio.setMomentoDeCreacion(LocalDateTime.of(2017, 06, 26, 0, 0));
 
-        TemaDeReunion segundoTemaObligatorio = new TemaDeReunion();
-        segundoTemaObligatorio.setObligatoriedad(ObligatoriedadDeReunion.OBLIGATORIO);
+        TemaDeReunion segundoTemaObligatorio = helper.nuevoTemaObligatorio();
         segundoTemaObligatorio.setMomentoDeCreacion(LocalDateTime.of(2018, 06, 26, 0, 0));
 
         Assert.assertTrue(primerTemaObligatorio.tieneMayorPrioridadQue(segundoTemaObligatorio));
@@ -100,13 +98,11 @@ public class TemaDeReunionTest {
     public void test09UnTemaNoObligatorioTieneMayorPrioridadQueOtroSiTieneMasVotos() throws Exception {
         Usuario unUsuario = new Usuario();
 
-        TemaDeReunion temaMasVotado = new TemaDeReunion();
-        temaMasVotado.setObligatoriedad(ObligatoriedadDeReunion.NO_OBLIGATORIO);
+        TemaDeReunion temaMasVotado = helper.nuevoTemaNoObligatorio();
         temaMasVotado.setMomentoDeCreacion(LocalDateTime.of(2017, 06, 26, 0, 0));
         temaMasVotado.agregarInteresado(unUsuario);
 
-        TemaDeReunion temaMenosVotado = new TemaDeReunion();
-        temaMenosVotado.setObligatoriedad(ObligatoriedadDeReunion.NO_OBLIGATORIO);
+        TemaDeReunion temaMenosVotado = helper.nuevoTemaNoObligatorio();
         temaMenosVotado.setMomentoDeCreacion(LocalDateTime.of(2016, 06, 26, 0, 0));
 
         Assert.assertTrue(temaMasVotado.tieneMayorPrioridadQue(temaMenosVotado));
@@ -116,13 +112,11 @@ public class TemaDeReunionTest {
     public void test10UnTemaNoObligatorioTieneMayorPrioridadQueOtroSiTienenLaMismaCantidadDeVotosYFueCreadoAntes() throws Exception {
         Usuario unUsuario = new Usuario();
 
-        TemaDeReunion primerTema = new TemaDeReunion();
-        primerTema.setObligatoriedad(ObligatoriedadDeReunion.NO_OBLIGATORIO);
+        TemaDeReunion primerTema = helper.nuevoTemaNoObligatorio();
         primerTema.setMomentoDeCreacion(LocalDateTime.of(2017, 06, 26, 0, 0));
         primerTema.agregarInteresado(unUsuario);
 
-        TemaDeReunion segundoTema = new TemaDeReunion();
-        segundoTema.setObligatoriedad(ObligatoriedadDeReunion.NO_OBLIGATORIO);
+        TemaDeReunion segundoTema = helper.nuevoTemaNoObligatorio();
         segundoTema.setMomentoDeCreacion(LocalDateTime.of(2018, 06, 26, 0, 0));
         segundoTema.agregarInteresado(unUsuario);
 
