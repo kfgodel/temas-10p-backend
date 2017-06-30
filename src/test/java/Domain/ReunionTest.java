@@ -37,8 +37,11 @@ public class ReunionTest {
         Reunion unaReunion = Reunion.create(LocalDate.of(2017, 06, 16));
         Usuario unUsuario = new Usuario();
         TemaDeReunion tema1 = new TemaDeReunion();
+        tema1.setObligatoriedad(ObligatoriedadDeReunion.NO_OBLIGATORIO);
         TemaDeReunion tema2 = new TemaDeReunion();
+        tema2.setObligatoriedad(ObligatoriedadDeReunion.NO_OBLIGATORIO);
         TemaDeReunion tema3 = new TemaDeReunion();
+        tema3.setObligatoriedad(ObligatoriedadDeReunion.NO_OBLIGATORIO);
         List<TemaDeReunion> temasDeLaReunion = Arrays.asList(tema1, tema2, tema3);
         unaReunion.setTemasPropuestos(temasDeLaReunion);
 

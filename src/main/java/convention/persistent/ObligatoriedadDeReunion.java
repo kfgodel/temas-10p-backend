@@ -5,15 +5,21 @@ package convention.persistent;
  */
 public enum ObligatoriedadDeReunion {
 
-    NO_OBLIGATORIO(true),
-    OBLIGATORIO(false);
+    NO_OBLIGATORIO(true, 2),
+    OBLIGATORIO(false, 1);
 
     private Boolean permiteRecibirVotos;
+    private Integer nivelDePrioridad;
 
-    ObligatoriedadDeReunion(Boolean value){
-        this.permiteRecibirVotos = value;
+    ObligatoriedadDeReunion(Boolean recibeVotos, Integer unNivelDePrioridad){
+        this.permiteRecibirVotos = recibeVotos;
+        this.nivelDePrioridad = unNivelDePrioridad;
     }
     public boolean permiteRecibirVotos() {
         return permiteRecibirVotos;
+    }
+
+    public Integer prioridad() {
+        return nivelDePrioridad;
     }
 }

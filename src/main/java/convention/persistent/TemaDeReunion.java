@@ -151,13 +151,21 @@ public class TemaDeReunion extends PersistableSupport {
 
 
     public boolean tieneMayorPrioridadQue(TemaDeReunion otroTema) {
-      int cantidadDeVotos = this.getCantidadDeVotos();
-      int otraCantidadDeVotos = otroTema.getCantidadDeVotos();
+      Integer prioridad = getObligatoriedad().prioridad();
+      Integer otraPrioridad = otroTema.getObligatoriedad().prioridad();
 
-      if(cantidadDeVotos == otraCantidadDeVotos)
-          return otroTema.seCreoDespuesDe(this);
+      Integer cantidadDeVotos = this.getCantidadDeVotos();
+      Integer otraCantidadDeVotos = otroTema.getCantidadDeVotos();
 
-      return cantidadDeVotos > otraCantidadDeVotos;
+      if(prioridad.equals(otraPrioridad)
+              && getObligatoriedad().equals(ObligatoriedadDeReunion.NO_OBLIGATORIO)
+              && cantidadDeVotos != otraCantidadDeVotos)
+        return cantidadDeVotos > otraCantidadDeVotos;
+
+      if(prioridad.equals(otraPrioridad))
+        return otroTema.seCreoDespuesDe(this);
+
+      return prioridad < otraPrioridad;
     }
 
   protected boolean seCreoDespuesDe(TemaDeReunion otroTema) {
