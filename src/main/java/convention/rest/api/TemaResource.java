@@ -29,7 +29,7 @@ import java.util.stream.Collector;
  */
 @Produces("application/json")
 @Consumes("application/json")
-public class TemaResource {
+public class TemaResource extends Resource {
 
   @Inject
   private DependencyInjector appInjector;
@@ -91,12 +91,8 @@ public class TemaResource {
   @Path("votar/{resourceId}")
   public TemaTo votar(@PathParam("resourceId") Long id, @Context SecurityContext securityContext) {
 
-    Long userId = ((JettyIdentityAdapter) securityContext.getUserPrincipal()).getApplicationIdentification();
     TemaTo temaAActualizar=getSingle(id);
-    Usuario usuarioActual=createOperation()
-            .insideASession()
-            .applying(FindById.create(Usuario.class, userId))
-            .mapping((encontrado) -> encontrado.orElse(null)).get();
+    Usuario usuarioActual=usuarioActual(securityContext);
 
     return createOperation()
             .insideATransaction()
@@ -121,13 +117,7 @@ public class TemaResource {
   @GET
   @Path("desvotar/{resourceId}")
   public TemaTo desvotar(@PathParam("resourceId") Long id, @Context SecurityContext securityContext) {
-
-
-    Long userId = ((JettyIdentityAdapter) securityContext.getUserPrincipal()).getApplicationIdentification();
-    Usuario usuarioActual=createOperation()
-            .insideASession()
-            .applying(FindById.create(Usuario.class, userId))
-            .mapping((encontrado) -> encontrado.orElse(null)).get();
+      Usuario usuarioActual=usuarioActual(securityContext);
     TemaTo temaAActualizar=getSingle(id);
 
     return createOperation()
@@ -162,10 +152,6 @@ public class TemaResource {
     TemaResource resource = new TemaResource();
     resource.appInjector = appInjector;
     return resource;
-  }
-
-  private ApplicationOperation createOperation() {
-    return ApplicationOperation.createFor(appInjector);
   }
 
 }

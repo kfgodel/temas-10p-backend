@@ -24,10 +24,8 @@ import java.util.List;
  */
 @Produces("application/json")
 @Consumes("application/json")
-public class UserResource {
+public class UserResource extends Resource{
 
-  @Inject
-  private DependencyInjector appInjector;
 
   private static final Type LIST_OF_USER_TOS = new ReferenceOf<List<UserTo>>() {
   }.getReferencedType();
@@ -35,8 +33,7 @@ public class UserResource {
   @GET
   @Path("current")
   public UserTo getCurrent(@Context SecurityContext securityContext) {
-    JettyIdentityAdapter principal = (JettyIdentityAdapter) securityContext.getUserPrincipal();
-    Long currentUserId = principal.getApplicationIdentification();
+    Long currentUserId =idDeUsuarioActual(securityContext);
 
     return createOperation()
       .insideASession()
@@ -96,10 +93,6 @@ public class UserResource {
     UserResource resource = new UserResource();
     resource.appInjector = appInjector;
     return resource;
-  }
-
-  private ApplicationOperation createOperation() {
-    return ApplicationOperation.createFor(appInjector);
   }
 
 }

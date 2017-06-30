@@ -6,7 +6,7 @@ import javax.ws.rs.GET;
  * This type represents the user session as a resource that can be queried
  * Created by kfgodel on 08/02/16.
  */
-public class SessionResource {
+public class SessionResource extends Resource {
 
   /**
    * Used by the frontend to check if resources are available (authenticated)
