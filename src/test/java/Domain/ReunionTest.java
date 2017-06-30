@@ -1,5 +1,6 @@
 package Domain;
 
+import ar.com.kfgodel.temas.model.OrdenarPorVotos;
 import convention.persistent.*;
 import helpers.TestHelper;
 import org.junit.Assert;
@@ -7,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -76,5 +78,39 @@ public class ReunionTest {
         unaReunion.cerrarVotacion();
         unaReunion.reabrirVotacion();
         Assert.assertEquals(StatusDeReunion.PENDIENTE, unaReunion.getStatus());
+    }
+
+    // No estoy seguro de que vaya acá
+    @Test
+    public void test06ElOrdenadorDeTemasOrdenaCorrectamenteUnConjuntoDeTemas() throws Exception {
+        Usuario unUsuario = new Usuario();
+
+        TemaDeReunion tema1 = helper.nuevoTemaObligatorio();
+        tema1.setMomentoDeCreacion(LocalDateTime.of(2017, 06, 26, 0, 0));
+
+        TemaDeReunion tema2 = helper.nuevoTemaObligatorio();
+        tema2.setMomentoDeCreacion(LocalDateTime.of(2018, 06, 26, 0, 0));
+
+        TemaDeReunion tema3 = helper.nuevoTemaNoObligatorio();
+        tema3.setMomentoDeCreacion(LocalDateTime.of(2018, 02, 26, 0, 0));
+        tema3.agregarInteresado(unUsuario);
+        tema3.agregarInteresado(unUsuario);
+
+        TemaDeReunion tema4 = helper.nuevoTemaNoObligatorio();
+        tema4.setMomentoDeCreacion(LocalDateTime.of(2016, 02, 26, 0, 0));
+        tema4.agregarInteresado(unUsuario);
+
+        TemaDeReunion tema5 = helper.nuevoTemaNoObligatorio();
+        tema5.setMomentoDeCreacion(LocalDateTime.of(2017, 05, 26, 0, 0));
+        tema5.agregarInteresado(unUsuario);
+
+        List<TemaDeReunion> temas = Arrays.asList(tema1, tema2, tema3, tema4, tema5);
+        temas.sort(OrdenarPorVotos.create());
+
+        Assert.assertEquals(tema1, temas.get(0));
+        Assert.assertEquals(tema2, temas.get(1));
+        Assert.assertEquals(tema3, temas.get(2));
+        Assert.assertEquals(tema4, temas.get(3));
+        Assert.assertEquals(tema5, temas.get(4));
     }
 }
