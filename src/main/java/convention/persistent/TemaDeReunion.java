@@ -43,6 +43,8 @@ public class TemaDeReunion extends PersistableSupport {
   private ObligatoriedadDeReunion obligatoriedad;
   public static final String obligatoriedad_FIELD = "obligatoriedad";
 
+  public static final String momentoDeCreacion_FIELD = "momentoDeCreacion";
+
   public ObligatoriedadDeReunion getObligatoriedad(){
     return obligatoriedad;
   }

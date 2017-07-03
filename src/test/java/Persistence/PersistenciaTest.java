@@ -91,6 +91,14 @@ public class PersistenciaTest {
         Assert.assertEquals(ObligatoriedadDeReunion.OBLIGATORIO, temaPersistido.getObligatoriedad());
     }
 
+    @Test
+    public void test05ElMomentoDeCreacionDeUnTemaSeCreaAlPersistirElTema(){
+        TemaDeReunion tema = new TemaDeReunion();
+        tema = temaService.save(tema);
+        TemaDeReunion temaPersistido = temaService.getSingle(tema.getId());
+        Assert.assertFalse(temaPersistido.getMomentoDeCreacion() == null);
+    }
+
     private void startApplication(){
         application = TestApplication.create(TestConfig.create());
         application.start();

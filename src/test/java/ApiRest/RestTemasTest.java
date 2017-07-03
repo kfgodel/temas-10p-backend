@@ -122,5 +122,49 @@ public class RestTemasTest {
         Assert.assertEquals("OBLIGATORIO", reunionRecuperada.getTemasPropuestos().get(0).getObligatoriedad());
     }
 
+    @Test
+    public void alEnviarUnTemaAlFrontendSeEnviaSuMomentoDeCreacion(){
+        TemaDeReunion tema = new TemaDeReunion();
+        tema = temaService.save(tema);
+
+        TemaTo temaEnviado = temaResource.getSingle(tema.getId());
+
+        Assert.assertFalse(temaEnviado.getMomentoDeCreacion() == null);
+    }
+
+    @Test
+    public void alRecibirUnTemaDelFrontendSeRecibeSuMomentoDeCreacion(){
+        TemaDeReunion tema = new TemaDeReunion();
+        tema = temaService.save(tema);
+
+        TemaTo temaEnviado = temaResource.getSingle(tema.getId());
+
+        TemaDeReunion temaRecibido = ApplicationOperation.createFor(app.getInjector())
+                                        .insideATransaction()
+                                        .taking(temaEnviado)
+                                        .convertingTo(TemaDeReunion.class)
+                                        .convertTo(TemaDeReunion.class);
+
+        Assert.assertFalse(temaRecibido.getMomentoDeCreacion() == null);
+    }
+
+    @Test
+    public void alRecibirUnaReunionDelFrontendSusTemasTienenMomentoDeCreacion(){
+        Reunion reunion = new Reunion();
+        TemaDeReunion tema = new TemaDeReunion();
+        tema.setReunion(reunion);
+        reunion = reunionService.save(reunion);
+        temaService.save(tema);
+
+        ReunionTo reunionEnviada = reunionResource.getSingle(reunion.getId(), testContextUserFeche);
+
+        Reunion reunionRecibida = ApplicationOperation.createFor(app.getInjector())
+                                    .insideATransaction()
+                                    .taking(reunionEnviada)
+                                    .convertingTo(Reunion.class)
+                                    .convertTo(Reunion.class);
+
+        Assert.assertFalse(reunionRecibida.getTemasPropuestos().get(0).getMomentoDeCreacion() == null);
+    }
 }
 
