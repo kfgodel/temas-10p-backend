@@ -21,7 +21,7 @@ import java.util.function.Function;
  */
 public abstract class Service<T extends PersistableSupport> {
     @Inject
-    private DependencyInjector appInjector;
+    protected DependencyInjector appInjector;
 
     protected   Type LIST_TYPE = new ReferenceOf<List<T>>() {}.getReferencedType();
     protected  Class<T>  clasePrincipal;

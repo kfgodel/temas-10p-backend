@@ -10,6 +10,7 @@ import net.sf.kfgodel.bean2bean.annotations.CopyFrom;
 import net.sf.kfgodel.bean2bean.annotations.CopyFromAndTo;
 import net.sf.kfgodel.bean2bean.annotations.MissingPropertyAction;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -42,6 +43,11 @@ public class TemaTo extends PersistableToSupport {
   @CopyFromAndTo(TemaDeReunion.interesados_FIELD)
   private List<Long> idsDeInteresados;
 
+  @CopyFrom(TemaDeReunion.obligatoriedad_FIELD)
+  private String obligatoriedad;
+
+//  @CopyFromAndTo(TemaDeReunion.momentoDeCreacion_FIELD)
+//  private LocalDateTime momentoDeCreacion;
 
   public String getAutor() {
     return autor;
@@ -109,4 +115,20 @@ public class TemaTo extends PersistableToSupport {
   public void setIdsDeInteresados(List<Long> idsDeInteresados) {
     this.idsDeInteresados = idsDeInteresados;
   }
+
+  public String getObligatoriedad() {
+    return obligatoriedad;
+  }
+
+  public void setObligatoriedad(String unaObligatoriedad) {
+    this.obligatoriedad = unaObligatoriedad;
+  }
+
+//  public LocalDateTime getMomentoDeCreacion() {
+//    return momentoDeCreacion;
+//  }
+//
+//  public void setMomentoDeCreacion(LocalDateTime momentoDeCreacion) {
+//    this.momentoDeCreacion = momentoDeCreacion;
+//  }
 }
