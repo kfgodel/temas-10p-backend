@@ -60,7 +60,7 @@ public class ResourcesTemasTest {
         temaResource = app.getInjector().createInjected(TemaResource.class);
         duracionResource = app.getInjector().createInjected(DuracionesResource.class);
 
-        testContextUserFeche = new SecurityContextTest();
+        testContextUserFeche = new SecurityContextTest(usuarioService.getAll().get(0).getId());
 
         userId = ((JettyIdentityAdapterTest) testContextUserFeche.getUserPrincipal()).getApplicationIdentification();
         otherUser = usuarioService.getAll().stream().filter(userTo -> !userTo.getId().equals(userId)).findFirst().get();
@@ -236,7 +236,7 @@ public class ResourcesTemasTest {
         temaDeMenorPrioridad.setReunion(unaReunion);
         temaDePrioridadMedia.setReunion(unaReunion);
         unaReunion = reunionService.update(unaReunion);
-        unaReunion = reunionService.getAndMapping(unaReunion.getId(), reunion -> reunionResource.muestreoDeReunion(reunion, userId));
+        unaReunion = reunionService.getAndMapping(unaReunion.getId(), reunion -> reunionResource.muestreoDeReunion(reunion, userId,testContextUserFeche));
         Assert.assertArrayEquals(unaReunion.getTemasPropuestos().toArray(), Arrays.asList(temaDeMayorPrioridad, temaDePrioridadMedia, temaDeMenorPrioridad).toArray());
     }
 
@@ -273,15 +273,7 @@ public class ResourcesTemasTest {
         Assert.assertEquals("OBLIGATORIO", reunionRecuperada.getTemasPropuestos().get(0).getObligatoriedad());
     }
 
-//    @Test
-//    public void alEnviarUnTemaAlFrontendSeEnviaSuMomentoDeCreacion(){
-//        TemaDeReunion tema = new TemaDeReunion();
-//        tema = temaService.save(tema);
-//
-//        TemaTo temaEnviado = temaResource.getSingle(tema.getId());
-//
-//        Assert.assertFalse(temaEnviado.getMomentoDeCreacion() == null);
-//    }
+
 
     @Test
     public void alRecibirUnTemaDelFrontendSeRecibeSuMomentoDeCreacion(){

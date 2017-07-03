@@ -25,51 +25,52 @@ import java.util.List;
  */
 @Produces("application/json")
 @Consumes("application/json")
-public class UserResource extends Resource{
+public class UserResource extends Resource {
 
 
-  @Inject
-  UsuarioService userService;
+    @Inject
+    UsuarioService userService;
 
-  private static final Type LIST_OF_USER_TOS = new ReferenceOf<List<UserTo>>() {
-  }.getReferencedType();
-  @GET
-  @Path("current")
-  public UserTo getCurrent(@Context SecurityContext securityContext) {
-    Long currentUserId =idDeUsuarioActual(securityContext);
-    return convertir(userService.get(currentUserId),UserTo.class);
-  }
+    private static final Type LIST_OF_USER_TOS = new ReferenceOf<List<UserTo>>() {
+    }.getReferencedType();
 
-  @GET
-  public List<UserTo> getAllUsers() {
-    return convertir(userService.getAll(),LIST_OF_USER_TOS);
-  }
+    @GET
+    @Path("current")
+    public UserTo getCurrent(@Context SecurityContext securityContext) {
+        Long currentUserId = idDeUsuarioActual(securityContext);
+        return convertir(userService.get(currentUserId), UserTo.class);
+    }
 
-  @GET
-  @Path("/{userId}")
-  public UserTo getSingleUser(@PathParam("userId") Long userId) {
-    return convertir(userService.get(userId),UserTo.class);
-  }
+    @GET
+    public List<UserTo> getAllUsers() {
+        return convertir(userService.getAll(), LIST_OF_USER_TOS);
+    }
+
+    @GET
+    @Path("/{userId}")
+    public UserTo getSingleUser(@PathParam("userId") Long userId) {
+        return convertir(userService.get(userId), UserTo.class);
+    }
 
 
-  @PUT
-  @Path("/{userId}")
-  public UserTo updateUser(UserTo newUserState, @PathParam("userId") Long userId) {
-    Usuario usuarioUpdateado=userService.update(convertir(newUserState,Usuario.class));
-     return convertir(usuarioUpdateado,UserTo.class);
-  }
+    @PUT
+    @Path("/{userId}")
+    public UserTo updateUser(UserTo newUserState, @PathParam("userId") Long userId) {
+        Usuario usuarioUpdateado = userService.update(convertir(newUserState, Usuario.class));
+        return convertir(usuarioUpdateado, UserTo.class);
+    }
 
-  @DELETE
-  @Path("/{userId}")
-  public void deleteUser(@PathParam("userId") Long userId) {
-    userService.delete(userId);
-  }
+    @DELETE
+    @Path("/{userId}")
+    public void deleteUser(@PathParam("userId") Long userId) {
+        userService.delete(userId);
+    }
 
-  public static UserResource create(DependencyInjector appInjector) {
-    UserResource resource = new UserResource();
-    resource.appInjector = appInjector;
-    resource.userService=resource.appInjector.createInjected(UsuarioService.class);
-    return resource;
-  }
+    public static UserResource create(DependencyInjector appInjector) {
+        UserResource resource = new UserResource();
+        resource.appInjector = appInjector;
+        resource.userService = resource.appInjector.createInjected(UsuarioService.class);
+        return resource;
+    }
 
 }

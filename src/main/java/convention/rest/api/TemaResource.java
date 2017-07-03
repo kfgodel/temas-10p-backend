@@ -28,7 +28,6 @@ public class TemaResource extends Resource {
         TemaDeReunion temaCreado = temaService.save(convertir(newState, TemaDeReunion.class));
         return convertir(temaCreado, TemaTo.class);
     }
-
     @GET
     @Path("/{resourceId}")
     public TemaTo getSingle(@PathParam("resourceId") Long id) {
@@ -38,6 +37,7 @@ public class TemaResource extends Resource {
     @GET
     @Path("votar/{resourceId}")
     public TemaTo votar(@PathParam("resourceId") Long id, @Context SecurityContext securityContext) {
+
         Usuario usuarioActual = usuarioActual(securityContext);
 
         TemaDeReunion temaVotado = temaService.updateAndMapping(id,
