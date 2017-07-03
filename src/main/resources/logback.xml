@@ -40,7 +40,7 @@
   <!-- Not sure if warn HHH000148 can be ignored, but the app seems to work without it -->
   <logger name="org.hibernate.c3p0.internal.C3P0ConnectionProvider" level="ERROR"/>
 
-  <!-- Mute schema update info -->
+  <!-- Mute schupdateAndMappingdate info -->
   <logger name="org.hibernate.tool.hbm2ddl.SchemaUpdate" level="WARN"/>
   <logger name="org.hibernate.tool.hbm2ddl.TableMetadata" level="WARN"/>
 

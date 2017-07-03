@@ -2,12 +2,14 @@ package Persistence;
 
 import ar.com.kfgodel.temas.application.Application;
 import convention.persistent.ObligatoriedadDeReunion;
+import ar.com.kfgodel.temas.filters.reuniones.AllReunionesUltimaPrimero;
 import convention.persistent.Reunion;
 import convention.persistent.TemaDeReunion;
 
 import convention.services.ReunionService;
 import convention.services.TemaService;
 import helpers.TestConfig;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,16 +32,19 @@ public class PersistenciaTest {
         reunionService = application.getInjector().createInjected(ReunionService.class);
         temaService = application.getInjector().createInjected(TemaService.class);
     }
-
+    @After
+    public void drop(){
+        application.stop();
+    }
     @Test
     public void test01SePuedePersistirCorrectamenteUnaReunion(){
         Reunion nuevaReunion = new Reunion();
 
-        int cantidadDeReunionesAnteriores = reunionService.getAll().size();
+        int cantidadDeReunionesAnteriores = reunionService.getAll(AllReunionesUltimaPrimero.create()).size();
 
         reunionService.save(nuevaReunion);
 
-        List<Reunion> reunionesPersistidas = reunionService.getAll();
+        List<Reunion> reunionesPersistidas = reunionService.getAll(AllReunionesUltimaPrimero.create());
 
         Assert.assertEquals(cantidadDeReunionesAnteriores + 1, reunionesPersistidas.size());
     }
@@ -87,7 +92,7 @@ public class PersistenciaTest {
 
         tema = temaService.save(tema);
 
-        TemaDeReunion temaPersistido = temaService.getSingle(tema.getId());
+        TemaDeReunion temaPersistido = temaService.get(tema.getId());
         Assert.assertEquals(ObligatoriedadDeReunion.OBLIGATORIO, temaPersistido.getObligatoriedad());
     }
 
@@ -95,7 +100,7 @@ public class PersistenciaTest {
     public void test05ElMomentoDeCreacionDeUnTemaSeCreaAlPersistirElTema(){
         TemaDeReunion tema = new TemaDeReunion();
         tema = temaService.save(tema);
-        TemaDeReunion temaPersistido = temaService.getSingle(tema.getId());
+        TemaDeReunion temaPersistido = temaService.get(tema.getId());
         Assert.assertFalse(temaPersistido.getMomentoDeCreacion() == null);
     }
 

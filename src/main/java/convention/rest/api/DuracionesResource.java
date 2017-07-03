@@ -35,24 +35,20 @@ import java.util.stream.Collectors;
 @Produces("application/json")
 @Consumes("application/json")
 
-public class DuracionesResource {
+public class DuracionesResource extends Resource {
 
+    public List<DuracionDeTema> getAllDuraciones(){
+            List<DuracionDeTema> listaOrdenada=Arrays.asList(DuracionDeTema.values());
+            listaOrdenada.sort((duracion1, duracion2) ->duracion1.getCantidadDeMinutos()-duracion2.getCantidadDeMinutos() );
+            return   createOperation().
+                    insideASession()
+                    .taking(listaOrdenada)
+                    .convertTo(new ReferenceOf<List<DuracionDeTema>>(){}.getReferencedType());
 
-    private static final Type LISTA_DE_DURACIONES_TO = new ReferenceOf<List<DuracionDeTemaTo>>() {
-    }.getReferencedType();
-    @Inject
-    private DependencyInjector appInjector;
-
+    }
     @GET
     public List<DuracionDeTemaTo> getAll() {
-       //Arrays.stream(DuracionDeTema.values())
-         //      .map(duracionDeTema -> DuracionDeTemaTo.create(duracionDeTema)).collect(Collectors.toList());
-
-        return   createOperation().
-                insideASession()
-                .taking(Arrays.asList(DuracionDeTema.values()))
-                .convertTo(new ReferenceOf<List<DuracionDeTemaTo>>() {
-                }.getReferencedType());
+         return  convertir(getAllDuraciones(), new ReferenceOf<List<DuracionDeTemaTo>>(){}.getReferencedType());
     }
 
     static  DuracionesResource create(DependencyInjector appInjector){
@@ -61,8 +57,5 @@ public class DuracionesResource {
         return duracionesResource;
     }
 
-    private ApplicationOperation createOperation() {
-        return ApplicationOperation.createFor(appInjector);
-    }
 
 }

@@ -1,16 +1,7 @@
 package convention.rest.api;
 
-import ar.com.kfgodel.appbyconvention.operation.api.ApplicationOperation;
 import ar.com.kfgodel.dependencies.api.DependencyInjector;
 import ar.com.kfgodel.diamond.api.types.reference.ReferenceOf;
-import ar.com.kfgodel.orm.api.operations.basic.Delete;
-import ar.com.kfgodel.orm.api.operations.basic.FindById;
-import ar.com.kfgodel.orm.api.operations.basic.Save;
-import ar.com.kfgodel.temas.acciones.CrearProximaReunion;
-import ar.com.kfgodel.temas.acciones.UsarExistente;
-import ar.com.kfgodel.temas.filters.reuniones.AllReunionesUltimaPrimero;
-import ar.com.kfgodel.temas.filters.reuniones.ProximaReunion;
-import ar.com.kfgodel.webbyconvention.impl.auth.adapters.JettyIdentityAdapter;
 import convention.persistent.Reunion;
 import convention.persistent.StatusDeReunion;
 import convention.persistent.TemaDeReunion;
@@ -31,113 +22,79 @@ import java.util.stream.Collectors;
  */
 @Produces("application/json")
 @Consumes("application/json")
-public class ReunionResource {
+public class ReunionResource extends Resource {
 
-  @Inject
-  private DependencyInjector appInjector;
   @Inject
   private ReunionService reunionService;
 
   private static final Type LISTA_DE_REUNIONES_TO = new ReferenceOf<List<ReunionTo>>() {
   }.getReferencedType();
 
-    private Reunion filtrarVotosDeReunionPendiente(Reunion reunion, Long userId){
+    private static final Type LISTA_DE_REUNIONES = new ReferenceOf<List<Reunion>>() {
+    }.getReferencedType();
+    public Reunion muestreoDeReunion(Reunion reunion, Long userId){
+        Reunion nuevaReunion = reunion.copy();
 
         if(reunion.getStatus() == StatusDeReunion.PENDIENTE) {
-            Reunion nuevaReunion = reunion.copy();
             List<TemaDeReunion> listaDeTemasNuevos = reunion.getTemasPropuestos().stream().
-                    map(temaDeReunion -> temaDeReunion.copy()).collect(Collectors.toList());
+                    map(temaDeReunion ->
+                            temaDeReunion.copy()).collect(Collectors.toList());
             listaDeTemasNuevos.forEach(temaDeReunion -> temaDeReunion.ocultarVotosPara(userId));
             nuevaReunion.setTemasPropuestos(listaDeTemasNuevos);
-            return nuevaReunion;
         }
         else{
-            return reunion;
+            nuevaReunion.getTemasPropuestos().sort((tema1, tema2) ->tema2.getPrioridad()-tema1.getPrioridad() );
         }
+        return  nuevaReunion;
     }
   @GET
   @Path("proxima")
-  public ReunionTo getProxima() {
-    return createOperation()
-      .insideATransaction()
-      .applying(ProximaReunion.create())
-      .applyingResultOf((existente) ->
-        existente.mapOptional(UsarExistente::create)
-          .orElseGet(CrearProximaReunion::create))
-      .convertTo(ReunionTo.class);
+  public ReunionTo getProxima(@Context SecurityContext securityContext) {
+    Reunion proxima=reunionService.getProxima();
+    return getSingle(proxima.getId(),securityContext);
   }
-
 
   @GET
   @Path("cerrar/{resourceId}")
   public ReunionTo cerrar(@PathParam("resourceId") Long id) {
-    return createOperation()
-      .insideATransaction()
-      .applying((context) -> FindById.create(Reunion.class, id).applyWithSessionOn(context))
-      .mapping((encontrado) -> {
-        Reunion reunion = encontrado.orElseThrow(() -> new WebApplicationException("reunion not found", 404));
-        reunion.cerrarVotacion();
-        return reunion;
-      }).applyingResultOf(Save::create)
-      .convertTo(ReunionTo.class);
+    Reunion reunionCerrada=reunionService.updateAndMapping(id,
+            reunion ->{reunion.cerrarVotacion();
+                        return reunion;});
+      return convertir(reunionCerrada,ReunionTo.class);
   }
 
   @GET
   @Path("reabrir/{resourceId}")
   public ReunionTo reabrir(@PathParam("resourceId") Long id) {
-    return createOperation()
-      .insideATransaction()
-      .applying((context) -> FindById.create(Reunion.class, id).applyWithSessionOn(context))
-      .mapping((encontrado) -> {
-        Reunion reunion = encontrado.orElseThrow(() -> new WebApplicationException("reunion not found", 404));
-        reunion.reabrirVotacion();
-        return reunion;
-      }).applyingResultOf(Save::create)
-      .convertTo(ReunionTo.class);
+    Reunion reunionAbierta=reunionService.updateAndMapping(id,
+            reunion -> {reunion.reabrirVotacion();
+                        return reunion;});
+   return convertir(reunionAbierta,ReunionTo.class);
   }
 
   @GET
   public List<ReunionTo> getAll(@Context SecurityContext securityContext) {
-      Long userId = ((JettyIdentityAdapter) securityContext.getUserPrincipal()).getApplicationIdentification();
-      return createOperation()
-      .insideASession()
-      .applying(AllReunionesUltimaPrimero.create())
-       .mapping(reuniones ->
-        reuniones.map(reunion -> filtrarVotosDeReunionPendiente(reunion,userId)).collect(Collectors.toList())
-       )
-      .convertTo(LISTA_DE_REUNIONES_TO);
-  }
+      Long userId = idDeUsuarioActual(securityContext);
+      List<Reunion> reuniones=reunionService.getAll();
+      List<Reunion> reunionesFiltradas= reuniones.stream()
+      .map(reunion -> muestreoDeReunion(reunion,userId)).collect(Collectors.toList());
+        return convertir(reunionesFiltradas,LISTA_DE_REUNIONES_TO);
+
+    }
 
   @POST
-  public ReunionTo create(ReunionTo newState) {
-      Reunion reunion = createOperation()
-                            .insideATransaction()
-                            .taking(newState)
-                            .convertingTo(ReunionTo.class)
-                            .convertTo(Reunion.class);
-      reunionService.save(reunion);
-      return createOperation()
-              .insideATransaction()
-              .taking(newState)
-              .convertingTo(Reunion.class)
-              .convertTo(ReunionTo.class);
+  public ReunionTo create(ReunionTo reunionNueva) {
+
+      Reunion reunionCreada=reunionService.save(convertir(reunionNueva,Reunion.class));
+      return convertir(reunionCreada,ReunionTo.class);
   }
 
   @GET
   @Path("/{resourceId}")
   public ReunionTo getSingle(@PathParam("resourceId") Long id, @Context SecurityContext securityContext) {
-            //esta identificacion podria caer en el userResource
-      Long userId = ((JettyIdentityAdapter) securityContext.getUserPrincipal()).getApplicationIdentification();
-    return createOperation()
-      .insideASession()
-      .applying(FindById.create(Reunion.class, id))
-      .mapping((encontrado) -> {
-        // Answer 404 if missing
-        Reunion reunion= encontrado.orElseThrowRuntime(() -> new WebApplicationException("reunion not found", 404));
-        return filtrarVotosDeReunionPendiente(reunion,userId);
-    })
-      .convertTo(ReunionTo.class);
-
+        Long userId = idDeUsuarioActual(securityContext);
+       Reunion reunionFiltrada= reunionService.getAndMapping(id, reunion -> muestreoDeReunion(reunion,userId));
+      return convertir(reunionFiltrada,ReunionTo.class);
 
   }
 
@@ -145,46 +102,22 @@ public class ReunionResource {
   @PUT
   @Path("/{resourceId}")
   public ReunionTo update(ReunionTo newState, @PathParam("resourceId") Long id) {
-    return createOperation()
-      .insideATransaction()
-      .taking(newState)
-      .convertingTo(Reunion.class)
-      .mapping((encontrado) -> {
-        // Answer 404 if missing
-        if (encontrado == null) {
-          throw new WebApplicationException("reunion not found", 404);
-        }
-        return encontrado;
-      }).applyingResultOf(Save::create)
-      .convertTo(ReunionTo.class);
+    Reunion reunionActualizada= reunionService.update(convertir(newState,Reunion.class));
+      return convertir(reunionActualizada,ReunionTo.class);
   }
 
   @DELETE
   @Path("/{resourceId}")
   public void delete(@PathParam("resourceId") Long id) {
-    createOperation()
-      .insideATransaction()
-      .taking(id)
-      .convertingTo(Reunion.class)
-      .mapping((encontrado) -> {
-        // Answer 404 if missing
-        if (encontrado == null) {
-          throw new WebApplicationException("reunion not found", 404);
-        }
-        return encontrado;
-      })
-      .applyResultOf(Delete::create);
+    reunionService.delete(id);
   }
 
   public static ReunionResource create(DependencyInjector appInjector) {
     ReunionResource resource = new ReunionResource();
     resource.appInjector = appInjector;
-    resource.reunionService = resource.appInjector.createInjected(ReunionService.class);
+    resource.reunionService = appInjector.createInjected(ReunionService.class);
     return resource;
   }
 
-  private ApplicationOperation createOperation() {
-    return ApplicationOperation.createFor(appInjector);
-  }
 
 }

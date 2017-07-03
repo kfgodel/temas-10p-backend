@@ -69,4 +69,12 @@ public class TemaEnCreacionTo {
     public void setObligatoriedad(String unaObligatoriedad) {
         this.obligatoriedad = unaObligatoriedad;
     }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 }

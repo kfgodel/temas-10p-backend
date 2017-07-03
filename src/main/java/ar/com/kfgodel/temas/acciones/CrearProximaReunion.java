@@ -18,15 +18,14 @@ public class CrearProximaReunion implements TransactionOperation<Reunion> {
 
   @Override
   public Reunion applyWithTransactionOn(TransactionContext transactionContext) {
-    LocalDate fechaDeProximaRoots = calcularFechaDeRoots();
+    LocalDate fechaDeProximaRoots = calcularFechaDeRoots(LocalDate.now());
     Reunion proximaRoots = Reunion.create(fechaDeProximaRoots);
     // La guardamos antes de devolverla para que quede persistida
     Save.create(proximaRoots).applyWithTransactionOn(transactionContext);
     return proximaRoots;
   }
 
-  private LocalDate calcularFechaDeRoots() {
-    LocalDate hoy = LocalDate.now();
+  public  LocalDate calcularFechaDeRoots(LocalDate hoy) {
     LocalDate tercerViernesDeEsteMes = hoy.with(tercerViernesDelMes());
     if (tercerViernesDeEsteMes.isBefore(hoy)) {
       return calcularTercerViernesDelProximoMes(hoy);
@@ -35,14 +34,18 @@ public class CrearProximaReunion implements TransactionOperation<Reunion> {
   }
 
   private LocalDate calcularTercerViernesDelProximoMes(LocalDate hoy) {
-    LocalDate primerDiaDelProximoMes = hoy.with(TemporalAdjusters.firstDayOfMonth());
-    LocalDate tercerViernesDelProximoMes = primerDiaDelProximoMes.with(tercerViernesDelMes());
-    return tercerViernesDelProximoMes;
+    if(hoy.with(tercerViernesDelMes()).isBefore(hoy)){
+   return hoy.with(TemporalAdjusters.firstDayOfNextMonth()).with(tercerViernesDelMes());
+    }
+      return hoy.with(tercerViernesDelMes());
   }
 
   private TemporalAdjuster tercerViernesDelMes() {
     return TemporalAdjusters.dayOfWeekInMonth(3, DayOfWeek.FRIDAY);
   }
+
+
+
 
   public static CrearProximaReunion create() {
     CrearProximaReunion accion = new CrearProximaReunion();

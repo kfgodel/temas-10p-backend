@@ -1,6 +1,5 @@
 package convention.rest.api;
 
-import ar.com.kfgodel.appbyconvention.operation.api.ApplicationOperation;
 import ar.com.kfgodel.dependencies.api.DependencyInjector;
 import ar.com.kfgodel.diamond.api.types.reference.ReferenceOf;
 import ar.com.kfgodel.orm.api.operations.basic.DeleteById;
@@ -10,6 +9,8 @@ import ar.com.kfgodel.temas.filters.users.FindAllUsersOrderedByName;
 import ar.com.kfgodel.webbyconvention.impl.auth.adapters.JettyIdentityAdapter;
 import convention.persistent.Usuario;
 import convention.rest.api.tos.UserTo;
+import convention.services.TemaService;
+import convention.services.UsuarioService;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -24,82 +25,51 @@ import java.util.List;
  */
 @Produces("application/json")
 @Consumes("application/json")
-public class UserResource {
+public class UserResource extends Resource{
+
 
   @Inject
-  private DependencyInjector appInjector;
+  UsuarioService userService;
 
   private static final Type LIST_OF_USER_TOS = new ReferenceOf<List<UserTo>>() {
   }.getReferencedType();
-
   @GET
   @Path("current")
   public UserTo getCurrent(@Context SecurityContext securityContext) {
-    JettyIdentityAdapter principal = (JettyIdentityAdapter) securityContext.getUserPrincipal();
-    Long currentUserId = principal.getApplicationIdentification();
-
-    return createOperation()
-      .insideASession()
-      .applying(FindById.create(Usuario.class, currentUserId))
-      .mapping((encontrado) -> encontrado.orElse(null))
-      .convertTo(UserTo.class);
+    Long currentUserId =idDeUsuarioActual(securityContext);
+    return convertir(userService.get(currentUserId),UserTo.class);
   }
 
   @GET
   public List<UserTo> getAllUsers() {
-    return createOperation()
-      .insideASession()
-      .applying(FindAllUsersOrderedByName.create())
-      .convertTo(LIST_OF_USER_TOS);
+    return convertir(userService.getAll(),LIST_OF_USER_TOS);
   }
 
   @GET
   @Path("/{userId}")
   public UserTo getSingleUser(@PathParam("userId") Long userId) {
-    return createOperation()
-      .insideASession()
-      .applying(FindById.create(Usuario.class, userId))
-      .mapping((encontrado) -> {
-        // Answer 404 if missing
-        return encontrado.orElseThrowRuntime(() -> new WebApplicationException("user not found", 404));
-      })
-      .convertTo(UserTo.class);
+    return convertir(userService.get(userId),UserTo.class);
   }
 
 
   @PUT
   @Path("/{userId}")
   public UserTo updateUser(UserTo newUserState, @PathParam("userId") Long userId) {
-    return createOperation()
-      .insideATransaction()
-      .taking(newUserState)
-      .convertingTo(Usuario.class)
-      .mapping((encontrado) -> {
-        // Answer 404 if missing
-        if (encontrado == null) {
-          throw new WebApplicationException("user not found", 404);
-        }
-        return encontrado;
-      }).applyingResultOf(Save::create)
-      .convertTo(UserTo.class);
+    Usuario usuarioUpdateado=userService.update(convertir(newUserState,Usuario.class));
+     return convertir(usuarioUpdateado,UserTo.class);
   }
 
   @DELETE
   @Path("/{userId}")
   public void deleteUser(@PathParam("userId") Long userId) {
-    createOperation()
-      .insideATransaction()
-      .apply(DeleteById.create(Usuario.class, userId));
+    userService.delete(userId);
   }
 
   public static UserResource create(DependencyInjector appInjector) {
     UserResource resource = new UserResource();
     resource.appInjector = appInjector;
+    resource.userService=resource.appInjector.createInjected(UsuarioService.class);
     return resource;
-  }
-
-  private ApplicationOperation createOperation() {
-    return ApplicationOperation.createFor(appInjector);
   }
 
 }
