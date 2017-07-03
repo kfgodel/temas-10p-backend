@@ -46,8 +46,8 @@ public class TemaTo extends PersistableToSupport {
   @CopyFrom(TemaDeReunion.obligatoriedad_FIELD)
   private String obligatoriedad;
 
-  @CopyFromAndTo(TemaDeReunion.momentoDeCreacion_FIELD)
-  private LocalDateTime momentoDeCreacion;
+//  @CopyFromAndTo(TemaDeReunion.momentoDeCreacion_FIELD)
+//  private LocalDateTime momentoDeCreacion;
 
   public String getAutor() {
     return autor;
@@ -124,11 +124,11 @@ public class TemaTo extends PersistableToSupport {
     this.obligatoriedad = unaObligatoriedad;
   }
 
-  public LocalDateTime getMomentoDeCreacion() {
-    return momentoDeCreacion;
-  }
-
-  public void setMomentoDeCreacion(LocalDateTime momentoDeCreacion) {
-    this.momentoDeCreacion = momentoDeCreacion;
-  }
+//  public LocalDateTime getMomentoDeCreacion() {
+//    return momentoDeCreacion;
+//  }
+//
+//  public void setMomentoDeCreacion(LocalDateTime momentoDeCreacion) {
+//    this.momentoDeCreacion = momentoDeCreacion;
+//  }
 }

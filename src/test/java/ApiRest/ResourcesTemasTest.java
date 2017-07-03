@@ -223,9 +223,9 @@ public class ResourcesTemasTest {
     @Test
     public void siUnaReunionEstaCerradaSeRecuperaConOrdenDePrioridad() {
         TemaDeReunion temaDeMayorPrioridad = new TemaDeReunion();
-        temaDeMayorPrioridad.setPrioridad(4);
+        temaDeMayorPrioridad.setPrioridad(1);
         TemaDeReunion temaDeMenorPrioridad = new TemaDeReunion();
-        temaDeMenorPrioridad.setPrioridad(1);
+        temaDeMenorPrioridad.setPrioridad(4);
         TemaDeReunion temaDePrioridadMedia = new TemaDeReunion();
         temaDePrioridadMedia.setPrioridad(2);
         Reunion unaReunion = Reunion.create(LocalDate.now());
@@ -273,15 +273,15 @@ public class ResourcesTemasTest {
         Assert.assertEquals("OBLIGATORIO", reunionRecuperada.getTemasPropuestos().get(0).getObligatoriedad());
     }
 
-    @Test
-    public void alEnviarUnTemaAlFrontendSeEnviaSuMomentoDeCreacion(){
-        TemaDeReunion tema = new TemaDeReunion();
-        tema = temaService.save(tema);
-
-        TemaTo temaEnviado = temaResource.getSingle(tema.getId());
-
-        Assert.assertFalse(temaEnviado.getMomentoDeCreacion() == null);
-    }
+//    @Test
+//    public void alEnviarUnTemaAlFrontendSeEnviaSuMomentoDeCreacion(){
+//        TemaDeReunion tema = new TemaDeReunion();
+//        tema = temaService.save(tema);
+//
+//        TemaTo temaEnviado = temaResource.getSingle(tema.getId());
+//
+//        Assert.assertFalse(temaEnviado.getMomentoDeCreacion() == null);
+//    }
 
     @Test
     public void alRecibirUnTemaDelFrontendSeRecibeSuMomentoDeCreacion(){
