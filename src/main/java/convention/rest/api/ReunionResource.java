@@ -33,8 +33,6 @@ public class ReunionResource extends Resource {
     private static final Type LISTA_DE_REUNIONES_TO = new ReferenceOf<List<ReunionTo>>() {
     }.getReferencedType();
 
-    private static final Type LISTA_DE_REUNIONES = new ReferenceOf<List<Reunion>>() {
-    }.getReferencedType();
 
     public Reunion muestreoDeReunion(Reunion reunion, Long userId,SecurityContext securityContext) {
         Reunion nuevaReunion = reunion.copy();
