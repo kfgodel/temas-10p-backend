@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  * Created by kfgodel on 21/08/16.
  */
 @Entity
-public class TemaDeReunion extends PersistableSupport {
+public class TemaDeReunion extends Tema {
 
   @ManyToOne
   private Reunion reunion;
@@ -22,32 +22,14 @@ public class TemaDeReunion extends PersistableSupport {
   private Integer prioridad;
   public static final String prioridad_FIELD = "prioridad";
 
-  @ManyToOne
-  private Usuario autor;
-  public static final String autor_FIELD = "autor";
-
-  @Column(length = 1024)
-  private String titulo;
-  public static final String titulo_FIELD = "titulo";
-
-  @Lob
-  private String descripcion;
-  public static final String descripcion_FIELD = "descripcion";
-
   @Fetch(org.hibernate.annotations.FetchMode.SELECT)
   @ManyToMany(fetch = FetchType.EAGER)
   private List<Usuario> interesados;
   public static final String interesados_FIELD = "interesados";
 
   @Enumerated(EnumType.STRING)
-  private DuracionDeTema duracion;
-  public static final String duracion_FIELD = "duracion";
-
-  @Enumerated(EnumType.STRING)
   private ObligatoriedadDeReunion obligatoriedad;
   public static final String obligatoriedad_FIELD = "obligatoriedad";
-
-  public static final String momentoDeCreacion_FIELD = "momentoDeCreacion";
 
   public ObligatoriedadDeReunion getObligatoriedad(){
     return obligatoriedad;
@@ -55,37 +37,6 @@ public class TemaDeReunion extends PersistableSupport {
 
   public void setObligatoriedad(ObligatoriedadDeReunion unaObligatoriedad){
     this.obligatoriedad = unaObligatoriedad;
-  }
-
-  public DuracionDeTema getDuracion(){
-    return duracion;
-  }
-  public void setDuracion(DuracionDeTema duracion) {
-    this.duracion=duracion;
-  }
-
-  public Usuario getAutor() {
-    return autor;
-  }
-
-  public void setAutor(Usuario autor) {
-    this.autor = autor;
-  }
-
-  public String getTitulo() {
-    return titulo;
-  }
-
-  public void setTitulo(String titulo) {
-    this.titulo = titulo;
-  }
-
-  public String getDescripcion() {
-    return descripcion;
-  }
-
-  public void setDescripcion(String descripcion) {
-    this.descripcion = descripcion;
   }
 
   public Reunion getReunion() {

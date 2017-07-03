@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Esta clase representa una reunion de roots con el temario a realizar
@@ -61,10 +62,15 @@ public class Reunion extends PersistableSupport {
     }
   }
 
-  public static Reunion create(LocalDate fecha) {
+  public static Reunion create(LocalDate fecha, List<TemaGeneral> temasGenerales) {
     Reunion reunion = new Reunion();
     reunion.fecha = fecha;
     reunion.status = StatusDeReunion.PENDIENTE;
+    reunion.setTemasPropuestos(
+            temasGenerales.stream()
+                          .map(temaGeneral -> temaGeneral.generarTemaPara(reunion))
+                          .collect(Collectors.toList())
+    );
     return reunion;
   }
 

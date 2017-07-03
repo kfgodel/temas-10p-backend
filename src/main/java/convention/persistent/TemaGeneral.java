@@ -3,7 +3,7 @@ package convention.persistent;
 /**
  * Created by sandro on 03/07/17.
  */
-public class TemaGeneral {
+public class TemaGeneral extends Tema {
 
     public TemaDeReunion generarTemaPara(Reunion reunion) {
         TemaDeReunion temaDeReunion = new TemaDeReunion();
