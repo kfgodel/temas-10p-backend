@@ -236,7 +236,7 @@ public class ResourcesTemasTest {
         temaDeMenorPrioridad.setReunion(unaReunion);
         temaDePrioridadMedia.setReunion(unaReunion);
         unaReunion = reunionService.update(unaReunion);
-        unaReunion = reunionService.getAndMapping(unaReunion.getId(), reunion -> reunionResource.muestreoDeReunion(reunion, userId));
+        unaReunion = reunionService.getAndMapping(unaReunion.getId(), reunion -> reunionResource.muestreoDeReunion(reunion, userId,testContextUserFeche));
         Assert.assertArrayEquals(unaReunion.getTemasPropuestos().toArray(), Arrays.asList(temaDeMayorPrioridad, temaDePrioridadMedia, temaDeMenorPrioridad).toArray());
     }
 

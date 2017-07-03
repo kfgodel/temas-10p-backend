@@ -13,7 +13,10 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 /**
@@ -33,7 +36,7 @@ public class ReunionResource extends Resource {
     private static final Type LISTA_DE_REUNIONES = new ReferenceOf<List<Reunion>>() {
     }.getReferencedType();
 
-    public Reunion muestreoDeReunion(Reunion reunion, Long userId) {
+    public Reunion muestreoDeReunion(Reunion reunion, Long userId,SecurityContext securityContext) {
         Reunion nuevaReunion = reunion.copy();
 
         if (reunion.getStatus() == StatusDeReunion.PENDIENTE) {
@@ -41,6 +44,7 @@ public class ReunionResource extends Resource {
                     map(temaDeReunion ->
                             temaDeReunion.copy()).collect(Collectors.toList());
             listaDeTemasNuevos.forEach(temaDeReunion -> temaDeReunion.ocultarVotosPara(userId));
+            Collections.shuffle(listaDeTemasNuevos,new Random(securityContext.getUserPrincipal().hashCode())); //random turbio
             nuevaReunion.setTemasPropuestos(listaDeTemasNuevos);
         }
         return nuevaReunion;
@@ -80,7 +84,7 @@ public class ReunionResource extends Resource {
         Long userId = idDeUsuarioActual(securityContext);
         List<Reunion> reuniones = reunionService.getAll();
         List<Reunion> reunionesFiltradas = reuniones.stream()
-                .map(reunion -> muestreoDeReunion(reunion, userId)).collect(Collectors.toList());
+                .map(reunion -> muestreoDeReunion(reunion, userId,securityContext)).collect(Collectors.toList());
         return convertir(reunionesFiltradas, LISTA_DE_REUNIONES_TO);
 
     }
@@ -96,7 +100,7 @@ public class ReunionResource extends Resource {
     @Path("/{resourceId}")
     public ReunionTo getSingle(@PathParam("resourceId") Long id, @Context SecurityContext securityContext) {
         Long userId = idDeUsuarioActual(securityContext);
-        Reunion reunionFiltrada = reunionService.getAndMapping(id, reunion -> muestreoDeReunion(reunion, userId));
+        Reunion reunionFiltrada = reunionService.getAndMapping(id, reunion -> muestreoDeReunion(reunion, userId,securityContext));
         return convertir(reunionFiltrada, ReunionTo.class);
 
     }
