@@ -6,6 +6,8 @@ import ar.com.kfgodel.diamond.api.types.reference.ReferenceOf;
 import ar.com.kfgodel.orm.api.config.DbCoordinates;
 import ar.com.kfgodel.orm.api.operations.basic.Save;
 import ar.com.kfgodel.orm.impl.config.ImmutableDbCoordinates;
+import ar.com.kfgodel.temas.application.auth.BackofficeCallbackAuthenticator;
+import ar.com.kfgodel.temas.application.auth.BackofficeCallbackAuthenticatorForAll;
 import ar.com.kfgodel.temas.filters.users.UserCount;
 import ar.com.kfgodel.webbyconvention.api.auth.WebCredential;
 import convention.persistent.Usuario;
@@ -44,34 +46,8 @@ public class DevelopmentConfig implements TemasConfiguration {
   }
 
   @Override
-  public Function<WebCredential,Optional<Object>> autenticador(){
-    return (webCredential -> Optional.of(usuarioDeMentira()));
-  }
-  @Override
-  public Void inicializarDatos(){
-    if(getUsers().isEmpty()) {
-      Usuario unUser = Usuario.create("feche", "fecheromero", "123", "sarlnga");
-      ApplicationOperation.createFor(getInjector())
-              .insideATransaction()
-              .taking(unUser)
-              .convertingTo(Usuario.class)
-              .applyingResultOf(Save::create)
-              .convertTo(UserTo.class);
-
-      Usuario unUser2 = Usuario.create("sandro", "unSandro", "123", "sarlonga");
-      ApplicationOperation.createFor(getInjector())
-              .insideATransaction()
-              .taking(unUser2)
-              .convertingTo(Usuario.class)
-              .applyingResultOf(Save::create)
-              .convertTo(UserTo.class);
-    }
-    return null;
-  }
-  protected Long usuarioDeMentira() {
-    List<UserTo> listOfUserTo= getUsers();
-    return listOfUserTo.get(0).getId();
-
+  public Function<WebCredential, Optional<Object>> autenticador() {
+    return BackofficeCallbackAuthenticatorForAll.create(getInjector());
   }
 
   protected List<UserTo> getUsers() {

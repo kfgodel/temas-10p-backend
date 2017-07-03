@@ -30,6 +30,7 @@ public interface TemasConfiguration {
 
     return injector;
   }
+
   default Void inicializarDatos(){
     return null;
   }
