@@ -24,35 +24,34 @@ public class TemaResource extends Resource {
     TemaService temaService;
 
 
+    @POST
+    public TemaTo create(TemaEnCreacionTo newState) {
+        TemaDeReunion temaCreado = temaService.save(convertir(newState, TemaDeReunion.class));
+        return convertir(temaCreado, TemaTo.class);
+    }
 
-  @POST
-  public TemaTo create(TemaEnCreacionTo newState) {
-        TemaDeReunion temaCreado=temaService.save(convertir(newState,TemaDeReunion.class));
-    return convertir(temaCreado,TemaTo.class);
-  }
+    @GET
+    @Path("/{resourceId}")
+    public TemaTo getSingle(@PathParam("resourceId") Long id) {
+        return convertir(temaService.get(id), TemaTo.class);
+    }
 
-  @GET
-  @Path("/{resourceId}")
-  public TemaTo getSingle(@PathParam("resourceId") Long id) {
-    return convertir(temaService.get(id),TemaTo.class);
-  }
+    @GET
+    @Path("votar/{resourceId}")
+    public TemaTo votar(@PathParam("resourceId") Long id, @Context SecurityContext securityContext) {
 
-  @GET
-  @Path("votar/{resourceId}")
-  public TemaTo votar(@PathParam("resourceId") Long id, @Context SecurityContext securityContext) {
+        Usuario usuarioActual = usuarioActual(securityContext);
 
-    Usuario usuarioActual=usuarioActual(securityContext);
-
-    TemaDeReunion temaVotado= temaService.updateAndMapping(id,
-            temaDeReunion -> votarTema(usuarioActual, temaDeReunion));
-          return convertir(temaVotado,TemaTo.class);
-  }
+        TemaDeReunion temaVotado = temaService.updateAndMapping(id,
+                temaDeReunion -> votarTema(usuarioActual, temaDeReunion));
+        return convertir(temaVotado, TemaTo.class);
+    }
 
     public TemaDeReunion votarTema(Usuario usuarioActual, TemaDeReunion temaDeReunion) {
-        long cantidadDeVotos=temaDeReunion.getInteresados().stream()
+        long cantidadDeVotos = temaDeReunion.getInteresados().stream()
                 .filter(usuario ->
                         usuario.getId().equals(usuarioActual.getId())).count();
-        if (cantidadDeVotos>=3) {
+        if (cantidadDeVotos >= 3) {
             throw new WebApplicationException("excede la cantidad de votos permitidos", 409);
         }
         temaDeReunion.agregarInteresado(usuarioActual);
@@ -60,23 +59,23 @@ public class TemaResource extends Resource {
     }
 
     @GET
-  @Path("desvotar/{resourceId}")
-  public TemaTo desvotar(@PathParam("resourceId") Long id, @Context SecurityContext securityContext) {
+    @Path("desvotar/{resourceId}")
+    public TemaTo desvotar(@PathParam("resourceId") Long id, @Context SecurityContext securityContext) {
 
-      Usuario usuarioActual=usuarioActual(securityContext);
+        Usuario usuarioActual = usuarioActual(securityContext);
 
-      TemaDeReunion temaVotado= temaService.updateAndMapping(id,
-              temaDeReunion -> desvotarTema(usuarioActual, temaDeReunion)
-              );
-      return convertir(temaVotado,TemaTo.class);
+        TemaDeReunion temaVotado = temaService.updateAndMapping(id,
+                temaDeReunion -> desvotarTema(usuarioActual, temaDeReunion)
+        );
+        return convertir(temaVotado, TemaTo.class);
 
-  }
+    }
 
     public TemaDeReunion desvotarTema(Usuario usuarioActual, TemaDeReunion temaDeReunion) {
-        long cantidadDeVotos=temaDeReunion.getInteresados().stream()
+        long cantidadDeVotos = temaDeReunion.getInteresados().stream()
                 .filter(usuario ->
                         usuario.getId().equals(usuarioActual.getId())).count();
-        if (cantidadDeVotos<=0) {
+        if (cantidadDeVotos <= 0) {
             throw new WebApplicationException("el usuario no tiene votos en el tema", 409);
         }
         temaDeReunion.quitarInteresado(usuarioActual);
@@ -89,12 +88,12 @@ public class TemaResource extends Resource {
         temaService.delete(id);
     }
 
-  public static TemaResource create(DependencyInjector appInjector) {
-    TemaResource resource = new TemaResource();
-    resource.appInjector = appInjector;
-      resource.temaService = resource.appInjector.createInjected(TemaService.class);
+    public static TemaResource create(DependencyInjector appInjector) {
+        TemaResource resource = new TemaResource();
+        resource.appInjector = appInjector;
+        resource.temaService = resource.appInjector.createInjected(TemaService.class);
 
-      return resource;
-  }
+        return resource;
+    }
 
 }

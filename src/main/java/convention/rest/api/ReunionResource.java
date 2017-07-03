@@ -24,100 +24,105 @@ import java.util.stream.Collectors;
 @Consumes("application/json")
 public class ReunionResource extends Resource {
 
-  @Inject
-  private ReunionService reunionService;
+    @Inject
+    private ReunionService reunionService;
 
-  private static final Type LISTA_DE_REUNIONES_TO = new ReferenceOf<List<ReunionTo>>() {
-  }.getReferencedType();
+    private static final Type LISTA_DE_REUNIONES_TO = new ReferenceOf<List<ReunionTo>>() {
+    }.getReferencedType();
 
     private static final Type LISTA_DE_REUNIONES = new ReferenceOf<List<Reunion>>() {
     }.getReferencedType();
-    public Reunion muestreoDeReunion(Reunion reunion, Long userId){
+
+    public Reunion muestreoDeReunion(Reunion reunion, Long userId) {
         Reunion nuevaReunion = reunion.copy();
 
-        if(reunion.getStatus() == StatusDeReunion.PENDIENTE) {
+        if (reunion.getStatus() == StatusDeReunion.PENDIENTE) {
             List<TemaDeReunion> listaDeTemasNuevos = reunion.getTemasPropuestos().stream().
                     map(temaDeReunion ->
                             temaDeReunion.copy()).collect(Collectors.toList());
             listaDeTemasNuevos.forEach(temaDeReunion -> temaDeReunion.ocultarVotosPara(userId));
             nuevaReunion.setTemasPropuestos(listaDeTemasNuevos);
+        } else {
+            nuevaReunion.getTemasPropuestos().sort((tema1, tema2) -> tema2.getPrioridad() - tema1.getPrioridad());
         }
-        else{
-            nuevaReunion.getTemasPropuestos().sort((tema1, tema2) ->tema2.getPrioridad()-tema1.getPrioridad() );
-        }
-        return  nuevaReunion;
-    }
-  @GET
-  @Path("proxima")
-  public ReunionTo getProxima(@Context SecurityContext securityContext) {
-    Reunion proxima=reunionService.getProxima();
-    return getSingle(proxima.getId(),securityContext);
-  }
-
-  @GET
-  @Path("cerrar/{resourceId}")
-  public ReunionTo cerrar(@PathParam("resourceId") Long id) {
-    Reunion reunionCerrada=reunionService.updateAndMapping(id,
-            reunion ->{reunion.cerrarVotacion();
-                        return reunion;});
-      return convertir(reunionCerrada,ReunionTo.class);
-  }
-
-  @GET
-  @Path("reabrir/{resourceId}")
-  public ReunionTo reabrir(@PathParam("resourceId") Long id) {
-    Reunion reunionAbierta=reunionService.updateAndMapping(id,
-            reunion -> {reunion.reabrirVotacion();
-                        return reunion;});
-   return convertir(reunionAbierta,ReunionTo.class);
-  }
-
-  @GET
-  public List<ReunionTo> getAll(@Context SecurityContext securityContext) {
-      Long userId = idDeUsuarioActual(securityContext);
-      List<Reunion> reuniones=reunionService.getAll();
-      List<Reunion> reunionesFiltradas= reuniones.stream()
-      .map(reunion -> muestreoDeReunion(reunion,userId)).collect(Collectors.toList());
-        return convertir(reunionesFiltradas,LISTA_DE_REUNIONES_TO);
-
+        return nuevaReunion;
     }
 
-  @POST
-  public ReunionTo create(ReunionTo reunionNueva) {
+    @GET
+    @Path("proxima")
+    public ReunionTo getProxima(@Context SecurityContext securityContext) {
+        Reunion proxima = reunionService.getProxima();
+        return getSingle(proxima.getId(), securityContext);
+    }
 
-      Reunion reunionCreada=reunionService.save(convertir(reunionNueva,Reunion.class));
-      return convertir(reunionCreada,ReunionTo.class);
-  }
+    @GET
+    @Path("cerrar/{resourceId}")
+    public ReunionTo cerrar(@PathParam("resourceId") Long id) {
+        Reunion reunionCerrada = reunionService.updateAndMapping(id,
+                reunion -> {
+                    reunion.cerrarVotacion();
+                    return reunion;
+                });
+        return convertir(reunionCerrada, ReunionTo.class);
+    }
 
-  @GET
-  @Path("/{resourceId}")
-  public ReunionTo getSingle(@PathParam("resourceId") Long id, @Context SecurityContext securityContext) {
+    @GET
+    @Path("reabrir/{resourceId}")
+    public ReunionTo reabrir(@PathParam("resourceId") Long id) {
+        Reunion reunionAbierta = reunionService.updateAndMapping(id,
+                reunion -> {
+                    reunion.reabrirVotacion();
+                    return reunion;
+                });
+        return convertir(reunionAbierta, ReunionTo.class);
+    }
+
+    @GET
+    public List<ReunionTo> getAll(@Context SecurityContext securityContext) {
         Long userId = idDeUsuarioActual(securityContext);
-       Reunion reunionFiltrada= reunionService.getAndMapping(id, reunion -> muestreoDeReunion(reunion,userId));
-      return convertir(reunionFiltrada,ReunionTo.class);
+        List<Reunion> reuniones = reunionService.getAll();
+        List<Reunion> reunionesFiltradas = reuniones.stream()
+                .map(reunion -> muestreoDeReunion(reunion, userId)).collect(Collectors.toList());
+        return convertir(reunionesFiltradas, LISTA_DE_REUNIONES_TO);
 
-  }
+    }
+
+    @POST
+    public ReunionTo create(ReunionTo reunionNueva) {
+
+        Reunion reunionCreada = reunionService.save(convertir(reunionNueva, Reunion.class));
+        return convertir(reunionCreada, ReunionTo.class);
+    }
+
+    @GET
+    @Path("/{resourceId}")
+    public ReunionTo getSingle(@PathParam("resourceId") Long id, @Context SecurityContext securityContext) {
+        Long userId = idDeUsuarioActual(securityContext);
+        Reunion reunionFiltrada = reunionService.getAndMapping(id, reunion -> muestreoDeReunion(reunion, userId));
+        return convertir(reunionFiltrada, ReunionTo.class);
+
+    }
 
 
-  @PUT
-  @Path("/{resourceId}")
-  public ReunionTo update(ReunionTo newState, @PathParam("resourceId") Long id) {
-    Reunion reunionActualizada= reunionService.update(convertir(newState,Reunion.class));
-      return convertir(reunionActualizada,ReunionTo.class);
-  }
+    @PUT
+    @Path("/{resourceId}")
+    public ReunionTo update(ReunionTo newState, @PathParam("resourceId") Long id) {
+        Reunion reunionActualizada = reunionService.update(convertir(newState, Reunion.class));
+        return convertir(reunionActualizada, ReunionTo.class);
+    }
 
-  @DELETE
-  @Path("/{resourceId}")
-  public void delete(@PathParam("resourceId") Long id) {
-    reunionService.delete(id);
-  }
+    @DELETE
+    @Path("/{resourceId}")
+    public void delete(@PathParam("resourceId") Long id) {
+        reunionService.delete(id);
+    }
 
-  public static ReunionResource create(DependencyInjector appInjector) {
-    ReunionResource resource = new ReunionResource();
-    resource.appInjector = appInjector;
-    resource.reunionService = appInjector.createInjected(ReunionService.class);
-    return resource;
-  }
+    public static ReunionResource create(DependencyInjector appInjector) {
+        ReunionResource resource = new ReunionResource();
+        resource.appInjector = appInjector;
+        resource.reunionService = appInjector.createInjected(ReunionService.class);
+        return resource;
+    }
 
 
 }

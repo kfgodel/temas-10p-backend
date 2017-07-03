@@ -22,10 +22,12 @@ public class ReunionService extends Service<Reunion> {
                         existente.mapOptional(UsarExistente::create)
                                 .orElseGet(CrearProximaReunion::create)).get();
     }
-    public ReunionService(){
+
+    public ReunionService() {
         setClasePrincipal(Reunion.class);
     }
-    public List<Reunion> getAll(){
-       return  getAll(AllReunionesUltimaPrimero.create());
+
+    public List<Reunion> getAll() {
+        return getAll(AllReunionesUltimaPrimero.create());
     }
 }
