@@ -42,8 +42,6 @@ public class ReunionResource extends Resource {
                             temaDeReunion.copy()).collect(Collectors.toList());
             listaDeTemasNuevos.forEach(temaDeReunion -> temaDeReunion.ocultarVotosPara(userId));
             nuevaReunion.setTemasPropuestos(listaDeTemasNuevos);
-        } else {
-            nuevaReunion.getTemasPropuestos().sort((tema1, tema2) -> tema2.getPrioridad() - tema1.getPrioridad());
         }
         return nuevaReunion;
     }

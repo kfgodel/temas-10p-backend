@@ -1,6 +1,7 @@
 package Persistence;
 
 import ar.com.kfgodel.temas.application.Application;
+import convention.persistent.ObligatoriedadDeReunion;
 import ar.com.kfgodel.temas.filters.reuniones.AllReunionesUltimaPrimero;
 import convention.persistent.Reunion;
 import convention.persistent.TemaDeReunion;
@@ -61,7 +62,7 @@ public class PersistenciaTest {
         Assert.assertEquals(cantidadDeTemasAnteriores + 1, temasPersistidos.size());
     }
 
-   @Test
+    @Test
     public void test03AlObtenerUnaReunionSeTraenSoloSusTemas(){
 
        Reunion reunion = new Reunion();
@@ -82,6 +83,25 @@ public class PersistenciaTest {
 
        Assert.assertEquals(1, reunionPersistida.getTemasPropuestos().size());
 
+    }
+
+    @Test
+    public void test04LaObligatoriedadDeUnTemaSePersisteCorrectamente(){
+        TemaDeReunion tema = new TemaDeReunion();
+        tema.setObligatoriedad(ObligatoriedadDeReunion.OBLIGATORIO);
+
+        tema = temaService.save(tema);
+
+        TemaDeReunion temaPersistido = temaService.get(tema.getId());
+        Assert.assertEquals(ObligatoriedadDeReunion.OBLIGATORIO, temaPersistido.getObligatoriedad());
+    }
+
+    @Test
+    public void test05ElMomentoDeCreacionDeUnTemaSeCreaAlPersistirElTema(){
+        TemaDeReunion tema = new TemaDeReunion();
+        tema = temaService.save(tema);
+        TemaDeReunion temaPersistido = temaService.get(tema.getId());
+        Assert.assertFalse(temaPersistido.getMomentoDeCreacion() == null);
     }
 
     private void startApplication(){

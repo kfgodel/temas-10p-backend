@@ -23,13 +23,11 @@ public class TemaResource extends Resource {
     @Inject
     TemaService temaService;
 
-
     @POST
     public TemaTo create(TemaEnCreacionTo newState) {
         TemaDeReunion temaCreado = temaService.save(convertir(newState, TemaDeReunion.class));
         return convertir(temaCreado, TemaTo.class);
     }
-
     @GET
     @Path("/{resourceId}")
     public TemaTo getSingle(@PathParam("resourceId") Long id) {
@@ -54,7 +52,11 @@ public class TemaResource extends Resource {
         if (cantidadDeVotos >= 3) {
             throw new WebApplicationException("excede la cantidad de votos permitidos", 409);
         }
-        temaDeReunion.agregarInteresado(usuarioActual);
+        try {
+            temaDeReunion.agregarInteresado(usuarioActual);
+        } catch (Exception exception) {
+            throw new WebApplicationException(TemaDeReunion.mensajeDeErrorAlAgregarInteresado(), 409);
+        }
         return temaDeReunion;
     }
 

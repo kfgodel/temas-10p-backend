@@ -21,12 +21,14 @@ public class TemaEnCreacionTo {
     @CopyTo(TemaDeReunion.reunion_FIELD)
     private Long idDeReunion;
 
-
     @CopyTo(TemaDeReunion.titulo_FIELD)
     private String titulo;
 
     @CopyTo(TemaDeReunion.descripcion_FIELD)
     private String descripcion;
+
+    @CopyTo(TemaDeReunion.obligatoriedad_FIELD)
+    private String obligatoriedad;
 
     public String getDuracion() {
         return duracion;
@@ -58,6 +60,14 @@ public class TemaEnCreacionTo {
 
     public void setTitulo(String titulo) {
         this.titulo = titulo;
+    }
+
+    public String getObligatoriedad() {
+        return obligatoriedad;
+    }
+
+    public void setObligatoriedad(String unaObligatoriedad) {
+        this.obligatoriedad = unaObligatoriedad;
     }
 
     public String getDescripcion() {
