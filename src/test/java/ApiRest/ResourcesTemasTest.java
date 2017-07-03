@@ -154,6 +154,12 @@ public class ResourcesTemasTest {
 
     }
     @Test
+    public void crearProximaReunionNoCrea2Reuniones(){
+        reunionService.getProxima();
+        reunionService.getProxima();
+        Assert.assertEquals(reunionService.getAll().size(),1);
+    }
+    @Test
     public void votarUnTemaNoLoVuelveACrearPeroSiGuardaLosVotos(){
         TemaDeReunion unTema=new TemaDeReunion();
             unTema.setDuracion(DuracionDeTema.MEDIO);
