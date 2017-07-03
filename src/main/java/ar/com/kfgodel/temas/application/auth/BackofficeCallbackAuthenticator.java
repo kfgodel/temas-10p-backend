@@ -23,22 +23,15 @@ import java.util.function.Function;
  * This type knows how to authenticate users from the backoffice callback
  * Created by kfgodel on 14/01/17.
  */
-public class BackofficeCallbackAuthenticator implements Function<WebCredential, Optional<Object>> {
+public abstract class BackofficeCallbackAuthenticator implements Function<WebCredential, Optional<Object>> {
   public static Logger LOG = LoggerFactory.getLogger(BackofficeCallbackAuthenticator.class);
 
-  private DependencyInjector appInjector;
+  protected DependencyInjector appInjector;
 
   @Override
-  public Optional<Object> apply(WebCredential webCredential) {
-    Optional<BackofficeUserTo> backofficeUser = createToFrom(webCredential);
-    Optional<Long> idAutenticado = backofficeUser
-      .filter(BackofficeUserTo::hasGrantedAccess)
-      .filter(BackofficeUserTo::isRoot)
-      .map(this::buscarIdDelUsuarioEnLaBase);
-    return idAutenticado.map(Object.class::cast); // El casteo solo para ayudar al compilador
-  }
+  public abstract Optional<Object> apply(WebCredential webCredential);
 
-  private Optional<BackofficeUserTo> createToFrom(WebCredential webCredential) {
+  protected Optional<BackofficeUserTo> createToFrom(WebCredential webCredential) {
     String denied = webCredential.getRequestParameter("denied");
     if (!StringUtils.isNullOrEmpty(denied)) {
       // Nos denegaron el acceso
@@ -88,7 +81,7 @@ public class BackofficeCallbackAuthenticator implements Function<WebCredential, 
     return sb.toString();
   }
 
-  private Long buscarIdDelUsuarioEnLaBase(BackofficeUserTo backofficeUser) {
+  protected Long buscarIdDelUsuarioEnLaBase(BackofficeUserTo backofficeUser) {
     Usuario usuario = createOperation()
       .insideASession()
       .applying(UserByBackofficeId.create(backofficeUser.uid))
@@ -111,12 +104,6 @@ public class BackofficeCallbackAuthenticator implements Function<WebCredential, 
 
   private ApplicationOperation createOperation() {
     return ApplicationOperation.createFor(appInjector);
-  }
-
-  public static BackofficeCallbackAuthenticator create(DependencyInjector appInjector) {
-    BackofficeCallbackAuthenticator authenticator = new BackofficeCallbackAuthenticator();
-    authenticator.appInjector = appInjector;
-    return authenticator;
   }
 
 }
