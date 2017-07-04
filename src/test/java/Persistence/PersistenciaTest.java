@@ -6,7 +6,9 @@ import ar.com.kfgodel.temas.filters.reuniones.AllReunionesUltimaPrimero;
 import convention.persistent.Reunion;
 import convention.persistent.TemaDeReunion;
 
+import convention.persistent.TemaGeneral;
 import convention.services.ReunionService;
+import convention.services.TemaGeneralService;
 import convention.services.TemaService;
 import helpers.TestConfig;
 import org.junit.After;
@@ -25,12 +27,14 @@ public class PersistenciaTest {
     Application application;
     ReunionService reunionService;
     TemaService temaService;
+    private TemaGeneralService temaGeneralService;
 
     @Before
     public void setUp(){
         startApplication();
         reunionService = application.getInjector().createInjected(ReunionService.class);
         temaService = application.getInjector().createInjected(TemaService.class);
+        temaGeneralService = application.getInjector().createInjected(TemaGeneralService.class);
     }
     @After
     public void drop(){
@@ -102,6 +106,15 @@ public class PersistenciaTest {
         tema = temaService.save(tema);
         TemaDeReunion temaPersistido = temaService.get(tema.getId());
         Assert.assertFalse(temaPersistido.getMomentoDeCreacion() == null);
+    }
+
+    @Test
+    public void test06SePuedePersistirCorrectamenteUnTemaGeneral(){
+        TemaGeneral temaGeneral = new TemaGeneral();
+        String titulo = "Tema General";
+        temaGeneral.setTitulo(titulo);
+        temaGeneral = temaGeneralService.save(temaGeneral);
+        Assert.assertEquals(titulo, temaGeneralService.get(temaGeneral.getId()).getTitulo());
     }
 
     private void startApplication(){

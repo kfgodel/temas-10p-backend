@@ -5,6 +5,7 @@ import javax.persistence.*;
 /**
  * Created by sandro on 03/07/17.
  */
+@MappedSuperclass
 public abstract class Tema extends PersistableSupport {
 
     @ManyToOne
