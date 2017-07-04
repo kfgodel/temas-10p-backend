@@ -3,6 +3,7 @@ package ar.com.kfgodel.temas.config;
 import ar.com.kfgodel.orm.api.config.DbCoordinates;
 import ar.com.kfgodel.orm.impl.config.ImmutableDbCoordinates;
 import ar.com.kfgodel.temas.application.auth.BackofficeCallbackAuthenticator;
+import ar.com.kfgodel.temas.application.auth.BackofficeCallbackAuthenticatorForRootsOnly;
 import ar.com.kfgodel.webbyconvention.api.auth.WebCredential;
 import com.heroku.sdk.jdbc.DatabaseUrl;
 
@@ -42,6 +43,6 @@ public class HerokuConfig implements TemasConfiguration {
 
   @Override
   public Function<WebCredential, Optional<Object>> autenticador() {
-    return BackofficeCallbackAuthenticator.create(getInjector());
+    return BackofficeCallbackAuthenticatorForRootsOnly.create(getInjector());
   }
 }

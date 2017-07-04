@@ -21,37 +21,41 @@ import java.util.function.Function;
  */
 public abstract class Service<T extends PersistableSupport> {
     @Inject
-    private DependencyInjector appInjector;
+    protected DependencyInjector appInjector;
 
-    protected   Type LIST_TYPE = new ReferenceOf<List<T>>() {}.getReferencedType();
-    protected  Class<T>  clasePrincipal;
+    protected Type LIST_TYPE = new ReferenceOf<List<T>>() {
+    }.getReferencedType();
+    protected Class<T> clasePrincipal;
 
-    public List<T> getAll(SessionOperation<Nary<T>> sessionOperation){
+    public List<T> getAll(SessionOperation<Nary<T>> sessionOperation) {
         return createOperation()
                 .insideASession()
                 .applying(sessionOperation)
                 .convertTo(LIST_TYPE);
     }
-    public Type getList_Type(){
+
+    public Type getList_Type() {
         return LIST_TYPE;
     }
+
     protected ApplicationOperation createOperation() {
         return ApplicationOperation.createFor(appInjector);
     }
 
 
-    public T save(T newObject){
-         return  createOperation()
+    public T save(T newObject) {
+        return createOperation()
                 .insideATransaction()
-                .taking( newObject)
+                .taking(newObject)
                 .applyingResultOf(Save::create)
-                 .convertTo(clasePrincipal);
+                .convertTo(clasePrincipal);
 
     }
+
     public T get(Long id) {
         return createOperation()
                 .insideASession()
-                .applying(FindById.create(clasePrincipal,id))
+                .applying(FindById.create(clasePrincipal, id))
                 .mapping((encontrado) -> {
                     return controlDeTargetAndReturn(encontrado);
 
@@ -64,27 +68,26 @@ public abstract class Service<T extends PersistableSupport> {
                 .insideASession()
                 .applying(FindById.create(clasePrincipal, id))
                 .mapping((encontrado) -> {
-                    T elem= controlDeTargetAndReturn(encontrado);
+                    T elem = controlDeTargetAndReturn(encontrado);
                     return mapping.apply(elem);
                 })
                 .convertTo(clasePrincipal);
     }
 
-    public T updateAndMapping(Long id, Function<T, T> mapping){
+    public T updateAndMapping(Long id, Function<T, T> mapping) {
         return createOperation()
                 .insideATransaction()
                 .applying((context) -> FindById.create(clasePrincipal, id).applyWithSessionOn(context))
                 .mapping((encontrado) -> {
-                    T reunion = controlDeTargetAndReturn(encontrado);
+                    T instancia = controlDeTargetAndReturn(encontrado);
 
-                    return mapping.apply(reunion);
+                    return mapping.apply(instancia);
                 }).applyingResultOf(Save::create)
                 .get();
     }
 
 
-
-    public T update(T newState){
+    public T update(T newState) {
         return createOperation()
                 .insideATransaction()
                 .taking(newState)
@@ -95,13 +98,14 @@ public abstract class Service<T extends PersistableSupport> {
                     return encontrado;
                 }).applyingResultOf(Save::create).get();
     }
-    public void delete( Long id) {
+
+    public void delete(Long id) {
         createOperation()
                 .insideATransaction()
                 .taking(id)
                 .convertingTo(clasePrincipal)
                 .mapping((encontrado) -> {
-                controlDeTarget(encontrado);
+                    controlDeTarget(encontrado);
                     return encontrado;
                 })
                 .applyResultOf(Delete::create);
@@ -112,11 +116,12 @@ public abstract class Service<T extends PersistableSupport> {
             throw new WebApplicationException("target not found", 404);
         }
     }
+
     private T controlDeTargetAndReturn(Nary<T> encontrado) {
         return encontrado.orElseThrow(() -> new WebApplicationException("target not found", 404));
     }
 
-    protected void  setClasePrincipal(Class<T> clasePrincipal){
-        this.clasePrincipal=clasePrincipal;
+    protected void setClasePrincipal(Class<T> clasePrincipal) {
+        this.clasePrincipal = clasePrincipal;
     }
 }
