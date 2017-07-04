@@ -1,6 +1,7 @@
 package convention.services;
 
 import ar.com.kfgodel.orm.api.operations.basic.FindAll;
+import ar.com.kfgodel.temas.filters.reuniones.ReunionesAbiertas;
 import convention.persistent.Reunion;
 import convention.persistent.TemaGeneral;
 
@@ -23,7 +24,7 @@ public class TemaGeneralService extends Service<TemaGeneral> {
     @Override
     public TemaGeneral save(TemaGeneral temaGeneral){
         ReunionService reunionService = appInjector.getImplementationFor(ReunionService.class).get();
-        List<Reunion> reunionesAbiertas = reunionService.getAll();
+        List<Reunion> reunionesAbiertas = reunionService.getAll(ReunionesAbiertas.create());
         reunionesAbiertas.forEach(reunion -> reunion.agregarTemaGeneral(temaGeneral));
         reunionService.saveAll(reunionesAbiertas);
         return super.save(temaGeneral);

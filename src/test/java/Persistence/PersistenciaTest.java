@@ -2,10 +2,7 @@ package Persistence;
 
 import ar.com.kfgodel.temas.application.Application;
 import ar.com.kfgodel.temas.filters.reuniones.AllReunionesUltimaPrimero;
-import convention.persistent.ObligatoriedadDeReunion;
-import convention.persistent.Reunion;
-import convention.persistent.TemaDeReunion;
-import convention.persistent.TemaGeneral;
+import convention.persistent.*;
 import convention.services.ReunionService;
 import convention.services.TemaGeneralService;
 import convention.services.TemaService;
@@ -142,6 +139,18 @@ public class PersistenciaTest {
         temaGeneralService.save(temaGeneral);
 
         Assert.assertEquals(1, reunionService.get(reunionAbierta.getId()).getTemasPropuestos().size());
+    }
+
+    @Test
+    public void test09AlGuardarUnaTemaGeneralElMismoNoSeAgregaALasReunionesCerradas(){
+        Reunion reunionCerrada = Reunion.create(LocalDate.of(2017, 06, 26));
+        reunionCerrada.setStatus(StatusDeReunion.CERRADA);
+        reunionCerrada = reunionService.save(reunionCerrada);
+
+        TemaGeneral temaGeneral = new TemaGeneral();
+        temaGeneralService.save(temaGeneral);
+
+        Assert.assertEquals(0, reunionService.get(reunionCerrada.getId()).getTemasPropuestos().size());
     }
 
     private void startApplication(){
