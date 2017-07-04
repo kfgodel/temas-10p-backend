@@ -1,8 +1,10 @@
 package convention.services;
 
 import ar.com.kfgodel.orm.api.operations.basic.FindAll;
+import convention.persistent.Reunion;
 import convention.persistent.TemaGeneral;
 
+import javax.inject.Inject;
 import java.util.List;
 
 /**
@@ -16,5 +18,14 @@ public class TemaGeneralService extends Service<TemaGeneral> {
 
     public List<TemaGeneral> getAll() {
         return getAll(FindAll.of(TemaGeneral.class));
+    }
+
+    @Override
+    public TemaGeneral save(TemaGeneral temaGeneral){
+        ReunionService reunionService = appInjector.getImplementationFor(ReunionService.class).get();
+        List<Reunion> reunionesAbiertas = reunionService.getAll();
+        reunionesAbiertas.forEach(reunion -> reunion.agregarTemaGeneral(temaGeneral));
+        reunionService.saveAll(reunionesAbiertas);
+        return super.save(temaGeneral);
     }
 }

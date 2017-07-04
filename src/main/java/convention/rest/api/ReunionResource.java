@@ -121,6 +121,7 @@ public class ReunionResource extends Resource {
         ReunionResource resource = new ReunionResource();
         resource.appInjector = appInjector;
         resource.reunionService = appInjector.createInjected(ReunionService.class);
+        appInjector.bindTo(ReunionService.class, resource.reunionService);
         return resource;
     }
 

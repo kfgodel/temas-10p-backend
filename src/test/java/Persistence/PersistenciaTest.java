@@ -16,6 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,6 +36,10 @@ public class PersistenciaTest {
         reunionService = application.getInjector().createInjected(ReunionService.class);
         temaService = application.getInjector().createInjected(TemaService.class);
         temaGeneralService = application.getInjector().createInjected(TemaGeneralService.class);
+
+        application.getInjector().bindTo(ReunionService.class, reunionService);
+        application.getInjector().bindTo(TemaService.class, temaService);
+        application.getInjector().bindTo(TemaGeneralService.class, temaGeneralService);
     }
     @After
     public void drop(){
@@ -126,6 +131,17 @@ public class PersistenciaTest {
         reunion = reunionService.save(reunion);
 
         Assert.assertEquals(1, reunionService.get(reunion.getId()).getTemasPropuestos().size());
+    }
+
+    @Test
+    public void test08AlGuardarUnTemaGeneralElMismoSeAgregaATodasLasReunionesAbiertas(){
+        Reunion reunionAbierta = Reunion.create(LocalDate.of(2017, 06, 26));
+        reunionAbierta = reunionService.save(reunionAbierta);
+
+        TemaGeneral temaGeneral = new TemaGeneral();
+        temaGeneralService.save(temaGeneral);
+
+        Assert.assertEquals(1, reunionService.get(reunionAbierta.getId()).getTemasPropuestos().size());
     }
 
     private void startApplication(){

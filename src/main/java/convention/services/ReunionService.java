@@ -16,9 +16,6 @@ import java.util.List;
  */
 public class ReunionService extends Service<Reunion> {
 
-    @Inject
-    private TemaGeneralService temaGeneralService;
-
     public Reunion getProxima() {
         return createOperation()
                 .insideATransaction()
@@ -38,6 +35,7 @@ public class ReunionService extends Service<Reunion> {
 
     @Override
     public Reunion save(Reunion nuevaReunion){
+        TemaGeneralService temaGeneralService = appInjector.getImplementationFor(TemaGeneralService.class).get();
         List<TemaGeneral> temasGenerales = temaGeneralService.getAll();
         nuevaReunion.agregarTemasGenerales(temasGenerales);
         return super.save(nuevaReunion);

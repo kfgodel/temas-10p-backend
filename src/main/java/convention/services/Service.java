@@ -9,6 +9,7 @@ import ar.com.kfgodel.orm.api.operations.basic.Delete;
 import ar.com.kfgodel.orm.api.operations.basic.FindById;
 import ar.com.kfgodel.orm.api.operations.basic.Save;
 import convention.persistent.PersistableSupport;
+import convention.persistent.Reunion;
 
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
@@ -49,7 +50,6 @@ public abstract class Service<T extends PersistableSupport> {
                 .taking(newObject)
                 .applyingResultOf(Save::create)
                 .convertTo(clasePrincipal);
-
     }
 
     public T get(Long id) {
@@ -123,5 +123,9 @@ public abstract class Service<T extends PersistableSupport> {
 
     protected void setClasePrincipal(Class<T> clasePrincipal) {
         this.clasePrincipal = clasePrincipal;
+    }
+
+    public void saveAll(List<T> newObjects) {
+        newObjects.forEach(newObject -> this.save(newObject));
     }
 }

@@ -10,11 +10,13 @@ import convention.persistent.*;
 
 import convention.rest.api.DuracionesResource;
 import convention.rest.api.ReunionResource;
+import convention.rest.api.TemaGeneralResource;
 import convention.rest.api.TemaResource;
 import convention.rest.api.tos.DuracionDeTemaTo;
 import convention.rest.api.tos.ReunionTo;
 import convention.rest.api.tos.TemaTo;
 import convention.services.ReunionService;
+import convention.services.TemaGeneralService;
 import convention.services.TemaService;
 import convention.services.UsuarioService;
 import helpers.TestConfig;
@@ -47,6 +49,7 @@ public class ResourcesTemasTest {
     Long otherUserId;
     Usuario otherUser;
     private TemaResource temaResource;
+    private TemaGeneralResource temaGeneralResource;
 
     @Before
     public void setUp() {
@@ -59,6 +62,7 @@ public class ResourcesTemasTest {
         reunionResource = app.getInjector().createInjected(ReunionResource.class);
         temaResource = app.getInjector().createInjected(TemaResource.class);
         duracionResource = app.getInjector().createInjected(DuracionesResource.class);
+        temaGeneralResource = TemaGeneralResource.create(app.getInjector());
 
         testContextUserFeche = new SecurityContextTest(usuarioService.getAll().get(0).getId());
 

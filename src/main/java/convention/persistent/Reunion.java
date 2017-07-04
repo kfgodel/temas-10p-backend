@@ -98,11 +98,17 @@ public class Reunion extends PersistableSupport {
     }
 
     public void agregarTemasGenerales(List<TemaGeneral> temasGenerales) {
-        Stream<TemaDeReunion> temasAAgregar = temasGenerales.stream().map(
-                temaGeneral -> temaGeneral.generarTemaPara(this));
-        Stream<TemaDeReunion> temasDeLaReunion = Stream.concat(
-                temasAAgregar,
-                this.getTemasPropuestos().stream());
-        this.setTemasPropuestos(temasDeLaReunion.collect(Collectors.toList()));
+        temasGenerales.forEach(temaGeneral -> this.agregarTemaGeneral(temaGeneral));
+    }
+
+    public void agregarTemaGeneral(TemaGeneral temaGeneral) {
+        TemaDeReunion temaNuevo = temaGeneral.generarTemaPara(this);
+        this.agregarTema(temaNuevo);
+    }
+
+    private void agregarTema(TemaDeReunion temaNuevo) {
+        if(temasPropuestos == null)
+            temasPropuestos = new ArrayList<>();
+        temasPropuestos.add(temaNuevo);
     }
 }
