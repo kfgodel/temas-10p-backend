@@ -20,7 +20,7 @@ public class CrearProximaReunion implements TransactionOperation<Reunion> {
   @Override
   public Reunion applyWithTransactionOn(TransactionContext transactionContext) {
     LocalDate fechaDeProximaRoots = calcularFechaDeRoots(LocalDate.now());
-    Reunion proximaRoots = Reunion.create(fechaDeProximaRoots, Arrays.asList());
+    Reunion proximaRoots = Reunion.create(fechaDeProximaRoots);
     // La guardamos antes de devolverla para que quede persistida
     Save.create(proximaRoots).applyWithTransactionOn(transactionContext);
     return proximaRoots;

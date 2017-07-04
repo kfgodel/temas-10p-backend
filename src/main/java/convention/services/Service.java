@@ -20,11 +20,11 @@ import java.util.function.Function;
  * Created by fede on 28/06/17.
  */
 public abstract class Service<T extends PersistableSupport> {
+
     @Inject
     protected DependencyInjector appInjector;
 
-    protected Type LIST_TYPE = new ReferenceOf<List<T>>() {
-    }.getReferencedType();
+    protected Type LIST_TYPE = new ReferenceOf<List<T>>() {}.getReferencedType();
     protected Class<T> clasePrincipal;
 
     public List<T> getAll(SessionOperation<Nary<T>> sessionOperation) {

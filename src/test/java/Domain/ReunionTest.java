@@ -26,26 +26,26 @@ public class ReunionTest {
 
     @Test
     public void test01AlCrearUnaReunionSuEstadoEsPendiente(){
-        Reunion unaReunion = Reunion.create(LocalDate.of(2017, 06, 16), Arrays.asList());
+        Reunion unaReunion = Reunion.create(LocalDate.of(2017, 06, 16));
         Assert.assertEquals(StatusDeReunion.PENDIENTE, unaReunion.getStatus());
     }
 
     @Test
     public void test02AlCrearUnaReunionNoTieneTemas(){
-        Reunion unaReunion = Reunion.create(LocalDate.of(2017, 06, 16), Arrays.asList());
+        Reunion unaReunion = Reunion.create(LocalDate.of(2017, 06, 16));
         Assert.assertEquals(0, unaReunion.getTemasPropuestos().size());
     }
 
     @Test
     public void test03AlCerrarUnaReunionSuEstadoEsCerrada(){
-        Reunion unaReunion = Reunion.create(LocalDate.of(2017, 06, 16), Arrays.asList());
+        Reunion unaReunion = Reunion.create(LocalDate.of(2017, 06, 16));
         unaReunion.cerrarVotacion();
         Assert.assertEquals(StatusDeReunion.CERRADA, unaReunion.getStatus());
     }
 
     @Test
     public void test04AlCerrarUnaReunionLosTemasPropuestosSeOrdenanPorCantidadDeVotos() throws Exception {
-        Reunion unaReunion = Reunion.create(LocalDate.of(2017, 06, 16), Arrays.asList());
+        Reunion unaReunion = Reunion.create(LocalDate.of(2017, 06, 16));
         Usuario unUsuario = new Usuario();
         TemaDeReunion tema1 = helper.nuevoTemaNoObligatorio();
         TemaDeReunion tema2 = helper.nuevoTemaNoObligatorio();
@@ -74,7 +74,7 @@ public class ReunionTest {
 
     @Test
     public void test05AlReabrirUnaReunionCerradaSuEstadoEsPendiente(){
-        Reunion unaReunion = Reunion.create(LocalDate.of(2017, 06, 16), Arrays.asList());
+        Reunion unaReunion = Reunion.create(LocalDate.of(2017, 06, 16));
         unaReunion.cerrarVotacion();
         unaReunion.reabrirVotacion();
         Assert.assertEquals(StatusDeReunion.PENDIENTE, unaReunion.getStatus());

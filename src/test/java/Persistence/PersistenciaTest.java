@@ -1,11 +1,10 @@
 package Persistence;
 
 import ar.com.kfgodel.temas.application.Application;
-import convention.persistent.ObligatoriedadDeReunion;
 import ar.com.kfgodel.temas.filters.reuniones.AllReunionesUltimaPrimero;
+import convention.persistent.ObligatoriedadDeReunion;
 import convention.persistent.Reunion;
 import convention.persistent.TemaDeReunion;
-
 import convention.persistent.TemaGeneral;
 import convention.services.ReunionService;
 import convention.services.TemaGeneralService;
@@ -16,6 +15,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -115,6 +115,17 @@ public class PersistenciaTest {
         temaGeneral.setTitulo(titulo);
         temaGeneral = temaGeneralService.save(temaGeneral);
         Assert.assertEquals(titulo, temaGeneralService.get(temaGeneral.getId()).getTitulo());
+    }
+
+    @Test
+    public void test07AlGuardarUnaReunionSeAgreganLosTemasGeneralesCorrespondientes(){
+        TemaGeneral temaGeneral = new TemaGeneral();
+        temaGeneralService.save(temaGeneral);
+        Reunion reunion = Reunion.create(LocalDate.of(2017, 06, 26));
+
+        reunion = reunionService.save(reunion);
+
+        Assert.assertEquals(1, reunionService.get(reunion.getId()).getTemasPropuestos().size());
     }
 
     private void startApplication(){

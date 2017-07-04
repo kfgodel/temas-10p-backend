@@ -228,7 +228,7 @@ public class ResourcesTemasTest {
         temaDeMenorPrioridad.setPrioridad(4);
         TemaDeReunion temaDePrioridadMedia = new TemaDeReunion();
         temaDePrioridadMedia.setPrioridad(2);
-        Reunion unaReunion = Reunion.create(LocalDate.now(), Arrays.asList());
+        Reunion unaReunion = Reunion.create(LocalDate.now());
         unaReunion.setTemasPropuestos(Arrays.asList(temaDeMenorPrioridad, temaDeMayorPrioridad, temaDePrioridadMedia));
         unaReunion.setStatus(StatusDeReunion.CERRADA);
         unaReunion = reunionService.save(unaReunion);

@@ -36,13 +36,13 @@ public class TemaGeneralTest {
         Assert.assertEquals(ObligatoriedadDeReunion.OBLIGATORIO, unTema.getObligatoriedad());
     }
 
-    @Test
-    public void test03SePuedeCrearUnaReunionConTemasYaCargados(){
-        TemaGeneral temaGeneral = new TemaGeneral();
-        List<TemaGeneral> temasGenerales = Arrays.asList(temaGeneral);
-        Reunion reunion = Reunion.create(LocalDate.of(2017, 06, 26), temasGenerales);
-
-        Assert.assertEquals(1, reunion.getTemasPropuestos().size());
-    }
+//    @Test
+//    public void test03SePuedeCrearUnaReunionConTemasYaCargados(){
+//        TemaGeneral temaGeneral = new TemaGeneral();
+//        List<TemaGeneral> temasGenerales = Arrays.asList(temaGeneral);
+//        Reunion reunion = Reunion.create(LocalDate.of(2017, 06, 26), temasGenerales);
+//
+//        Assert.assertEquals(1, reunion.getTemasPropuestos().size());
+//    }
 
 }
