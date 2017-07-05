@@ -26,7 +26,7 @@ public class TemaGeneralService extends Service<TemaGeneral> {
         ReunionService reunionService = appInjector.getImplementationFor(ReunionService.class).get();
         List<Reunion> reunionesAbiertas = reunionService.getAll(ReunionesAbiertas.create());
         reunionesAbiertas.forEach(reunion -> reunion.agregarTemaGeneral(temaGeneral));
-        reunionService.saveAll(reunionesAbiertas);
+        reunionService.updateAll(reunionesAbiertas);
         return super.save(temaGeneral);
     }
 }

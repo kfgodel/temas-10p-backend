@@ -128,4 +128,8 @@ public abstract class Service<T extends PersistableSupport> {
     public void saveAll(List<T> newObjects) {
         newObjects.forEach(newObject -> this.save(newObject));
     }
+
+    public void updateAll(List<T> newObjects) {
+        newObjects.forEach(newObject -> this.update(newObject));
+    }
 }

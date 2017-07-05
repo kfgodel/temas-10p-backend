@@ -277,8 +277,6 @@ public class ResourcesTemasTest {
         Assert.assertEquals("OBLIGATORIO", reunionRecuperada.getTemasPropuestos().get(0).getObligatoriedad());
     }
 
-
-
     @Test
     public void alRecibirUnTemaDelFrontendSeRecibeSuMomentoDeCreacion(){
         TemaDeReunion tema = new TemaDeReunion();

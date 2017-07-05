@@ -13,7 +13,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -70,7 +69,6 @@ public class PersistenciaTest {
 
     @Test
     public void test03AlObtenerUnaReunionSeTraenSoloSusTemas(){
-
        Reunion reunion = new Reunion();
        TemaDeReunion temaDeLaReunion = new TemaDeReunion();
        TemaDeReunion temaDeOtraReunion = new TemaDeReunion();

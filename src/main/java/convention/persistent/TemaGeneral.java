@@ -12,6 +12,10 @@ public class TemaGeneral extends Tema {
         TemaDeReunion temaDeReunion = new TemaDeReunion();
         temaDeReunion.setReunion(reunion);
         temaDeReunion.setObligatoriedad(ObligatoriedadDeReunion.OBLIGATORIO);
+        temaDeReunion.setTitulo(this.getTitulo());
+        temaDeReunion.setDescripcion(this.getDescripcion());
+        temaDeReunion.setAutor(this.getAutor());
+        temaDeReunion.setDuracion(this.getDuracion());
         return temaDeReunion;
     }
 }
