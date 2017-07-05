@@ -46,6 +46,7 @@ public class ResourcesTemasTest {
     Long userId;
     Long otherUserId;
     Usuario otherUser;
+    Usuario user;
     private TemaResource temaResource;
 
     @Before
@@ -63,6 +64,7 @@ public class ResourcesTemasTest {
         testContextUserFeche = new SecurityContextTest(usuarioService.getAll().get(0).getId());
 
         userId = ((JettyIdentityAdapterTest) testContextUserFeche.getUserPrincipal()).getApplicationIdentification();
+        user=usuarioService.get(userId);
         otherUser = usuarioService.getAll().stream().filter(userTo -> !userTo.getId().equals(userId)).findFirst().get();
         otherUserId = otherUser.getId();
 

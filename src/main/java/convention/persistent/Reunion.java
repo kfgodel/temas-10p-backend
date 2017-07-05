@@ -9,6 +9,8 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * Esta clase representa una reunion de roots con el temario a realizar
@@ -76,7 +78,13 @@ public class Reunion extends PersistableSupport {
     }
     this.status = StatusDeReunion.CERRADA;
   }
-
+  public List<Usuario> usuariosQueVotaron(){
+    return getTemasPropuestos().stream().
+            map(temaDeReunion -> temaDeReunion.getInteresados())
+            .reduce((usuarios, usuarios2) -> {usuarios.addAll(usuarios2);
+                                              return usuarios;})
+            .orElse(new ArrayList<>());
+  }
   public void reabrirVotacion() {
     this.status = StatusDeReunion.PENDIENTE;
   }
