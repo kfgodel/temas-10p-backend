@@ -1,17 +1,12 @@
 package convention.persistent;
 
 import ar.com.kfgodel.temas.model.OrdenarPorVotos;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Esta clase representa una reunion de roots con el temario a realizar
@@ -88,7 +83,6 @@ public class Reunion extends PersistableSupport {
         Reunion copia = new Reunion();
         copia.setPersistenceVersion(this.getPersistenceVersion());
         copia.setMomentoDeUltimaModificacion(this.getMomentoDeUltimaModificacion());
-        copia.setPersistenceVersion(this.getPersistenceVersion());
         copia.setMomentoDeCreacion(this.getMomentoDeCreacion());
         copia.setId(this.getId());
         copia.setStatus(this.getStatus());
@@ -111,4 +105,13 @@ public class Reunion extends PersistableSupport {
             temasPropuestos = new ArrayList<>();
         temasPropuestos.add(temaNuevo);
     }
+
+  public List<Usuario> usuariosQueVotaron(){
+    return getTemasPropuestos().stream().
+            map(temaDeReunion -> temaDeReunion.getInteresados())
+            .reduce((usuarios, usuarios2) -> {usuarios.addAll(usuarios2);
+                                              return usuarios;})
+            .orElse(new ArrayList<>());
+  }
+
 }
