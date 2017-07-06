@@ -1,16 +1,12 @@
 package convention.persistent;
 
 import ar.com.kfgodel.temas.model.OrdenarPorVotos;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 /**
  * Esta clase representa una reunion de roots con el temario a realizar
