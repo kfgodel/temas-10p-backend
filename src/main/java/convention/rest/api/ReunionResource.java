@@ -2,10 +2,12 @@ package convention.rest.api;
 
 import ar.com.kfgodel.dependencies.api.DependencyInjector;
 import ar.com.kfgodel.diamond.api.types.reference.ReferenceOf;
+import convention.persistent.Minuta;
 import convention.persistent.Reunion;
 import convention.persistent.StatusDeReunion;
 import convention.persistent.TemaDeReunion;
 import convention.rest.api.tos.ReunionTo;
+import convention.rest.api.tos.UserTo;
 import convention.services.ReunionService;
 
 import javax.inject.Inject;
@@ -13,10 +15,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -65,7 +64,12 @@ public class ReunionResource extends Resource {
                 });
         return convertir(reunionCerrada, ReunionTo.class);
     }
-
+    @GET
+    @Path("minuta/{resourceId}")
+    public Minuta minuta (@PathParam("resourceId") Long id) {
+     ReunionTo reunion= convertir(reunionService.get(id),ReunionTo.class);
+     return new Minuta(reunion.getFecha(),new ArrayList<UserTo>(),reunion.getTemasPropuestos());
+    }
     @GET
     @Path("reabrir/{resourceId}")
     public ReunionTo reabrir(@PathParam("resourceId") Long id) {
