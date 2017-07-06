@@ -12,11 +12,9 @@ import convention.rest.api.DuracionesResource;
 import convention.rest.api.ReunionResource;
 import convention.rest.api.TemaGeneralResource;
 import convention.rest.api.TemaResource;
-import convention.rest.api.tos.DuracionDeTemaTo;
 import convention.rest.api.tos.ReunionTo;
 import convention.rest.api.tos.TemaTo;
 import convention.services.ReunionService;
-import convention.services.TemaGeneralService;
 import convention.services.TemaService;
 import convention.services.UsuarioService;
 import helpers.TestConfig;
@@ -254,7 +252,7 @@ public class ResourcesTemasTest {
     @Test
     public void seObtieneCorrectamenteLaObligatoriedadDeUnTema(){
         TemaDeReunion temaDeLaReunion = new TemaDeReunion();
-        temaDeLaReunion.setObligatoriedad(ObligatoriedadDeReunion.OBLIGATORIO);
+        temaDeLaReunion.setObligatoriedad(ObligatoriedadDeTema.OBLIGATORIO);
 
         temaDeLaReunion = temaService.save(temaDeLaReunion);
 
@@ -269,7 +267,7 @@ public class ResourcesTemasTest {
 
         TemaDeReunion tema = new TemaDeReunion();
         tema.setReunion(reunion);
-        tema.setObligatoriedad(ObligatoriedadDeReunion.OBLIGATORIO);
+        tema.setObligatoriedad(ObligatoriedadDeTema.OBLIGATORIO);
         tema.setDescripcion("una descripción");
         temaService.save(tema);
 

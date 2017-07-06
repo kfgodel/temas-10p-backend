@@ -1,6 +1,5 @@
 package convention.persistent;
 
-import org.hibernate.FetchMode;
 import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
@@ -28,14 +27,17 @@ public class TemaDeReunion extends Tema {
   public static final String interesados_FIELD = "interesados";
 
   @Enumerated(EnumType.STRING)
-  private ObligatoriedadDeReunion obligatoriedad;
+  private ObligatoriedadDeTema obligatoriedad;
   public static final String obligatoriedad_FIELD = "obligatoriedad";
 
-  public ObligatoriedadDeReunion getObligatoriedad(){
+  private Boolean esDeUnTemaGeneral = false;
+  public static final String esDeUnTemaGeneral_FIELD = "esDeUnTemaGeneral";
+
+  public ObligatoriedadDeTema getObligatoriedad(){
     return obligatoriedad;
   }
 
-  public void setObligatoriedad(ObligatoriedadDeReunion unaObligatoriedad){
+  public void setObligatoriedad(ObligatoriedadDeTema unaObligatoriedad){
     this.obligatoriedad = unaObligatoriedad;
   }
 
@@ -70,7 +72,7 @@ public class TemaDeReunion extends Tema {
   }
 
   public void agregarInteresado(Usuario votante) throws Exception {
-    if(obligatoriedad != ObligatoriedadDeReunion.OBLIGATORIO)
+    if(obligatoriedad != ObligatoriedadDeTema.OBLIGATORIO)
       this.getInteresados().add(votante);
     else
       throw new Exception(mensajeDeErrorAlAgregarInteresado());
@@ -103,11 +105,12 @@ public class TemaDeReunion extends Tema {
     copia.setAutor(this.getAutor());
     copia.setDuracion(this.getDuracion());
     copia.setObligatoriedad(this.getObligatoriedad());
+    copia.setEsDeUnTemaGeneral(this.getEsDeUnTemaGeneral());
     return copia;
   }
 
 
-    public boolean tieneMayorPrioridadQue(TemaDeReunion otroTema) {
+    public Boolean tieneMayorPrioridadQue(TemaDeReunion otroTema) {
       Integer prioridad = getObligatoriedad().prioridad();
       Integer otraPrioridad = otroTema.getObligatoriedad().prioridad();
 
@@ -115,7 +118,7 @@ public class TemaDeReunion extends Tema {
       Integer otraCantidadDeVotos = otroTema.getCantidadDeVotos();
 
       if(prioridad.equals(otraPrioridad)
-              && getObligatoriedad().equals(ObligatoriedadDeReunion.NO_OBLIGATORIO)
+              && getObligatoriedad().equals(ObligatoriedadDeTema.NO_OBLIGATORIO)
               && cantidadDeVotos != otraCantidadDeVotos)
         return cantidadDeVotos > otraCantidadDeVotos;
 
@@ -125,7 +128,7 @@ public class TemaDeReunion extends Tema {
       return prioridad < otraPrioridad;
     }
 
-  protected boolean seCreoDespuesDe(TemaDeReunion otroTema) {
+  protected Boolean seCreoDespuesDe(TemaDeReunion otroTema) {
       return this.getMomentoDeCreacion().isAfter(otroTema.getMomentoDeCreacion());
   }
 
@@ -136,7 +139,19 @@ public class TemaDeReunion extends Tema {
               .collect(Collectors.toList()));
   }
 
-  public boolean puedeSerVotado() {
+  public Boolean puedeSerVotado() {
     return obligatoriedad.permiteRecibirVotos();
+  }
+
+  public Boolean fueGeneradoPorUnTemaGeneral() {
+    return this.getEsDeUnTemaGeneral();
+  }
+
+  public void setEsDeUnTemaGeneral(Boolean esDeUnTemaGeneral) {
+    this.esDeUnTemaGeneral = esDeUnTemaGeneral;
+  }
+
+  public Boolean getEsDeUnTemaGeneral() {
+    return esDeUnTemaGeneral;
   }
 }

@@ -46,6 +46,9 @@ public class TemaTo extends PersistableToSupport {
   @CopyFrom(TemaDeReunion.obligatoriedad_FIELD)
   private String obligatoriedad;
 
+  @CopyFromAndTo(TemaDeReunion.esDeUnTemaGeneral_FIELD)
+  private Boolean esDeUnTemaGeneral;
+
   public String getAutor() {
     return autor;
   }
@@ -120,5 +123,13 @@ public class TemaTo extends PersistableToSupport {
 
   public void setObligatoriedad(String unaObligatoriedad) {
     this.obligatoriedad = unaObligatoriedad;
+  }
+
+  public Boolean getEsDeUnTemaGeneral() {
+    return esDeUnTemaGeneral;
+  }
+
+  public void setEsDeUnTemaGeneral(Boolean esDeUnTemaGeneral) {
+    this.esDeUnTemaGeneral = esDeUnTemaGeneral;
   }
 }

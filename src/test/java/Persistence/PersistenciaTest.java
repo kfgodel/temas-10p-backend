@@ -92,12 +92,12 @@ public class PersistenciaTest {
     @Test
     public void test04LaObligatoriedadDeUnTemaSePersisteCorrectamente(){
         TemaDeReunion tema = new TemaDeReunion();
-        tema.setObligatoriedad(ObligatoriedadDeReunion.OBLIGATORIO);
+        tema.setObligatoriedad(ObligatoriedadDeTema.OBLIGATORIO);
 
         tema = temaService.save(tema);
 
         TemaDeReunion temaPersistido = temaService.get(tema.getId());
-        Assert.assertEquals(ObligatoriedadDeReunion.OBLIGATORIO, temaPersistido.getObligatoriedad());
+        Assert.assertEquals(ObligatoriedadDeTema.OBLIGATORIO, temaPersistido.getObligatoriedad());
     }
 
     @Test
@@ -149,6 +149,17 @@ public class PersistenciaTest {
         temaGeneralService.save(temaGeneral);
 
         Assert.assertEquals(0, reunionService.get(reunionCerrada.getId()).getTemasPropuestos().size());
+    }
+
+    @Test
+    public void test10SePuedePersistirSiUnTemaDeReunionFueGeneradoPorUnTemaGeneral(){
+        Reunion reunion = new Reunion();
+        reunionService.save(reunion);
+        TemaGeneral temaGeneral = new TemaGeneral();
+        TemaDeReunion temaDeReunion = temaGeneral.generarTemaPara(reunion);
+        temaDeReunion = temaService.save(temaDeReunion);
+
+        Assert.assertTrue(temaService.get(temaDeReunion.getId()).fueGeneradoPorUnTemaGeneral());
     }
 
     private void startApplication(){

@@ -1,6 +1,6 @@
 package Domain;
 
-import convention.persistent.ObligatoriedadDeReunion;
+import convention.persistent.ObligatoriedadDeTema;
 import convention.persistent.Reunion;
 import convention.persistent.TemaDeReunion;
 import convention.persistent.TemaGeneral;
@@ -8,7 +8,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,7 +32,7 @@ public class TemaGeneralTest {
         Reunion reunion = new Reunion();
         TemaDeReunion unTema = temaGeneral.generarTemaPara(reunion);
 
-        Assert.assertEquals(ObligatoriedadDeReunion.OBLIGATORIO, unTema.getObligatoriedad());
+        Assert.assertEquals(ObligatoriedadDeTema.OBLIGATORIO, unTema.getObligatoriedad());
     }
 
     @Test
