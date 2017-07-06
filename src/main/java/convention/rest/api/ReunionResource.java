@@ -9,6 +9,7 @@ import convention.persistent.TemaDeReunion;
 import convention.rest.api.tos.ReunionTo;
 import convention.rest.api.tos.UserTo;
 import convention.services.ReunionService;
+import convention.services.UsuarioService;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -125,6 +126,7 @@ public class ReunionResource extends Resource {
         ReunionResource resource = new ReunionResource();
         resource.appInjector = appInjector;
         resource.reunionService = appInjector.createInjected(ReunionService.class);
+        resource.appInjector.bindTo(ReunionService.class,resource.reunionService);
         return resource;
     }
 
