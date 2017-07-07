@@ -1,6 +1,6 @@
 package helpers;
 
-import convention.persistent.ObligatoriedadDeReunion;
+import convention.persistent.ObligatoriedadDeTema;
 import convention.persistent.TemaDeReunion;
 
 /**
@@ -10,13 +10,13 @@ public class TestHelper {
 
     public TemaDeReunion nuevoTemaObligatorio(){
         TemaDeReunion tema = new TemaDeReunion();
-        tema.setObligatoriedad(ObligatoriedadDeReunion.OBLIGATORIO);
+        tema.setObligatoriedad(ObligatoriedadDeTema.OBLIGATORIO);
         return tema;
     }
 
     public TemaDeReunion nuevoTemaNoObligatorio(){
         TemaDeReunion tema = new TemaDeReunion();
-        tema.setObligatoriedad(ObligatoriedadDeReunion.NO_OBLIGATORIO);
+        tema.setObligatoriedad(ObligatoriedadDeTema.NO_OBLIGATORIO);
         return tema;
     }
 }

@@ -9,6 +9,7 @@ import ar.com.kfgodel.orm.api.operations.basic.Delete;
 import ar.com.kfgodel.orm.api.operations.basic.FindById;
 import ar.com.kfgodel.orm.api.operations.basic.Save;
 import convention.persistent.PersistableSupport;
+import convention.persistent.Reunion;
 
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
@@ -20,11 +21,11 @@ import java.util.function.Function;
  * Created by fede on 28/06/17.
  */
 public abstract class Service<T extends PersistableSupport> {
+
     @Inject
     protected DependencyInjector appInjector;
 
-    protected Type LIST_TYPE = new ReferenceOf<List<T>>() {
-    }.getReferencedType();
+    protected Type LIST_TYPE = new ReferenceOf<List<T>>() {}.getReferencedType();
     protected Class<T> clasePrincipal;
 
     public List<T> getAll(SessionOperation<Nary<T>> sessionOperation) {
@@ -49,7 +50,6 @@ public abstract class Service<T extends PersistableSupport> {
                 .taking(newObject)
                 .applyingResultOf(Save::create)
                 .convertTo(clasePrincipal);
-
     }
 
     public T get(Long id) {
@@ -123,5 +123,13 @@ public abstract class Service<T extends PersistableSupport> {
 
     protected void setClasePrincipal(Class<T> clasePrincipal) {
         this.clasePrincipal = clasePrincipal;
+    }
+
+    public void saveAll(List<T> newObjects) {
+        newObjects.forEach(newObject -> this.save(newObject));
+    }
+
+    public void updateAll(List<T> newObjects) {
+        newObjects.forEach(newObject -> this.update(newObject));
     }
 }

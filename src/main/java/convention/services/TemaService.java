@@ -21,7 +21,7 @@ import java.util.List;
 public class TemaService extends Service<TemaDeReunion> {
 
     public List<TemaDeReunion> getAll() {
-        return super.getAll(FindAll.of(TemaDeReunion.class));
+        return getAll(FindAll.of(TemaDeReunion.class));
     }
     public TemaService(){
         setClasePrincipal(TemaDeReunion.class);

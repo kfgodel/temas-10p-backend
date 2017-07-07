@@ -10,8 +10,8 @@ import convention.persistent.*;
 
 import convention.rest.api.DuracionesResource;
 import convention.rest.api.ReunionResource;
+import convention.rest.api.TemaGeneralResource;
 import convention.rest.api.TemaResource;
-import convention.rest.api.tos.DuracionDeTemaTo;
 import convention.rest.api.tos.ReunionTo;
 import convention.rest.api.tos.TemaTo;
 import convention.services.ReunionService;
@@ -48,6 +48,7 @@ public class ResourcesTemasTest {
     Usuario otherUser;
     Usuario user;
     private TemaResource temaResource;
+    private TemaGeneralResource temaGeneralResource;
 
     @Before
     public void setUp() {
@@ -60,6 +61,7 @@ public class ResourcesTemasTest {
         reunionResource = app.getInjector().createInjected(ReunionResource.class);
         temaResource = app.getInjector().createInjected(TemaResource.class);
         duracionResource = app.getInjector().createInjected(DuracionesResource.class);
+        temaGeneralResource = TemaGeneralResource.create(app.getInjector());
 
         testContextUserFeche = new SecurityContextTest(usuarioService.getAll().get(0).getId());
 
@@ -252,7 +254,7 @@ public class ResourcesTemasTest {
     @Test
     public void seObtieneCorrectamenteLaObligatoriedadDeUnTema(){
         TemaDeReunion temaDeLaReunion = new TemaDeReunion();
-        temaDeLaReunion.setObligatoriedad(ObligatoriedadDeReunion.OBLIGATORIO);
+        temaDeLaReunion.setObligatoriedad(ObligatoriedadDeTema.OBLIGATORIO);
 
         temaDeLaReunion = temaService.save(temaDeLaReunion);
 
@@ -267,15 +269,13 @@ public class ResourcesTemasTest {
 
         TemaDeReunion tema = new TemaDeReunion();
         tema.setReunion(reunion);
-        tema.setObligatoriedad(ObligatoriedadDeReunion.OBLIGATORIO);
+        tema.setObligatoriedad(ObligatoriedadDeTema.OBLIGATORIO);
         tema.setDescripcion("una descripción");
         temaService.save(tema);
 
         ReunionTo reunionRecuperada = reunionResource.getSingle(reunion.getId(), testContextUserFeche);
         Assert.assertEquals("OBLIGATORIO", reunionRecuperada.getTemasPropuestos().get(0).getObligatoriedad());
     }
-
-
 
     @Test
     public void alRecibirUnTemaDelFrontendSeRecibeSuMomentoDeCreacion(){

@@ -34,7 +34,7 @@ public class ReunionResource extends Resource {
     }.getReferencedType();
 
 
-    public Reunion muestreoDeReunion(Reunion reunion, Long userId,SecurityContext securityContext) {
+    public Reunion muestreoDeReunion(Reunion reunion, Long userId, SecurityContext securityContext) {
         Reunion nuevaReunion = reunion.copy();
 
         if (reunion.getStatus() == StatusDeReunion.PENDIENTE) {
@@ -42,7 +42,7 @@ public class ReunionResource extends Resource {
                     map(temaDeReunion ->
                             temaDeReunion.copy()).collect(Collectors.toList());
             listaDeTemasNuevos.forEach(temaDeReunion -> temaDeReunion.ocultarVotosPara(userId));
-            Collections.shuffle(listaDeTemasNuevos,new Random(securityContext.getUserPrincipal().hashCode())); //random turbio
+            Collections.shuffle(listaDeTemasNuevos, new Random(securityContext.getUserPrincipal().hashCode())); //random turbio
             nuevaReunion.setTemasPropuestos(listaDeTemasNuevos);
         }
         return nuevaReunion;
@@ -65,12 +65,14 @@ public class ReunionResource extends Resource {
                 });
         return convertir(reunionCerrada, ReunionTo.class);
     }
+
     @GET
     @Path("minuta/{resourceId}")
-    public Minuta minuta (@PathParam("resourceId") Long id) {
-     ReunionTo reunion= convertir(reunionService.get(id),ReunionTo.class);
-     return new Minuta(reunion.getFecha(),new ArrayList<UserTo>(),reunion.getTemasPropuestos());
+    public Minuta minuta(@PathParam("resourceId") Long id) {
+        ReunionTo reunion = convertir(reunionService.get(id), ReunionTo.class);
+        return new Minuta(reunion.getFecha(), new ArrayList<UserTo>(), reunion.getTemasPropuestos());
     }
+
     @GET
     @Path("reabrir/{resourceId}")
     public ReunionTo reabrir(@PathParam("resourceId") Long id) {
@@ -87,9 +89,8 @@ public class ReunionResource extends Resource {
         Long userId = idDeUsuarioActual(securityContext);
         List<Reunion> reuniones = reunionService.getAll();
         List<Reunion> reunionesFiltradas = reuniones.stream()
-                .map(reunion -> muestreoDeReunion(reunion, userId,securityContext)).collect(Collectors.toList());
+                .map(reunion -> muestreoDeReunion(reunion, userId, securityContext)).collect(Collectors.toList());
         return convertir(reunionesFiltradas, LISTA_DE_REUNIONES_TO);
-
     }
 
     @POST
@@ -103,9 +104,8 @@ public class ReunionResource extends Resource {
     @Path("/{resourceId}")
     public ReunionTo getSingle(@PathParam("resourceId") Long id, @Context SecurityContext securityContext) {
         Long userId = idDeUsuarioActual(securityContext);
-        Reunion reunionFiltrada = reunionService.getAndMapping(id, reunion -> muestreoDeReunion(reunion, userId,securityContext));
+        Reunion reunionFiltrada = reunionService.getAndMapping(id, reunion -> muestreoDeReunion(reunion, userId, securityContext));
         return convertir(reunionFiltrada, ReunionTo.class);
-
     }
 
 
@@ -126,7 +126,7 @@ public class ReunionResource extends Resource {
         ReunionResource resource = new ReunionResource();
         resource.appInjector = appInjector;
         resource.reunionService = appInjector.createInjected(ReunionService.class);
-        resource.appInjector.bindTo(ReunionService.class,resource.reunionService);
+        resource.appInjector.bindTo(ReunionService.class, resource.reunionService);
         return resource;
     }
 
