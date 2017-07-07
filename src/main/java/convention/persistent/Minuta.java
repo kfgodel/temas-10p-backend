@@ -3,6 +3,9 @@ package convention.persistent;
 import convention.rest.api.tos.TemaTo;
 import convention.rest.api.tos.UserTo;
 
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,48 +13,40 @@ import java.util.List;
 /**
  * Created by fede on 04/07/17.
  */
-public class Minuta {
-    private String fecha;
-    private List<UserTo> listaDeUsuarios;
-    private List<TemaTo> listaDeTemas;
+@Entity
+public class Minuta extends PersistableSupport {
+
+    @ManyToMany
     private List<Usuario> asistentes;
+    public static final String asistentes_FIELD = "asistentes";
 
-    public Minuta(String fecha,List<UserTo> listaDeUsuarios, List<TemaTo> listaDeTemas){
+    @OneToOne
+    private Reunion reunion;
+    public static final String reunion_FIELD = "reunion";
 
-        this.fecha = fecha;
-        this.listaDeUsuarios = listaDeUsuarios;
-        this.listaDeTemas = listaDeTemas;
+    public static final String fecha_FIELD = "fecha";
+    public static final String temas_FIELD = "temas";
+
+    public LocalDate getFecha() {
+        return reunion.getFecha();
     }
 
-    public Minuta() {}
-
-    public String getFecha() {
-        return fecha;
+    public List<TemaDeReunion> getTemas(){
+        return reunion.getTemasPropuestos();
     }
 
-    public void setFecha(String fecha) {
-        this.fecha = fecha;
+    public Reunion getReunion(){
+        return reunion;
     }
 
-    public List<UserTo> getListaDeUsuarios() {
-        return listaDeUsuarios;
+    public void setReunion(Reunion reunion){
+        this.reunion = reunion;
     }
 
-    public void setListaDeUsuarios(List<UserTo> listaDeUsuarios) {
-        this.listaDeUsuarios = listaDeUsuarios;
-    }
-
-    public List<TemaTo> getListaDeTemas() {
-        return listaDeTemas;
-    }
-
-    public void setListaDeTemas(List<TemaTo> listaDeTemas) {
-        this.listaDeTemas = listaDeTemas;
-    }
-
-    public static Minuta create() {
+    public static Minuta create(Reunion reunion) {
         Minuta nuevaMinuta = new Minuta();
         nuevaMinuta.asistentes = new ArrayList<>();
+        nuevaMinuta.reunion = reunion;
         return nuevaMinuta;
     }
 

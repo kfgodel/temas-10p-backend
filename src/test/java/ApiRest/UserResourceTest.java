@@ -17,22 +17,23 @@ public class UserResourceTest extends ResourcesTemasTest {
     UserResource userResource;
 
     @Override
-    public void setUp(){
+    public void setUp() {
         super.setUp();
-        userResource=new UserResource();
-        app.getInjector().bindTo(UserResource.class,userResource);
+        userResource = new UserResource();
+        app.getInjector().bindTo(UserResource.class, userResource);
     }
-@Test
-public void AlPedirLosNoVotantesDeUnaReunionMeDevuelveTodosLosUsuariosQueNoVotaron() throws Exception {
-    Reunion unaReunion=reunionService.save(new Reunion());
-    TemaDeReunion unTema=new TemaDeReunion();
-    unTema.agregarInteresado(user);
-    unTema.setReunion(unaReunion);
-    unaReunion.setTemasPropuestos(Arrays.asList(unTema));
-    unaReunion=reunionService.update(unaReunion);
 
-   Assert.assertTrue(userResource.getUsersQueNoVotaron(unaReunion.getId()).stream().allMatch(userTo -> userTo.getId()!=userId));
-    Assert.assertTrue(userResource.getUsersQueNoVotaron(unaReunion.getId()).stream().anyMatch(userTo -> userTo.getId().equals(otherUserId)));
+    @Test
+    public void AlPedirLosNoVotantesDeUnaReunionMeDevuelveTodosLosUsuariosQueNoVotaron() throws Exception {
+        Reunion unaReunion = reunionService.save(new Reunion());
+        TemaDeReunion unTema = new TemaDeReunion();
+        unTema.agregarInteresado(user);
+        unTema.setReunion(unaReunion);
+        unaReunion.setTemasPropuestos(Arrays.asList(unTema));
+        unaReunion = reunionService.update(unaReunion);
+
+        Assert.assertTrue(userResource.getUsersQueNoVotaron(unaReunion.getId()).stream().allMatch(userTo -> userTo.getId() != userId));
+        Assert.assertTrue(userResource.getUsersQueNoVotaron(unaReunion.getId()).stream().anyMatch(userTo -> userTo.getId().equals(otherUserId)));
 
     }
 }
