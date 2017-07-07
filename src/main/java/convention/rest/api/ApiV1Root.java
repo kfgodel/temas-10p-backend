@@ -26,6 +26,8 @@ public class ApiV1Root {
   private TemaResource temas;
   private DuracionesResource duraciones;
   private TemaGeneralResource temasGenrales;
+  private MinutaResource minutas;
+
 
   @Path("/session")
   public SessionResource session() {
@@ -50,7 +52,15 @@ public class ApiV1Root {
     }
     return users;
   }
+  @Path("/minuta")
+  public MinutaResource minutas() {
+    if (minutas == null) {
 
+
+      minutas = application.getInjector().createInjected(MinutaResource.class);
+    }
+    return minutas;
+  }
   @Path("/reuniones")
   public ReunionResource reuniones() {
     if (reuniones == null) {
