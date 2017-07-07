@@ -5,7 +5,9 @@ import ar.com.kfgodel.temas.acciones.UsarExistente;
 import ar.com.kfgodel.temas.filters.reuniones.AllReunionesUltimaPrimero;
 import ar.com.kfgodel.temas.filters.reuniones.ProximaReunion;
 import convention.persistent.Reunion;
+import convention.persistent.TemaGeneral;
 
+import javax.inject.Inject;
 import java.util.List;
 
 
@@ -29,5 +31,13 @@ public class ReunionService extends Service<Reunion> {
 
     public List<Reunion> getAll() {
         return getAll(AllReunionesUltimaPrimero.create());
+    }
+
+    @Override
+    public Reunion save(Reunion nuevaReunion){
+        TemaGeneralService temaGeneralService = appInjector.getImplementationFor(TemaGeneralService.class).get();
+        List<TemaGeneral> temasGenerales = temaGeneralService.getAll();
+        nuevaReunion.agregarTemasGenerales(temasGenerales);
+        return super.save(nuevaReunion);
     }
 }

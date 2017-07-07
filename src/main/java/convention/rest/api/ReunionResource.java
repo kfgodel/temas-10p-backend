@@ -92,7 +92,6 @@ public class ReunionResource extends Resource {
         List<Reunion> reunionesFiltradas = reuniones.stream()
                 .map(reunion -> muestreoDeReunion(reunion, userId, securityContext)).collect(Collectors.toList());
         return convertir(reunionesFiltradas, LISTA_DE_REUNIONES_TO);
-
     }
 
     @POST
@@ -108,7 +107,6 @@ public class ReunionResource extends Resource {
         Long userId = idDeUsuarioActual(securityContext);
         Reunion reunionFiltrada = reunionService.getAndMapping(id, reunion -> muestreoDeReunion(reunion, userId, securityContext));
         return convertir(reunionFiltrada, ReunionTo.class);
-
     }
 
 
