@@ -19,15 +19,6 @@ public class MinutaResource extends Resource {
     @Inject
     private MinutaService minutaService;
 
-    @Inject
-    private ReunionService reunionService;
-
-    @GET
-    @Path("/{resourceId}")
-    public MinutaTo getSingle(@PathParam("resourceId") Long id) {
-        return convertir(minutaService.get(id), MinutaTo.class);
-    }
-
     @GET
     @Path("reunion/{reunionId}")
     public MinutaTo getParaReunion(@PathParam("reunionId") Long id){

@@ -64,14 +64,6 @@ public class Minuta extends PersistableSupport {
         this.asistentes = asistentes;
     }
 
-    public void agregarAsistente(Usuario unUsuario) {
-        asistentes.add(unUsuario);
-    }
-
-    public void quitarAsistente(Usuario unUsuario) {
-        asistentes.remove(unUsuario);
-    }
-
     public void setTemas(List<TemaDeMinuta> temas) {
         this.temas = temas;
     }

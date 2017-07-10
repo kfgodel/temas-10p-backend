@@ -19,24 +19,4 @@ public class MinutaTest {
         Minuta minuta = Minuta.create(reunion);
         Assert.assertEquals(0, minuta.getAsistentes().size());
     }
-
-    @Test
-    public void test02AUnaMinutaSeLePuedenAgregarAsistentes(){
-        Reunion reunion = Reunion.create(LocalDate.of(2017, 06, 26));
-        Minuta minuta = Minuta.create(reunion);
-        Usuario unUsuario = new Usuario();
-        minuta.agregarAsistente(unUsuario);
-        Assert.assertEquals(1, minuta.getAsistentes().size());
-    }
-
-    @Test
-    public void test03AUnaMinutaSeLePuedenQuitarAsistentes(){
-        Reunion reunion = Reunion.create(LocalDate.of(2017, 06, 26));
-        Minuta minuta = Minuta.create(reunion);
-        Usuario unUsuario = new Usuario();
-        minuta.agregarAsistente(unUsuario);
-        minuta.quitarAsistente(unUsuario);
-        Assert.assertEquals(0, minuta.getAsistentes().size());
-    }
-
 }
