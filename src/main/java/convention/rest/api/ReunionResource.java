@@ -2,21 +2,22 @@ package convention.rest.api;
 
 import ar.com.kfgodel.dependencies.api.DependencyInjector;
 import ar.com.kfgodel.diamond.api.types.reference.ReferenceOf;
+import convention.persistent.Minuta;
 import convention.persistent.Reunion;
 import convention.persistent.StatusDeReunion;
 import convention.persistent.TemaDeReunion;
+import convention.rest.api.tos.MinutaTo;
 import convention.rest.api.tos.ReunionTo;
+import convention.rest.api.tos.UserTo;
 import convention.services.ReunionService;
+import convention.services.UsuarioService;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -34,7 +35,7 @@ public class ReunionResource extends Resource {
     }.getReferencedType();
 
 
-    public Reunion muestreoDeReunion(Reunion reunion, Long userId,SecurityContext securityContext) {
+    public Reunion muestreoDeReunion(Reunion reunion, Long userId, SecurityContext securityContext) {
         Reunion nuevaReunion = reunion.copy();
 
         if (reunion.getStatus() == StatusDeReunion.PENDIENTE) {
@@ -42,7 +43,7 @@ public class ReunionResource extends Resource {
                     map(temaDeReunion ->
                             temaDeReunion.copy()).collect(Collectors.toList());
             listaDeTemasNuevos.forEach(temaDeReunion -> temaDeReunion.ocultarVotosPara(userId));
-            Collections.shuffle(listaDeTemasNuevos,new Random(securityContext.getUserPrincipal().hashCode())); //random turbio
+            Collections.shuffle(listaDeTemasNuevos, new Random(securityContext.getUserPrincipal().hashCode())); //random turbio
             nuevaReunion.setTemasPropuestos(listaDeTemasNuevos);
         }
         return nuevaReunion;
@@ -66,6 +67,7 @@ public class ReunionResource extends Resource {
         return convertir(reunionCerrada, ReunionTo.class);
     }
 
+
     @GET
     @Path("reabrir/{resourceId}")
     public ReunionTo reabrir(@PathParam("resourceId") Long id) {
@@ -82,9 +84,8 @@ public class ReunionResource extends Resource {
         Long userId = idDeUsuarioActual(securityContext);
         List<Reunion> reuniones = reunionService.getAll();
         List<Reunion> reunionesFiltradas = reuniones.stream()
-                .map(reunion -> muestreoDeReunion(reunion, userId,securityContext)).collect(Collectors.toList());
+                .map(reunion -> muestreoDeReunion(reunion, userId, securityContext)).collect(Collectors.toList());
         return convertir(reunionesFiltradas, LISTA_DE_REUNIONES_TO);
-
     }
 
     @POST
@@ -98,9 +99,8 @@ public class ReunionResource extends Resource {
     @Path("/{resourceId}")
     public ReunionTo getSingle(@PathParam("resourceId") Long id, @Context SecurityContext securityContext) {
         Long userId = idDeUsuarioActual(securityContext);
-        Reunion reunionFiltrada = reunionService.getAndMapping(id, reunion -> muestreoDeReunion(reunion, userId,securityContext));
+        Reunion reunionFiltrada = reunionService.getAndMapping(id, reunion -> muestreoDeReunion(reunion, userId, securityContext));
         return convertir(reunionFiltrada, ReunionTo.class);
-
     }
 
 
@@ -121,6 +121,7 @@ public class ReunionResource extends Resource {
         ReunionResource resource = new ReunionResource();
         resource.appInjector = appInjector;
         resource.reunionService = appInjector.createInjected(ReunionService.class);
+        resource.appInjector.bindTo(ReunionService.class, resource.reunionService);
         return resource;
     }
 

@@ -1,6 +1,5 @@
 package convention.persistent;
 
-import org.hibernate.FetchMode;
 import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
@@ -13,7 +12,7 @@ import java.util.stream.Collectors;
  * Created by kfgodel on 21/08/16.
  */
 @Entity
-public class TemaDeReunion extends PersistableSupport {
+public class TemaDeReunion extends Tema {
 
   @ManyToOne
   private Reunion reunion;
@@ -22,70 +21,24 @@ public class TemaDeReunion extends PersistableSupport {
   private Integer prioridad;
   public static final String prioridad_FIELD = "prioridad";
 
-  @ManyToOne
-  private Usuario autor;
-  public static final String autor_FIELD = "autor";
-
-  @Column(length = 1024)
-  private String titulo;
-  public static final String titulo_FIELD = "titulo";
-
-  @Lob
-  private String descripcion;
-  public static final String descripcion_FIELD = "descripcion";
-
   @Fetch(org.hibernate.annotations.FetchMode.SELECT)
   @ManyToMany(fetch = FetchType.EAGER)
   private List<Usuario> interesados;
   public static final String interesados_FIELD = "interesados";
 
   @Enumerated(EnumType.STRING)
-  private DuracionDeTema duracion;
-  public static final String duracion_FIELD = "duracion";
-
-  @Enumerated(EnumType.STRING)
-  private ObligatoriedadDeReunion obligatoriedad;
+  private ObligatoriedadDeTema obligatoriedad;
   public static final String obligatoriedad_FIELD = "obligatoriedad";
 
-  public static final String momentoDeCreacion_FIELD = "momentoDeCreacion";
+  private Boolean esDeUnTemaGeneral = false;
+  public static final String esDeUnTemaGeneral_FIELD = "esDeUnTemaGeneral";
 
-  public ObligatoriedadDeReunion getObligatoriedad(){
+  public ObligatoriedadDeTema getObligatoriedad(){
     return obligatoriedad;
   }
 
-  public void setObligatoriedad(ObligatoriedadDeReunion unaObligatoriedad){
+  public void setObligatoriedad(ObligatoriedadDeTema unaObligatoriedad){
     this.obligatoriedad = unaObligatoriedad;
-  }
-
-  public DuracionDeTema getDuracion(){
-    return duracion;
-  }
-  public void setDuracion(DuracionDeTema duracion) {
-    this.duracion=duracion;
-  }
-
-  public Usuario getAutor() {
-    return autor;
-  }
-
-  public void setAutor(Usuario autor) {
-    this.autor = autor;
-  }
-
-  public String getTitulo() {
-    return titulo;
-  }
-
-  public void setTitulo(String titulo) {
-    this.titulo = titulo;
-  }
-
-  public String getDescripcion() {
-    return descripcion;
-  }
-
-  public void setDescripcion(String descripcion) {
-    this.descripcion = descripcion;
   }
 
   public Reunion getReunion() {
@@ -119,7 +72,7 @@ public class TemaDeReunion extends PersistableSupport {
   }
 
   public void agregarInteresado(Usuario votante) throws Exception {
-    if(obligatoriedad != ObligatoriedadDeReunion.OBLIGATORIO)
+    if(obligatoriedad != ObligatoriedadDeTema.OBLIGATORIO)
       this.getInteresados().add(votante);
     else
       throw new Exception(mensajeDeErrorAlAgregarInteresado());
@@ -152,11 +105,12 @@ public class TemaDeReunion extends PersistableSupport {
     copia.setAutor(this.getAutor());
     copia.setDuracion(this.getDuracion());
     copia.setObligatoriedad(this.getObligatoriedad());
+    copia.setEsDeUnTemaGeneral(this.getEsDeUnTemaGeneral());
     return copia;
   }
 
 
-    public boolean tieneMayorPrioridadQue(TemaDeReunion otroTema) {
+    public Boolean tieneMayorPrioridadQue(TemaDeReunion otroTema) {
       Integer prioridad = getObligatoriedad().prioridad();
       Integer otraPrioridad = otroTema.getObligatoriedad().prioridad();
 
@@ -164,7 +118,7 @@ public class TemaDeReunion extends PersistableSupport {
       Integer otraCantidadDeVotos = otroTema.getCantidadDeVotos();
 
       if(prioridad.equals(otraPrioridad)
-              && getObligatoriedad().equals(ObligatoriedadDeReunion.NO_OBLIGATORIO)
+              && getObligatoriedad().equals(ObligatoriedadDeTema.NO_OBLIGATORIO)
               && cantidadDeVotos != otraCantidadDeVotos)
         return cantidadDeVotos > otraCantidadDeVotos;
 
@@ -174,7 +128,7 @@ public class TemaDeReunion extends PersistableSupport {
       return prioridad < otraPrioridad;
     }
 
-  protected boolean seCreoDespuesDe(TemaDeReunion otroTema) {
+  protected Boolean seCreoDespuesDe(TemaDeReunion otroTema) {
       return this.getMomentoDeCreacion().isAfter(otroTema.getMomentoDeCreacion());
   }
 
@@ -185,7 +139,19 @@ public class TemaDeReunion extends PersistableSupport {
               .collect(Collectors.toList()));
   }
 
-  public boolean puedeSerVotado() {
+  public Boolean puedeSerVotado() {
     return obligatoriedad.permiteRecibirVotos();
+  }
+
+  public Boolean fueGeneradoPorUnTemaGeneral() {
+    return this.getEsDeUnTemaGeneral();
+  }
+
+  public void setEsDeUnTemaGeneral(Boolean esDeUnTemaGeneral) {
+    this.esDeUnTemaGeneral = esDeUnTemaGeneral;
+  }
+
+  public Boolean getEsDeUnTemaGeneral() {
+    return esDeUnTemaGeneral;
   }
 }

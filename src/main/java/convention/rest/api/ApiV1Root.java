@@ -2,6 +2,7 @@ package convention.rest.api;
 
 import ar.com.kfgodel.temas.application.Application;
 import ar.com.kfgodel.webbyconvention.api.auth.WebCredential;
+import convention.persistent.TemaGeneral;
 
 import javax.inject.Inject;
 import javax.ws.rs.Path;
@@ -24,6 +25,10 @@ public class ApiV1Root {
   private ReunionResource reuniones;
   private TemaResource temas;
   private DuracionesResource duraciones;
+  private TemaGeneralResource temasGenrales;
+  private MinutaResource minutas;
+  private TemaDeMinutaResource temasDeMinuta;
+
   @Path("/session")
   public SessionResource session() {
     if (session == null) {
@@ -38,6 +43,13 @@ public class ApiV1Root {
     }
     return duraciones;
   }
+  @Path("/temaDeMinuta")
+  public TemaDeMinutaResource temasDeMinuta() {
+    if (temasDeMinuta == null) {
+      temasDeMinuta = application.getInjector().createInjected(TemaDeMinutaResource.class);
+    }
+    return temasDeMinuta;
+  }
   @Path("/users")
   public UserResource users() {
     if (users == null) {
@@ -47,7 +59,15 @@ public class ApiV1Root {
     }
     return users;
   }
+  @Path("/minuta")
+  public MinutaResource minutas() {
+    if (minutas == null) {
 
+
+      minutas = application.getInjector().createInjected(MinutaResource.class);
+    }
+    return minutas;
+  }
   @Path("/reuniones")
   public ReunionResource reuniones() {
     if (reuniones == null) {
@@ -62,6 +82,14 @@ public class ApiV1Root {
       temas = application.getInjector().createInjected(TemaResource.class);
     }
     return temas;
+  }
+
+  @Path("/temas-generales")
+  public TemaGeneralResource temasGenerales() {
+    if (temasGenrales == null) {
+      temasGenrales = application.getInjector().createInjected(TemaGeneralResource.class);
+    }
+    return temasGenrales;
   }
 
 }

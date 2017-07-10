@@ -1,7 +1,8 @@
 package Domain;
 
-import convention.persistent.ObligatoriedadDeReunion;
+import convention.persistent.Reunion;
 import convention.persistent.TemaDeReunion;
+import convention.persistent.TemaGeneral;
 import convention.persistent.Usuario;
 import helpers.TestHelper;
 import org.junit.Assert;
@@ -121,5 +122,20 @@ public class TemaDeReunionTest {
         segundoTema.agregarInteresado(unUsuario);
 
         Assert.assertTrue(primerTema.tieneMayorPrioridadQue(segundoTema));
+    }
+
+    @Test
+    public void test11UnTemaDeReunionSabeCuandoNoFueGeneradoPorUnTemaGeneral(){
+        TemaDeReunion temaDeReunion = new TemaDeReunion();
+        Assert.assertFalse(temaDeReunion.fueGeneradoPorUnTemaGeneral());
+    }
+
+    @Test
+    public void test12UnTemaDeReunionSabeCuandoSiFueGeneradoPorUnTemaGeneral(){
+        Reunion unaReunion = Reunion.create(LocalDate.of(2017, 06, 26));
+        TemaGeneral temaGeneral = new TemaGeneral();
+        TemaDeReunion temaDeReunion = temaGeneral.generarTemaPara(unaReunion);
+
+        Assert.assertTrue(temaDeReunion.fueGeneradoPorUnTemaGeneral());
     }
 }

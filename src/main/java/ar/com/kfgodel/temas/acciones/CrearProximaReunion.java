@@ -9,6 +9,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
+import java.util.Arrays;
 
 /**
  * Esta clase representa el creador de reunion de proxima roots, que sabe calcular la fecha de la proxima
