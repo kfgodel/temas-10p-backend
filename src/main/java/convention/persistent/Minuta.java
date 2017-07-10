@@ -2,13 +2,13 @@ package convention.persistent;
 
 import convention.rest.api.tos.TemaTo;
 import convention.rest.api.tos.UserTo;
+import org.hibernate.annotations.Fetch;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by fede on 04/07/17.
@@ -16,7 +16,8 @@ import java.util.List;
 @Entity
 public class Minuta extends PersistableSupport {
 
-    @ManyToMany
+    @Fetch(org.hibernate.annotations.FetchMode.SELECT)
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Usuario> asistentes;
     public static final String asistentes_FIELD = "asistentes";
 
@@ -25,14 +26,17 @@ public class Minuta extends PersistableSupport {
     public static final String reunion_FIELD = "reunion";
 
     public static final String fecha_FIELD = "fecha";
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<TemaDeMinuta> temas;
     public static final String temas_FIELD = "temas";
 
     public LocalDate getFecha() {
         return reunion.getFecha();
     }
 
-    public List<TemaDeReunion> getTemas(){
-        return reunion.getTemasPropuestos();
+    public List<TemaDeMinuta> getTemas(){
+        return temas;
     }
 
     public Reunion getReunion(){
@@ -46,7 +50,10 @@ public class Minuta extends PersistableSupport {
     public static Minuta create(Reunion reunion) {
         Minuta nuevaMinuta = new Minuta();
         nuevaMinuta.asistentes = new ArrayList<>();
-        nuevaMinuta.reunion = reunion;
+        nuevaMinuta.reunion=reunion;
+        List<TemaDeMinuta> temas=reunion.getTemasPropuestos().stream()
+                .map(temaDeReunion -> TemaDeMinuta.create(temaDeReunion,nuevaMinuta)).collect(Collectors.toList());
+        nuevaMinuta.setTemas(temas);
         return nuevaMinuta;
     }
 
@@ -64,5 +71,9 @@ public class Minuta extends PersistableSupport {
 
     public void quitarAsistente(Usuario unUsuario) {
         asistentes.remove(unUsuario);
+    }
+
+    public void setTemas(List<TemaDeMinuta> temas) {
+        this.temas = temas;
     }
 }

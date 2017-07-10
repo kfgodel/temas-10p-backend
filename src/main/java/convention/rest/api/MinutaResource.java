@@ -1,5 +1,6 @@
 package convention.rest.api;
 
+import ar.com.kfgodel.dependencies.api.DependencyInjector;
 import com.google.inject.Inject;
 import convention.persistent.Minuta;
 import convention.rest.api.tos.MinutaTo;
@@ -33,5 +34,10 @@ public class MinutaResource extends Resource {
         Minuta minuta = minutaService.getFromReunion(id);
         return convertir(minuta, MinutaTo.class);
     }
-
+    public static MinutaResource create(DependencyInjector appInjector) {
+        MinutaResource resource = new MinutaResource();
+        resource.appInjector = appInjector;
+        resource.appInjector.bindTo(MinutaResource.class, resource);
+        return resource;
+    }
 }

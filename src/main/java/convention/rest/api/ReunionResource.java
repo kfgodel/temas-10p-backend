@@ -67,12 +67,6 @@ public class ReunionResource extends Resource {
         return convertir(reunionCerrada, ReunionTo.class);
     }
 
-    @GET
-    @Path("minuta/{resourceId}")
-    public MinutaTo minuta(@PathParam("resourceId") Long id) {
-        Reunion reunion = reunionService.get(id);
-        return convertir(Minuta.create(reunion), MinutaTo.class);
-    }
 
     @GET
     @Path("reabrir/{resourceId}")
