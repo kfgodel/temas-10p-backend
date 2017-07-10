@@ -5,8 +5,9 @@ package convention.persistent;
  */
 public enum ObligatoriedadDeTema {
 
-    NO_OBLIGATORIO(true, 2),
-    OBLIGATORIO(false, 1);
+    NO_OBLIGATORIO(true, 3),
+    OBLIGATORIO(false, 2),
+    OBLIGATORIO_GENERAL(false, 1);
 
     private Boolean permiteRecibirVotos;
     private Integer nivelDePrioridad;
