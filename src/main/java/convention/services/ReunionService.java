@@ -4,8 +4,11 @@ import ar.com.kfgodel.temas.acciones.CrearProximaReunion;
 import ar.com.kfgodel.temas.acciones.UsarExistente;
 import ar.com.kfgodel.temas.filters.reuniones.AllReunionesUltimaPrimero;
 import ar.com.kfgodel.temas.filters.reuniones.ProximaReunion;
+import convention.persistent.Minuta;
 import convention.persistent.Reunion;
+import convention.persistent.TemaDeMinuta;
 import convention.persistent.TemaGeneral;
+import convention.rest.api.MinutaResource;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -15,7 +18,8 @@ import java.util.List;
  * Created by sandro on 21/06/17.
  */
 public class ReunionService extends Service<Reunion> {
-
+        @Inject
+        MinutaService minutaService;
     public Reunion getProxima() {
         return createOperation()
                 .insideATransaction()
@@ -32,7 +36,12 @@ public class ReunionService extends Service<Reunion> {
     public List<Reunion> getAll() {
         return getAll(AllReunionesUltimaPrimero.create());
     }
-
+    @Override
+    public void delete(Long id){
+        Minuta minuta=minutaService.getFromReunion(id);
+        minutaService.delete(minuta.getId());
+        super.delete(id);
+    }
     @Override
     public Reunion save(Reunion nuevaReunion){
         TemaGeneralService temaGeneralService = appInjector.getImplementationFor(TemaGeneralService.class).get();

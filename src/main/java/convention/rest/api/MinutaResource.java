@@ -37,6 +37,7 @@ public class MinutaResource extends Resource {
         MinutaResource resource = new MinutaResource();
         resource.appInjector = appInjector;
         resource.appInjector.bindTo(MinutaResource.class, resource);
+        resource.appInjector.bindTo(MinutaService.class,resource.minutaService);
         return resource;
     }
 }
