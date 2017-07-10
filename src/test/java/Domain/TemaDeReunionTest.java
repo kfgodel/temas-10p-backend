@@ -143,4 +143,14 @@ public class TemaDeReunionTest {
 
         Assert.assertTrue(temaObligatorioGeneral.tieneMayorPrioridadQue(temaObligatorio));
     }
+
+    @Test
+    public void test14SiDosTemasFueronGeneradosPorTemasGeneralesTieneMayorPrioridadElQueFueCreadoAntes(){
+        TemaDeReunion temaAnterior = helper.nuevoTemaObligatorioGeneral();
+        temaAnterior.setMomentoDeCreacion(LocalDateTime.of(2017,06,20,0,0));
+        TemaDeReunion temaPosterior = helper.nuevoTemaObligatorioGeneral();
+        temaPosterior.setMomentoDeCreacion(LocalDateTime.of(2018,06,20,0,0));
+
+        Assert.assertTrue(temaAnterior.tieneMayorPrioridadQue(temaPosterior));
+    }
 }
