@@ -22,7 +22,7 @@ public class MinutaTo extends PersistableToSupport {
     private String fecha;
 
     @CopyFrom(Minuta.temas_FIELD)
-    private List<TemaTo> temas;
+    private List<TemaDeMinutaTo> temas;
 
     public List<UserTo> getAsistentes() {
         return asistentes;
@@ -48,11 +48,11 @@ public class MinutaTo extends PersistableToSupport {
         this.fecha = fecha;
     }
 
-    public List<TemaTo> getTemas() {
+    public List<TemaDeMinutaTo> getTemas() {
         return temas;
     }
 
-    public void setTemas(List<TemaTo> temas) {
+    public void setTemas(List<TemaDeMinutaTo> temas) {
         this.temas = temas;
     }
 }
