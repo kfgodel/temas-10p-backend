@@ -34,4 +34,11 @@ public class MinutaResource extends Resource {
         return convertir(minuta, MinutaTo.class);
     }
 
+    @PUT
+    @Path("/{resourceId}")
+    public MinutaTo update(MinutaTo newState, @PathParam("resourceId") Long id){
+        Minuta minutaActualizada = minutaService.update(convertir(newState, Minuta.class));
+        return convertir(minutaActualizada, MinutaTo.class);
+    }
+
 }
