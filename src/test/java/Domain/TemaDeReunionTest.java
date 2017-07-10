@@ -1,9 +1,6 @@
 package Domain;
 
-import convention.persistent.Reunion;
-import convention.persistent.TemaDeReunion;
-import convention.persistent.TemaGeneral;
-import convention.persistent.Usuario;
+import convention.persistent.*;
 import helpers.TestHelper;
 import org.junit.Assert;
 import org.junit.Before;
@@ -137,5 +134,13 @@ public class TemaDeReunionTest {
         TemaDeReunion temaDeReunion = temaGeneral.generarTemaPara(unaReunion);
 
         Assert.assertTrue(temaDeReunion.fueGeneradoPorUnTemaGeneral());
+    }
+
+    @Test
+    public void test13UnTemaGeneradoPorUnTemaGeneralTieneMajorPrioridadQueUnoObligatorio(){
+        TemaDeReunion temaObligatorio = helper.nuevoTemaObligatorio();
+        TemaDeReunion temaObligatorioGeneral = helper.nuevoTemaObligatorioGeneral();
+
+        Assert.assertTrue(temaObligatorioGeneral.tieneMayorPrioridadQue(temaObligatorio));
     }
 }

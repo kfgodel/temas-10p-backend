@@ -33,6 +33,11 @@ public class TemaDeReunion extends Tema {
   private Boolean esDeUnTemaGeneral = false;
   public static final String esDeUnTemaGeneral_FIELD = "esDeUnTemaGeneral";
 
+  public TemaDeReunion(){
+      //Es la obligatoriedad default
+      this.obligatoriedad = ObligatoriedadDeTema.NO_OBLIGATORIO;
+  }
+
   public ObligatoriedadDeTema getObligatoriedad(){
     return obligatoriedad;
   }
@@ -72,7 +77,7 @@ public class TemaDeReunion extends Tema {
   }
 
   public void agregarInteresado(Usuario votante) throws Exception {
-    if(obligatoriedad != ObligatoriedadDeTema.OBLIGATORIO)
+    if(this.puedeSerVotado())
       this.getInteresados().add(votante);
     else
       throw new Exception(mensajeDeErrorAlAgregarInteresado());
@@ -110,23 +115,23 @@ public class TemaDeReunion extends Tema {
   }
 
 
-    public Boolean tieneMayorPrioridadQue(TemaDeReunion otroTema) {
-      Integer prioridad = getObligatoriedad().prioridad();
-      Integer otraPrioridad = otroTema.getObligatoriedad().prioridad();
+  public Boolean tieneMayorPrioridadQue(TemaDeReunion otroTema) {
+    Integer prioridad = getObligatoriedad().prioridad();
+    Integer otraPrioridad = otroTema.getObligatoriedad().prioridad();
 
-      Integer cantidadDeVotos = this.getCantidadDeVotos();
-      Integer otraCantidadDeVotos = otroTema.getCantidadDeVotos();
+    Integer cantidadDeVotos = this.getCantidadDeVotos();
+    Integer otraCantidadDeVotos = otroTema.getCantidadDeVotos();
 
-      if(prioridad.equals(otraPrioridad)
-              && getObligatoriedad().equals(ObligatoriedadDeTema.NO_OBLIGATORIO)
-              && cantidadDeVotos != otraCantidadDeVotos)
-        return cantidadDeVotos > otraCantidadDeVotos;
+    if(prioridad.equals(otraPrioridad)
+            && getObligatoriedad().permiteRecibirVotos()
+            && cantidadDeVotos != otraCantidadDeVotos)
+      return cantidadDeVotos > otraCantidadDeVotos;
 
-      if(prioridad.equals(otraPrioridad))
-        return otroTema.seCreoDespuesDe(this);
+    if(prioridad.equals(otraPrioridad))
+      return otroTema.seCreoDespuesDe(this);
 
-      return prioridad < otraPrioridad;
-    }
+    return prioridad < otraPrioridad;
+  }
 
   protected Boolean seCreoDespuesDe(TemaDeReunion otroTema) {
       return this.getMomentoDeCreacion().isAfter(otroTema.getMomentoDeCreacion());
