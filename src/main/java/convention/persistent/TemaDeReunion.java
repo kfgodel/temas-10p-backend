@@ -30,9 +30,6 @@ public class TemaDeReunion extends Tema {
   private ObligatoriedadDeTema obligatoriedad;
   public static final String obligatoriedad_FIELD = "obligatoriedad";
 
-  private Boolean esDeUnTemaGeneral = false;
-  public static final String esDeUnTemaGeneral_FIELD = "esDeUnTemaGeneral";
-
   public TemaDeReunion(){
       //Es la obligatoriedad default
       this.obligatoriedad = ObligatoriedadDeTema.NO_OBLIGATORIO;
@@ -110,7 +107,6 @@ public class TemaDeReunion extends Tema {
     copia.setAutor(this.getAutor());
     copia.setDuracion(this.getDuracion());
     copia.setObligatoriedad(this.getObligatoriedad());
-    copia.setEsDeUnTemaGeneral(this.getEsDeUnTemaGeneral());
     return copia;
   }
 
@@ -149,14 +145,6 @@ public class TemaDeReunion extends Tema {
   }
 
   public Boolean fueGeneradoPorUnTemaGeneral() {
-    return this.getEsDeUnTemaGeneral();
-  }
-
-  public void setEsDeUnTemaGeneral(Boolean esDeUnTemaGeneral) {
-    this.esDeUnTemaGeneral = esDeUnTemaGeneral;
-  }
-
-  public Boolean getEsDeUnTemaGeneral() {
-    return esDeUnTemaGeneral;
+    return this.getObligatoriedad().equals(ObligatoriedadDeTema.OBLIGATORIO_GENERAL);
   }
 }

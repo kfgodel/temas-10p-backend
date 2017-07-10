@@ -16,7 +16,6 @@ public class TemaGeneral extends Tema {
         temaDeReunion.setDescripcion(this.getDescripcion());
         temaDeReunion.setAutor(this.getAutor());
         temaDeReunion.setDuracion(this.getDuracion());
-        temaDeReunion.setEsDeUnTemaGeneral(true);
         return temaDeReunion;
     }
 }
