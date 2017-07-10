@@ -3,6 +3,7 @@ package Persistence;
 import ar.com.kfgodel.temas.application.Application;
 import ar.com.kfgodel.temas.filters.reuniones.AllReunionesUltimaPrimero;
 import convention.persistent.*;
+import convention.services.MinutaService;
 import convention.services.ReunionService;
 import convention.services.TemaGeneralService;
 import convention.services.TemaService;
@@ -25,6 +26,7 @@ public class PersistenciaTest {
     ReunionService reunionService;
     TemaService temaService;
     private TemaGeneralService temaGeneralService;
+    private MinutaService minutaService;
 
     @Before
     public void setUp(){
@@ -32,10 +34,12 @@ public class PersistenciaTest {
         reunionService = application.getInjector().createInjected(ReunionService.class);
         temaService = application.getInjector().createInjected(TemaService.class);
         temaGeneralService = application.getInjector().createInjected(TemaGeneralService.class);
+        minutaService = application.getInjector().createInjected(MinutaService.class);
 
         application.getInjector().bindTo(ReunionService.class, reunionService);
         application.getInjector().bindTo(TemaService.class, temaService);
         application.getInjector().bindTo(TemaGeneralService.class, temaGeneralService);
+        application.getInjector().bindTo(MinutaService.class, minutaService);
     }
     @After
     public void drop(){
@@ -160,6 +164,27 @@ public class PersistenciaTest {
         temaDeReunion = temaService.save(temaDeReunion);
 
         Assert.assertTrue(temaService.get(temaDeReunion.getId()).fueGeneradoPorUnTemaGeneral());
+    }
+
+    @Test
+    public void test11SePuedePersistirUnaMinuta(){
+        Reunion reunion = Reunion.create(LocalDate.of(2017, 06, 26));
+        TemaDeReunion unTema = new TemaDeReunion();
+        reunion = reunionService.save(reunion);
+        unTema.setReunion(reunion);
+        temaService.save(unTema);
+        reunion.setTemasPropuestos(Arrays.asList(unTema));
+        reunion = reunionService.update(reunion);
+
+        Minuta minuta = Minuta.create(reunion);
+        minuta = minutaService.save(minuta);
+
+        Minuta minutaRecuperada = minutaService.get(minuta.getId());
+
+        Assert.assertEquals(minuta.getId(), minutaRecuperada.getId());
+        Assert.assertEquals(minuta.getReunion().getId(), minutaRecuperada.getReunion().getId());
+        Assert.assertEquals(minuta.getFecha(), minutaRecuperada.getFecha());
+        Assert.assertEquals(1, minutaRecuperada.getTemas().size());
     }
 
     private void startApplication(){

@@ -6,6 +6,7 @@ import convention.persistent.Minuta;
 import convention.persistent.Reunion;
 import convention.persistent.StatusDeReunion;
 import convention.persistent.TemaDeReunion;
+import convention.rest.api.tos.MinutaTo;
 import convention.rest.api.tos.ReunionTo;
 import convention.rest.api.tos.UserTo;
 import convention.services.ReunionService;
@@ -66,12 +67,6 @@ public class ReunionResource extends Resource {
         return convertir(reunionCerrada, ReunionTo.class);
     }
 
-    @GET
-    @Path("minuta/{resourceId}")
-    public Minuta minuta(@PathParam("resourceId") Long id) {
-        ReunionTo reunion = convertir(reunionService.get(id), ReunionTo.class);
-        return new Minuta(reunion.getFecha(), new ArrayList<UserTo>(), reunion.getTemasPropuestos());
-    }
 
     @GET
     @Path("reabrir/{resourceId}")

@@ -2,45 +2,78 @@ package convention.persistent;
 
 import convention.rest.api.tos.TemaTo;
 import convention.rest.api.tos.UserTo;
+import org.hibernate.annotations.Fetch;
 
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by fede on 04/07/17.
  */
-public class Minuta {
-    private String fecha;
-    private List<UserTo> listaDeUsuarios;
-    private List<TemaTo> listaDeTemas;
+@Entity
+public class Minuta extends PersistableSupport {
 
-    public Minuta(String fecha,List<UserTo> listaDeUsuarios, List<TemaTo> listaDeTemas){
+    @Fetch(org.hibernate.annotations.FetchMode.SELECT)
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Usuario> asistentes;
+    public static final String asistentes_FIELD = "asistentes";
 
-        this.fecha = fecha;
-        this.listaDeUsuarios = listaDeUsuarios;
-        this.listaDeTemas = listaDeTemas;
-    }
-    public String getFecha() {
-        return fecha;
-    }
+    @OneToOne
+    private Reunion reunion;
+    public static final String reunion_FIELD = "reunion";
 
-    public void setFecha(String fecha) {
-        this.fecha = fecha;
-    }
+    public static final String fecha_FIELD = "fecha";
 
-    public List<UserTo> getListaDeUsuarios() {
-        return listaDeUsuarios;
-    }
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<TemaDeMinuta> temas;
+    public static final String temas_FIELD = "temas";
 
-    public void setListaDeUsuarios(List<UserTo> listaDeUsuarios) {
-        this.listaDeUsuarios = listaDeUsuarios;
+    public LocalDate getFecha() {
+        return reunion.getFecha();
     }
 
-    public List<TemaTo> getListaDeTemas() {
-        return listaDeTemas;
+    public List<TemaDeMinuta> getTemas(){
+        return temas;
     }
 
-    public void setListaDeTemas(List<TemaTo> listaDeTemas) {
-        this.listaDeTemas = listaDeTemas;
+    public Reunion getReunion(){
+        return reunion;
+    }
+
+    public void setReunion(Reunion reunion){
+        this.reunion = reunion;
+    }
+
+    public static Minuta create(Reunion reunion) {
+        Minuta nuevaMinuta = new Minuta();
+        nuevaMinuta.asistentes = new ArrayList<>();
+        nuevaMinuta.reunion=reunion;
+        List<TemaDeMinuta> temas=reunion.getTemasPropuestos().stream()
+                .map(temaDeReunion -> TemaDeMinuta.create(temaDeReunion,nuevaMinuta)).collect(Collectors.toList());
+        nuevaMinuta.setTemas(temas);
+        return nuevaMinuta;
+    }
+
+    public List<Usuario> getAsistentes() {
+        return asistentes;
+    }
+
+    public void setAsistentes(List<Usuario> asistentes) {
+        this.asistentes = asistentes;
+    }
+
+    public void agregarAsistente(Usuario unUsuario) {
+        asistentes.add(unUsuario);
+    }
+
+    public void quitarAsistente(Usuario unUsuario) {
+        asistentes.remove(unUsuario);
+    }
+
+    public void setTemas(List<TemaDeMinuta> temas) {
+        this.temas = temas;
     }
 }
