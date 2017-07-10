@@ -1,8 +1,7 @@
 package convention.persistent;
 
-import convention.rest.api.tos.TemaTo;
-import convention.rest.api.tos.UserTo;
 import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -16,7 +15,7 @@ import java.util.stream.Collectors;
 @Entity
 public class Minuta extends PersistableSupport {
 
-    @Fetch(org.hibernate.annotations.FetchMode.SELECT)
+    @Fetch(FetchMode.SELECT)
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Usuario> asistentes;
     public static final String asistentes_FIELD = "asistentes";
@@ -63,14 +62,6 @@ public class Minuta extends PersistableSupport {
 
     public void setAsistentes(List<Usuario> asistentes) {
         this.asistentes = asistentes;
-    }
-
-    public void agregarAsistente(Usuario unUsuario) {
-        asistentes.add(unUsuario);
-    }
-
-    public void quitarAsistente(Usuario unUsuario) {
-        asistentes.remove(unUsuario);
     }
 
     public void setTemas(List<TemaDeMinuta> temas) {

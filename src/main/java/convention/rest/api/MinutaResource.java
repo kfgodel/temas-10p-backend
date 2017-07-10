@@ -19,21 +19,20 @@ public class MinutaResource extends Resource {
     @Inject
     private MinutaService minutaService;
 
-    @Inject
-    private ReunionService reunionService;
-
-    @GET
-    @Path("/{resourceId}")
-    public MinutaTo getSingle(@PathParam("resourceId") Long id) {
-        return convertir(minutaService.get(id), MinutaTo.class);
-    }
-
     @GET
     @Path("reunion/{reunionId}")
     public MinutaTo getParaReunion(@PathParam("reunionId") Long id){
         Minuta minuta = minutaService.getFromReunion(id);
         return convertir(minuta, MinutaTo.class);
     }
+
+    @PUT
+    @Path("/{resourceId}")
+    public MinutaTo update(MinutaTo newState, @PathParam("resourceId") Long id){
+        Minuta minutaActualizada = minutaService.update(convertir(newState, Minuta.class));
+        return convertir(minutaActualizada, MinutaTo.class);
+    }
+
     public static MinutaResource create(DependencyInjector appInjector) {
         MinutaResource resource = new MinutaResource();
         resource.appInjector = appInjector;
