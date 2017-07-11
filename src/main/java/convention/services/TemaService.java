@@ -7,13 +7,18 @@ import ar.com.kfgodel.orm.api.operations.basic.DeleteById;
 import ar.com.kfgodel.orm.api.operations.basic.FindAll;
 import ar.com.kfgodel.orm.api.operations.basic.FindById;
 import ar.com.kfgodel.orm.api.operations.basic.Save;
+import convention.persistent.StatusDeReunion;
+import convention.persistent.TemaDeMinuta;
 import convention.persistent.TemaDeReunion;
+import convention.persistent.TemaGeneral;
 import convention.rest.api.tos.TemaTo;
 
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Created by sandro on 21/06/17.
@@ -34,4 +39,24 @@ public class TemaService extends Service<TemaDeReunion> {
                 .apply(DeleteById.create(TemaDeReunion.class, id));
     }
 
+    public void deleteAllForTemaGeneral(Long temaGeneralId) {
+        List<TemaDeReunion> todosLosTemas = this.getAll();
+        Stream<TemaDeReunion> temasABorrar = todosLosTemas.stream().
+                filter(tema -> this.esUnTemaGeneradoPorElTemaGeneral(tema, temaGeneralId));
+        temasABorrar.forEach(tema -> this.deleteSiReunionPendiente(tema));
+    }
+
+    private Boolean esUnTemaGeneradoPorElTemaGeneral(TemaDeReunion tema, Long temaGeneralId){
+        return tema.getTemaGenerador().isPresent() &&
+                temaGeneralId.equals(tema.getTemaGenerador().get().getId());
+    }
+
+    private void deleteSiReunionPendiente(TemaDeReunion tema) {
+        if(tema.getReunion().getStatus().equals(StatusDeReunion.PENDIENTE)){
+            this.delete(tema.getId());
+        }else{
+            tema.setTemaGenerador(null);
+            this.update(tema);
+        }
+    }
 }

@@ -84,7 +84,7 @@ public class PersistenciaTest {
 
        reunion.setTemasPropuestos(Arrays.asList(temaDeLaReunion));
 
-       reunion = reunionService.save(reunion);
+       reunion = reunionService.update(reunion);
 
 
        Reunion reunionPersistida = reunionService.get(reunion.getId());
@@ -160,6 +160,7 @@ public class PersistenciaTest {
         Reunion reunion = new Reunion();
         reunionService.save(reunion);
         TemaGeneral temaGeneral = new TemaGeneral();
+        temaGeneralService.save(temaGeneral);
         TemaDeReunion temaDeReunion = temaGeneral.generarTemaPara(reunion);
         temaDeReunion = temaService.save(temaDeReunion);
 
@@ -185,6 +186,56 @@ public class PersistenciaTest {
         Assert.assertEquals(minuta.getReunion().getId(), minutaRecuperada.getReunion().getId());
         Assert.assertEquals(minuta.getFecha(), minutaRecuperada.getFecha());
         Assert.assertEquals(1, minutaRecuperada.getTemas().size());
+    }
+
+    @Test
+    public void test12AlBorrarUnTemaGeneralSusTemasDeReunionAsociadosSeEliminanTambien(){
+        Reunion reunion = Reunion.create(LocalDate.of(2017, 06, 26));
+        TemaGeneral temaGeneral = new TemaGeneral();
+
+        reunion = reunionService.save(reunion);
+        temaGeneral = temaGeneralService.save(temaGeneral);
+
+        Assert.assertEquals(1, reunionService.get(reunion.getId()).getTemasPropuestos().size());
+
+        temaGeneralService.delete(temaGeneral.getId());
+
+        Assert.assertEquals(0, reunionService.get(reunion.getId()).getTemasPropuestos().size());
+    }
+
+    @Test
+    public void test13AlBorrarUnTemaGeneralSusTemasDeReunionAsociadosNoSeEliminanDeLasReunionesCerradas(){
+        Reunion reunion = Reunion.create(LocalDate.of(2017, 06, 26));
+        TemaGeneral temaGeneral = new TemaGeneral();
+
+        reunion = reunionService.save(reunion);
+        temaGeneral = temaGeneralService.save(temaGeneral);
+
+        reunion = reunionService.get(reunion.getId());
+        reunion.setStatus(StatusDeReunion.CERRADA);
+        reunionService.update(reunion);
+
+        temaGeneralService.delete(temaGeneral.getId());
+        Assert.assertEquals(1, reunionService.get(reunion.getId()).getTemasPropuestos().size());
+    }
+
+    @Test
+    public void test14AlBorrarUnTemaGeneralNoSeBorranlosTemasDeReunionQueNoFueronGeneradosPorEl(){
+        Reunion reunion = Reunion.create(LocalDate.of(2017, 06, 26));
+        TemaDeReunion unTemaNoGenerado = new TemaDeReunion();
+        unTemaNoGenerado.setReunion(reunion);
+        reunion.setTemasPropuestos(Arrays.asList(unTemaNoGenerado));
+
+        reunion = reunionService.save(reunion);
+        temaService.save(unTemaNoGenerado);
+
+        TemaGeneral unTemaGeneral = new TemaGeneral();
+        unTemaGeneral = temaGeneralService.save(unTemaGeneral);
+        TemaGeneral otroTemaGeneral = new TemaGeneral();
+        temaGeneralService.save(otroTemaGeneral);
+
+        temaGeneralService.delete(unTemaGeneral.getId());
+        Assert.assertEquals(2, reunionService.get(reunion.getId()).getTemasPropuestos().size());
     }
 
     private void startApplication(){
