@@ -10,10 +10,7 @@ import convention.rest.api.tos.TemaTo;
 import convention.services.TemaGeneralService;
 
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -41,6 +38,12 @@ public class TemaGeneralResource extends Resource {
     public TemaGeneralTo create(TemaGeneralTo newState) {
         TemaGeneral temaCreado = temaGeneralService.save(convertir(newState, TemaGeneral.class));
         return convertir(temaCreado, TemaGeneralTo.class);
+    }
+
+    @DELETE
+    @Path("/{resourceId}")
+    public void delete(@PathParam("resourceId") Long id) {
+        temaGeneralService.delete(id);
     }
 
     public static TemaGeneralResource create(DependencyInjector appInjector) {
