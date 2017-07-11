@@ -51,7 +51,7 @@ public class DuracionesResource extends Resource {
          return  convertir(getAllDuraciones(), new ReferenceOf<List<DuracionDeTemaTo>>(){}.getReferencedType());
     }
 
-    static  DuracionesResource create(DependencyInjector appInjector){
+   public  static  DuracionesResource create(DependencyInjector appInjector){
         DuracionesResource duracionesResource=new DuracionesResource();
         duracionesResource.appInjector=appInjector;
         return duracionesResource;

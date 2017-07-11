@@ -76,7 +76,7 @@ public class ResourcesTemasTest {
     public void drop() {
         app.stop();
     }
-
+    //TODO refactorizar test
     @Test
     public void alTraerUnaReunionConLaSeccionDeUnUsuarioNoTraeLosVotosDeOtrosSiLaReunionEstaPendiente() {
 
@@ -241,6 +241,7 @@ public class ResourcesTemasTest {
         temaDePrioridadMedia.setReunion(unaReunion);
         unaReunion = reunionService.update(unaReunion);
         unaReunion = reunionService.getAndMapping(unaReunion.getId(), reunion -> reunionResource.muestreoDeReunion(reunion, userId,testContextUserFeche));
+
         Assert.assertArrayEquals(unaReunion.getTemasPropuestos().toArray(), Arrays.asList(temaDeMayorPrioridad, temaDePrioridadMedia, temaDeMenorPrioridad).toArray());
     }
 

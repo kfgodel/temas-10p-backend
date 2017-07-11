@@ -100,6 +100,7 @@ public abstract class Service<T extends PersistableSupport> {
     }
 
     public void delete(Long id) {
+
         createOperation()
                 .insideATransaction()
                 .taking(id)
