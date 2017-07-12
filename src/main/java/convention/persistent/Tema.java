@@ -12,6 +12,11 @@ public abstract class Tema extends PersistableSupport {
     private Usuario autor;
     public static final String autor_FIELD = "autor";
 
+
+    @ManyToOne
+    private Usuario ultimoModificador;
+    public static final String ultimoModificador_FIELD = "ultimoModificador";
+
     @Column(length = 1024)
     private String titulo;
     public static final String titulo_FIELD = "titulo";
@@ -53,5 +58,13 @@ public abstract class Tema extends PersistableSupport {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public Usuario getUltimoModificador() {
+        return ultimoModificador;
+    }
+
+    public void setUltimoModificador(Usuario ultimoModificador) {
+        this.ultimoModificador = ultimoModificador;
     }
 }

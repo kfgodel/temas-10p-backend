@@ -29,6 +29,14 @@ public class TemaResource extends Resource {
         TemaDeReunion temaCreado = temaService.save(convertir(newState, TemaDeReunion.class));
         return convertir(temaCreado, TemaTo.class);
     }
+
+    @Path("/{resourceId}")
+    @PUT
+    public TemaTo update(TemaTo newState,@PathParam("resourceId") Long id) {
+        TemaDeReunion estadoNuevo=convertir(newState, TemaDeReunion.class);
+        TemaDeReunion temaUpdateado = temaService.update(estadoNuevo);
+        return convertir(temaUpdateado, TemaTo.class);
+    }
     @GET
     @Path("/{resourceId}")
     public TemaTo getSingle(@PathParam("resourceId") Long id) {

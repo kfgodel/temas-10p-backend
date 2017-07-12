@@ -18,6 +18,9 @@ public class TemaEnCreacionTo {
     @CopyTo(TemaDeReunion.autor_FIELD)
     private Long idDeAutor;
 
+    @CopyTo(TemaDeReunion.ultimoModificador_FIELD)
+    private Long idDeUltimoModificador;
+
     @CopyTo(TemaDeReunion.reunion_FIELD)
     private Long idDeReunion;
 
@@ -76,5 +79,13 @@ public class TemaEnCreacionTo {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public Long getIdDeUltimoModificador() {
+        return idDeUltimoModificador;
+    }
+
+    public void setIdDeUltimoModificador(Long idDeUltimoModificador) {
+        this.idDeUltimoModificador = idDeUltimoModificador;
     }
 }
