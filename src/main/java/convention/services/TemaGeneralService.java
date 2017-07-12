@@ -37,4 +37,11 @@ public class TemaGeneralService extends Service<TemaGeneral> {
         temaService.deleteAllForTemaGeneral(id);
         super.delete(id);
     }
+
+    @Override
+    public TemaGeneral update(TemaGeneral newState){
+        TemaService temaService = appInjector.getImplementationFor(TemaService.class).get();
+        temaService.updateAllForTemaGeneral(newState);
+        return super.update(newState);
+    }
 }

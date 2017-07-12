@@ -2,8 +2,10 @@ package convention.rest.api;
 
 import ar.com.kfgodel.dependencies.api.DependencyInjector;
 import ar.com.kfgodel.diamond.api.types.reference.ReferenceOf;
+import convention.persistent.Reunion;
 import convention.persistent.TemaDeReunion;
 import convention.persistent.TemaGeneral;
+import convention.rest.api.tos.ReunionTo;
 import convention.rest.api.tos.TemaEnCreacionTo;
 import convention.rest.api.tos.TemaGeneralTo;
 import convention.rest.api.tos.TemaTo;
@@ -44,6 +46,13 @@ public class TemaGeneralResource extends Resource {
     @Path("/{resourceId}")
     public void delete(@PathParam("resourceId") Long id) {
         temaGeneralService.delete(id);
+    }
+
+    @PUT
+    @Path("/{resourceId}")
+    public TemaGeneralTo update(TemaGeneralTo newState, @PathParam("resourceId") Long id) {
+        TemaGeneral temaGeneralActualizada = temaGeneralService.update(convertir(newState, TemaGeneral.class));
+        return convertir(temaGeneralActualizada, TemaGeneralTo.class);
     }
 
     public static TemaGeneralResource create(DependencyInjector appInjector) {

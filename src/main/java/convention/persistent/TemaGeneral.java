@@ -20,4 +20,10 @@ public class TemaGeneral extends Tema {
         temaDeReunion.setTemaGenerador(this);
         return temaDeReunion;
     }
+
+    public void actualizarTema(TemaDeReunion tema) {
+        tema.setTitulo(this.getTitulo());
+        tema.setDescripcion(this.getDescripcion());
+        tema.setDuracion(this.getDuracion());
+    }
 }

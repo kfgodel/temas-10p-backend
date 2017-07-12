@@ -238,6 +238,64 @@ public class PersistenciaTest {
         Assert.assertEquals(2, reunionService.get(reunion.getId()).getTemasPropuestos().size());
     }
 
+    @Test
+    public void test15AlEditarUnTemaGeneralSusTemasDeReunionAsociadosSeModificanTambien(){
+        Reunion reunion = Reunion.create(LocalDate.of(2017, 06, 26));
+        TemaGeneral temaGeneral = new TemaGeneral();
+        temaGeneral.setTitulo("Título");
+
+        reunion = reunionService.save(reunion);
+        temaGeneral = temaGeneralService.save(temaGeneral);
+
+        temaGeneral.setTitulo("Título modificado");
+        temaGeneralService.update(temaGeneral);
+
+        Assert.assertEquals("Título modificado", reunionService.get(reunion.getId()).getTemasPropuestos().get(0).getTitulo());
+    }
+
+    @Test
+    public void test16AlEditarUnTemaGeneralSusTemasDeReunionAsociadosNoSeModificanEnLasReunionesCerradas(){
+        Reunion reunion = Reunion.create(LocalDate.of(2017, 06, 26));
+        TemaGeneral temaGeneral = new TemaGeneral();
+        temaGeneral.setTitulo("Título");
+
+        reunion = reunionService.save(reunion);
+        temaGeneral = temaGeneralService.save(temaGeneral);
+
+        reunion = reunionService.get(reunion.getId());
+        reunion.setStatus(StatusDeReunion.CERRADA);
+        reunionService.update(reunion);
+
+        temaGeneral.setTitulo("Título modificado");
+        temaGeneralService.update(temaGeneral);
+        Assert.assertEquals("Título", reunionService.get(reunion.getId()).getTemasPropuestos().get(0).getTitulo());
+    }
+
+    @Test
+    public void test17AlEditarUnTemaGeneralNoSeModificanlosTemasDeReunionQueNoFueronGeneradosPorEl(){
+        Reunion reunion = Reunion.create(LocalDate.of(2017, 06, 26));
+        TemaDeReunion unTemaNoGenerado = new TemaDeReunion();
+        unTemaNoGenerado.setReunion(reunion);
+        unTemaNoGenerado.setTitulo("Título");
+        reunion.setTemasPropuestos(Arrays.asList(unTemaNoGenerado));
+
+        reunion = reunionService.save(reunion);
+        temaService.save(unTemaNoGenerado);
+
+        TemaGeneral unTemaGeneral = new TemaGeneral();
+        unTemaGeneral.setTitulo("Título 2");
+        unTemaGeneral = temaGeneralService.save(unTemaGeneral);
+        TemaGeneral otroTemaGeneral = new TemaGeneral();
+        otroTemaGeneral.setTitulo("Título 3");
+        temaGeneralService.save(otroTemaGeneral);
+
+        unTemaGeneral.setTitulo("Título modificado");
+        temaGeneralService.update(unTemaGeneral);
+        Assert.assertEquals("Título", reunionService.get(reunion.getId()).getTemasPropuestos().get(0).getTitulo());
+        Assert.assertEquals("Título modificado", reunionService.get(reunion.getId()).getTemasPropuestos().get(1).getTitulo());
+        Assert.assertEquals("Título 3", reunionService.get(reunion.getId()).getTemasPropuestos().get(2).getTitulo());
+    }
+
     private void startApplication(){
         application = TestApplication.create(TestConfig.create());
         application.start();

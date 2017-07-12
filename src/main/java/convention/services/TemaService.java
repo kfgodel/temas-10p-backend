@@ -18,6 +18,8 @@ import javax.ws.rs.WebApplicationException;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
@@ -46,6 +48,13 @@ public class TemaService extends Service<TemaDeReunion> {
         temasABorrar.forEach(tema -> this.deleteSiReunionPendiente(tema));
     }
 
+    public void updateAllForTemaGeneral(TemaGeneral temaModificado) {
+        List<TemaDeReunion> todosLosTemas = this.getAll();
+        Stream<TemaDeReunion> temasABorrar = todosLosTemas.stream().
+                filter(tema -> this.esUnTemaGeneradoPorElTemaGeneral(tema, temaModificado.getId()));
+        temasABorrar.forEach(tema -> this.updateSiReunionPendiente(tema, temaModificado));
+    }
+
     private Boolean esUnTemaGeneradoPorElTemaGeneral(TemaDeReunion tema, Long temaGeneralId){
         return tema.getTemaGenerador().isPresent() &&
                 temaGeneralId.equals(tema.getTemaGenerador().get().getId());
@@ -56,6 +65,13 @@ public class TemaService extends Service<TemaDeReunion> {
             this.delete(tema.getId());
         }else{
             tema.setTemaGenerador(null);
+            this.update(tema);
+        }
+    }
+
+    private void updateSiReunionPendiente(TemaDeReunion tema, TemaGeneral temaModificado) {
+        if(tema.getReunion().getStatus().equals(StatusDeReunion.PENDIENTE)){
+            temaModificado.actualizarTema(tema);
             this.update(tema);
         }
     }
