@@ -5,6 +5,7 @@ import convention.persistent.TemaDeReunion;
 import convention.persistent.Usuario;
 import convention.rest.api.tos.TemaEnCreacionTo;
 import convention.rest.api.tos.TemaTo;
+import convention.services.TemaGeneralService;
 import convention.services.TemaService;
 
 import javax.inject.Inject;
@@ -93,8 +94,8 @@ public class TemaResource extends Resource {
     public static TemaResource create(DependencyInjector appInjector) {
         TemaResource resource = new TemaResource();
         resource.appInjector = appInjector;
-        resource.temaService = resource.appInjector.createInjected(TemaService.class);
-
+        resource.temaService = appInjector.createInjected(TemaService.class);
+        appInjector.bindTo(TemaService.class, resource.temaService);
         return resource;
     }
 

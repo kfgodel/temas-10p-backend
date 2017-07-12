@@ -13,6 +13,9 @@ import java.util.List;
  */
 public class TemaGeneralService extends Service<TemaGeneral> {
 
+    @Inject
+    private TemaService temaService;
+
     public TemaGeneralService(){
         setClasePrincipal(TemaGeneral.class);
     }
@@ -33,14 +36,12 @@ public class TemaGeneralService extends Service<TemaGeneral> {
 
     @Override
     public void delete(Long id){
-        TemaService temaService = appInjector.getImplementationFor(TemaService.class).get();
         temaService.deleteAllForTemaGeneral(id);
         super.delete(id);
     }
 
     @Override
     public TemaGeneral update(TemaGeneral newState){
-        TemaService temaService = appInjector.getImplementationFor(TemaService.class).get();
         temaService.updateAllForTemaGeneral(newState);
         return super.update(newState);
     }
