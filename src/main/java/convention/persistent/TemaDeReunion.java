@@ -107,6 +107,7 @@ public class TemaDeReunion extends Tema {
     copia.setAutor(this.getAutor());
     copia.setDuracion(this.getDuracion());
     copia.setObligatoriedad(this.getObligatoriedad());
+    copia.setUltimoModificador(this.getUltimoModificador());
     return copia;
   }
 
