@@ -15,6 +15,7 @@ public class UsuarioService extends Service<Usuario> {
     }
 
     public List<Usuario> getAll() {
+
         return getAll(FindAllUsersOrderedByName.create());
     }
 }

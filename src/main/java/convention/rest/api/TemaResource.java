@@ -25,15 +25,20 @@ public class TemaResource extends Resource {
     TemaService temaService;
 
     @POST
-    public TemaTo create(TemaEnCreacionTo newState) {
-        TemaDeReunion temaCreado = temaService.save(convertir(newState, TemaDeReunion.class));
+    public TemaTo create(TemaEnCreacionTo newState,@Context SecurityContext securityContext) {
+        TemaDeReunion temaCreado = convertir(newState, TemaDeReunion.class);
+                Usuario modificador=this.usuarioActual(securityContext);
+                temaCreado.setUltimoModificador(modificador);
+        temaService.save(temaCreado);
         return convertir(temaCreado, TemaTo.class);
     }
 
     @Path("/{resourceId}")
     @PUT
-    public TemaTo update(TemaTo newState,@PathParam("resourceId") Long id) {
+    public TemaTo update(TemaTo newState,@PathParam("resourceId") Long id,@Context SecurityContext securityContext) {
         TemaDeReunion estadoNuevo=convertir(newState, TemaDeReunion.class);
+        Usuario modificador=this.usuarioActual(securityContext);
+                    estadoNuevo.setUltimoModificador(modificador);
         TemaDeReunion temaUpdateado = temaService.update(estadoNuevo);
         return convertir(temaUpdateado, TemaTo.class);
     }

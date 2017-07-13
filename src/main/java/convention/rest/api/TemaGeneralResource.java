@@ -5,6 +5,7 @@ import ar.com.kfgodel.diamond.api.types.reference.ReferenceOf;
 import convention.persistent.Reunion;
 import convention.persistent.TemaDeReunion;
 import convention.persistent.TemaGeneral;
+import convention.persistent.Usuario;
 import convention.rest.api.tos.ReunionTo;
 import convention.rest.api.tos.TemaEnCreacionTo;
 import convention.rest.api.tos.TemaGeneralTo;
@@ -13,6 +14,8 @@ import convention.services.TemaGeneralService;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.SecurityContext;
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -37,8 +40,11 @@ public class TemaGeneralResource extends Resource {
     }
 
     @POST
-    public TemaGeneralTo create(TemaGeneralTo newState) {
-        TemaGeneral temaCreado = temaGeneralService.save(convertir(newState, TemaGeneral.class));
+    public TemaGeneralTo create(TemaGeneralTo newState,@Context SecurityContext securityContext) {
+        TemaGeneral temaCreado =convertir(newState, TemaGeneral.class);
+        Usuario modificador=this.usuarioActual(securityContext);
+            temaCreado.setUltimoModificador(modificador);
+                temaCreado=temaGeneralService.save(temaCreado);
         return convertir(temaCreado, TemaGeneralTo.class);
     }
 
@@ -50,9 +56,12 @@ public class TemaGeneralResource extends Resource {
 
     @PUT
     @Path("/{resourceId}")
-    public TemaGeneralTo update(TemaGeneralTo newState, @PathParam("resourceId") Long id) {
-        TemaGeneral temaGeneralActualizada = temaGeneralService.update(convertir(newState, TemaGeneral.class));
-        return convertir(temaGeneralActualizada, TemaGeneralTo.class);
+    public TemaGeneralTo update(TemaGeneralTo newState, @PathParam("resourceId") Long id,@Context SecurityContext securityContext) {
+        TemaGeneral temaActualizado =convertir(newState, TemaGeneral.class);
+        Usuario modificador=this.usuarioActual(securityContext);
+        temaActualizado.setUltimoModificador(modificador);
+        temaActualizado=temaGeneralService.update(temaActualizado);
+        return convertir(temaActualizado, TemaGeneralTo.class);
     }
 
     public static TemaGeneralResource create(DependencyInjector appInjector) {
