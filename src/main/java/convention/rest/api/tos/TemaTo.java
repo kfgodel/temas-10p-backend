@@ -28,9 +28,6 @@ public class TemaTo extends PersistableToSupport {
   @CopyFromAndTo(value= TemaDeReunion.ultimoModificador_FIELD + "." +Usuario.name_FIELD, whenMissing = MissingPropertyAction.TREAT_AS_NULL)
   private String ultimoModificador;
 
-  @CopyFromAndTo(TemaDeReunion.ultimoModificador_FIELD)
-  private Long idDeUltimoModificador;
-
   @CopyFromAndTo(TemaDeReunion.reunion_FIELD)
   private Long idDeReunion;
 
@@ -136,11 +133,4 @@ public class TemaTo extends PersistableToSupport {
     this.ultimoModificador = idDeUltimoModificador;
   }
 
-  public Long getIdDeUltimoModificador() {
-    return idDeUltimoModificador;
-  }
-
-  public void setIdDeUltimoModificador(Long idDeUltimoModificador) {
-    this.idDeUltimoModificador = idDeUltimoModificador;
-  }
 }
