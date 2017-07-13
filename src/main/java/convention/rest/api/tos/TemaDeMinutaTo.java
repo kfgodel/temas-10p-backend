@@ -21,6 +21,9 @@ public class TemaDeMinutaTo extends PersistableToSupport {
     @CopyFromAndTo(TemaDeMinuta.conclusion_FIELD)
     private String conclusion;
 
+    @CopyFromAndTo(TemaDeMinuta.fueTratado_FIELD)
+    private Boolean fueTratado;
+
     public TemaTo getTema() {
         return tema;
     }
@@ -43,5 +46,13 @@ public class TemaDeMinutaTo extends PersistableToSupport {
 
     public void setIdDeMinuta(Long idDeMinuta) {
         this.idDeMinuta = idDeMinuta;
+    }
+
+    public Boolean getFueTratado() {
+        return fueTratado;
+    }
+
+    public void setFueTratado(Boolean fueTratado) {
+        this.fueTratado = fueTratado;
     }
 }

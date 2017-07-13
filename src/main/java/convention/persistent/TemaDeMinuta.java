@@ -17,11 +17,14 @@ public class TemaDeMinuta extends PersistableSupport {
     private TemaDeReunion tema;
     public static final String tema_FIELD = "tema";
 
-        private String conclusion;
+    private String conclusion;
     public static final String conclusion_FIELD = "conclusion";
 
-    public static TemaDeMinuta create(TemaDeReunion temaDeReunion,Minuta minuta) {
-        TemaDeMinuta nuevoTema=new TemaDeMinuta();
+    private boolean fueTratado;
+    public static final String fueTratado_FIELD = "fueTratado";
+
+    public static TemaDeMinuta create(TemaDeReunion temaDeReunion, Minuta minuta) {
+        TemaDeMinuta nuevoTema = new TemaDeMinuta();
         nuevoTema.setTema(temaDeReunion);
         nuevoTema.setMinuta(minuta);
         return nuevoTema;
@@ -49,5 +52,13 @@ public class TemaDeMinuta extends PersistableSupport {
 
     public void setMinuta(Minuta minuta) {
         this.minuta = minuta;
+    }
+
+    public void setFueTratado(boolean fueTratado) {
+        this.fueTratado = fueTratado;
+    }
+
+    public boolean getFueTratado() {
+        return fueTratado;
     }
 }

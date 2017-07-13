@@ -25,6 +25,7 @@ public class PersistenciaTest {
     private TemaGeneralService temaGeneralService;
     private MinutaService minutaService;
     private UsuarioService usuarioService;
+    private TemaDeMinutaService temaDeMinutaService;
 
     @Before
     public void setUp(){
@@ -34,12 +35,14 @@ public class PersistenciaTest {
         temaGeneralService = application.getInjector().createInjected(TemaGeneralService.class);
         minutaService = application.getInjector().createInjected(MinutaService.class);
         usuarioService = application.getInjector().createInjected(UsuarioService.class);
+        temaDeMinutaService = application.getInjector().createInjected(TemaDeMinutaService.class);
 
         application.getInjector().bindTo(ReunionService.class, reunionService);
         application.getInjector().bindTo(TemaService.class, temaService);
         application.getInjector().bindTo(TemaGeneralService.class, temaGeneralService);
         application.getInjector().bindTo(MinutaService.class, minutaService);
         application.getInjector().bindTo(UsuarioService.class, usuarioService);
+        application.getInjector().bindTo(TemaDeMinutaService.class, temaDeMinutaService);
     }
     @After
     public void drop(){
@@ -328,7 +331,14 @@ public class PersistenciaTest {
         temaGeneralService.update(temaGeneral);
 
         Assert.assertEquals("Sandro", reunionService.get(reunion.getId()).getTemasPropuestos().get(0).getUltimoModificador().getName());
+    }
 
+    @Test
+    public void test20SePuedePersistirSiUnTemaDeMinutaFueTratado(){
+        TemaDeMinuta temaDeMinuta = new TemaDeMinuta();
+        temaDeMinuta.setFueTratado(true);
+        temaDeMinuta = temaDeMinutaService.save(temaDeMinuta);
+        Assert.assertTrue(temaDeMinutaService.get(temaDeMinuta.getId()).getFueTratado());
     }
 
     private void startApplication(){
