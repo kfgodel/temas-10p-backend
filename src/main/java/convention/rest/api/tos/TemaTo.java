@@ -19,19 +19,22 @@ import java.util.List;
  */
 @JsonIgnoreProperties({"usuarioActual"})
 public class TemaTo extends PersistableToSupport {
-  @CopyFrom(TemaDeReunion.duracion_FIELD)
+  @CopyFromAndTo(TemaDeReunion.duracion_FIELD)
   private String duracion;
 
   @CopyFromAndTo(TemaDeReunion.autor_FIELD)
   private Long idDeAutor;
 
+  @CopyFromAndTo(value= TemaDeReunion.ultimoModificador_FIELD + "." +Usuario.name_FIELD, whenMissing = MissingPropertyAction.TREAT_AS_NULL)
+  private String ultimoModificador;
+
   @CopyFromAndTo(TemaDeReunion.reunion_FIELD)
   private Long idDeReunion;
 
-  @CopyFrom(value = TemaDeReunion.autor_FIELD + "." + Usuario.name_FIELD, whenMissing = MissingPropertyAction.TREAT_AS_NULL)
+  @CopyFromAndTo(value = TemaDeReunion.autor_FIELD + "." + Usuario.name_FIELD, whenMissing = MissingPropertyAction.TREAT_AS_NULL)
   private String autor;
 
-  @CopyFrom(TemaDeReunion.prioridad_FIELD)
+  @CopyFromAndTo(TemaDeReunion.prioridad_FIELD)
   private Integer prioridad;
 
   @CopyFromAndTo(TemaDeReunion.titulo_FIELD)
@@ -43,7 +46,7 @@ public class TemaTo extends PersistableToSupport {
   @CopyFromAndTo(TemaDeReunion.interesados_FIELD)
   private List<Long> idsDeInteresados;
 
-  @CopyFrom(TemaDeReunion.obligatoriedad_FIELD)
+  @CopyFromAndTo(TemaDeReunion.obligatoriedad_FIELD)
   private String obligatoriedad;
 
   public String getAutor() {
@@ -121,4 +124,13 @@ public class TemaTo extends PersistableToSupport {
   public void setObligatoriedad(String unaObligatoriedad) {
     this.obligatoriedad = unaObligatoriedad;
   }
+
+  public String getUltimoModificador() {
+    return ultimoModificador;
+  }
+
+  public void setUltimoModificador(String idDeUltimoModificador) {
+    this.ultimoModificador = idDeUltimoModificador;
+  }
+
 }

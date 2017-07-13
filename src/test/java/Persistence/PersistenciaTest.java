@@ -3,10 +3,7 @@ package Persistence;
 import ar.com.kfgodel.temas.application.Application;
 import ar.com.kfgodel.temas.filters.reuniones.AllReunionesUltimaPrimero;
 import convention.persistent.*;
-import convention.services.MinutaService;
-import convention.services.ReunionService;
-import convention.services.TemaGeneralService;
-import convention.services.TemaService;
+import convention.services.*;
 import helpers.TestConfig;
 import org.junit.After;
 import org.junit.Assert;
@@ -22,11 +19,12 @@ import java.util.List;
  */
 public class PersistenciaTest {
 
-    Application application;
-    ReunionService reunionService;
-    TemaService temaService;
+    private Application application;
+    private ReunionService reunionService;
+    private TemaService temaService;
     private TemaGeneralService temaGeneralService;
     private MinutaService minutaService;
+    private UsuarioService usuarioService;
 
     @Before
     public void setUp(){
@@ -35,11 +33,13 @@ public class PersistenciaTest {
         temaService = application.getInjector().createInjected(TemaService.class);
         temaGeneralService = application.getInjector().createInjected(TemaGeneralService.class);
         minutaService = application.getInjector().createInjected(MinutaService.class);
+        usuarioService = application.getInjector().createInjected(UsuarioService.class);
 
         application.getInjector().bindTo(ReunionService.class, reunionService);
         application.getInjector().bindTo(TemaService.class, temaService);
         application.getInjector().bindTo(TemaGeneralService.class, temaGeneralService);
         application.getInjector().bindTo(MinutaService.class, minutaService);
+        application.getInjector().bindTo(UsuarioService.class, usuarioService);
     }
     @After
     public void drop(){
@@ -84,7 +84,7 @@ public class PersistenciaTest {
 
        reunion.setTemasPropuestos(Arrays.asList(temaDeLaReunion));
 
-       reunion = reunionService.save(reunion);
+       reunion = reunionService.update(reunion);
 
 
        Reunion reunionPersistida = reunionService.get(reunion.getId());
@@ -160,6 +160,7 @@ public class PersistenciaTest {
         Reunion reunion = new Reunion();
         reunionService.save(reunion);
         TemaGeneral temaGeneral = new TemaGeneral();
+        temaGeneralService.save(temaGeneral);
         TemaDeReunion temaDeReunion = temaGeneral.generarTemaPara(reunion);
         temaDeReunion = temaService.save(temaDeReunion);
 
@@ -185,6 +186,149 @@ public class PersistenciaTest {
         Assert.assertEquals(minuta.getReunion().getId(), minutaRecuperada.getReunion().getId());
         Assert.assertEquals(minuta.getFecha(), minutaRecuperada.getFecha());
         Assert.assertEquals(1, minutaRecuperada.getTemas().size());
+    }
+
+    @Test
+    public void test12AlBorrarUnTemaGeneralSusTemasDeReunionAsociadosSeEliminanTambien(){
+        Reunion reunion = Reunion.create(LocalDate.of(2017, 06, 26));
+        TemaGeneral temaGeneral = new TemaGeneral();
+
+        reunion = reunionService.save(reunion);
+        temaGeneral = temaGeneralService.save(temaGeneral);
+
+        Assert.assertEquals(1, reunionService.get(reunion.getId()).getTemasPropuestos().size());
+
+        temaGeneralService.delete(temaGeneral.getId());
+
+        Assert.assertEquals(0, reunionService.get(reunion.getId()).getTemasPropuestos().size());
+    }
+
+    @Test
+    public void test13AlBorrarUnTemaGeneralSusTemasDeReunionAsociadosNoSeEliminanDeLasReunionesCerradas(){
+        Reunion reunion = Reunion.create(LocalDate.of(2017, 06, 26));
+        TemaGeneral temaGeneral = new TemaGeneral();
+
+        reunion = reunionService.save(reunion);
+        temaGeneral = temaGeneralService.save(temaGeneral);
+
+        reunion = reunionService.get(reunion.getId());
+        reunion.setStatus(StatusDeReunion.CERRADA);
+        reunionService.update(reunion);
+
+        temaGeneralService.delete(temaGeneral.getId());
+        Assert.assertEquals(1, reunionService.get(reunion.getId()).getTemasPropuestos().size());
+    }
+
+    @Test
+    public void test14AlBorrarUnTemaGeneralNoSeBorranlosTemasDeReunionQueNoFueronGeneradosPorEl(){
+        Reunion reunion = Reunion.create(LocalDate.of(2017, 06, 26));
+        TemaDeReunion unTemaNoGenerado = new TemaDeReunion();
+        unTemaNoGenerado.setReunion(reunion);
+        reunion.setTemasPropuestos(Arrays.asList(unTemaNoGenerado));
+
+        reunion = reunionService.save(reunion);
+        temaService.save(unTemaNoGenerado);
+
+        TemaGeneral unTemaGeneral = new TemaGeneral();
+        unTemaGeneral = temaGeneralService.save(unTemaGeneral);
+        TemaGeneral otroTemaGeneral = new TemaGeneral();
+        temaGeneralService.save(otroTemaGeneral);
+
+        temaGeneralService.delete(unTemaGeneral.getId());
+        Assert.assertEquals(2, reunionService.get(reunion.getId()).getTemasPropuestos().size());
+    }
+
+    @Test
+    public void test15AlEditarUnTemaGeneralSusTemasDeReunionAsociadosSeModificanTambien(){
+        Reunion reunion = Reunion.create(LocalDate.of(2017, 06, 26));
+        TemaGeneral temaGeneral = new TemaGeneral();
+        temaGeneral.setTitulo("Título");
+
+        reunion = reunionService.save(reunion);
+        temaGeneral = temaGeneralService.save(temaGeneral);
+
+        temaGeneral.setTitulo("Título modificado");
+        temaGeneralService.update(temaGeneral);
+
+        Assert.assertEquals("Título modificado", reunionService.get(reunion.getId()).getTemasPropuestos().get(0).getTitulo());
+    }
+
+    @Test
+    public void test16AlEditarUnTemaGeneralSusTemasDeReunionAsociadosNoSeModificanEnLasReunionesCerradas(){
+        Reunion reunion = Reunion.create(LocalDate.of(2017, 06, 26));
+        TemaGeneral temaGeneral = new TemaGeneral();
+        temaGeneral.setTitulo("Título");
+
+        reunion = reunionService.save(reunion);
+        temaGeneral = temaGeneralService.save(temaGeneral);
+
+        reunion = reunionService.get(reunion.getId());
+        reunion.setStatus(StatusDeReunion.CERRADA);
+        reunionService.update(reunion);
+
+        temaGeneral.setTitulo("Título modificado");
+        temaGeneralService.update(temaGeneral);
+        Assert.assertEquals("Título", reunionService.get(reunion.getId()).getTemasPropuestos().get(0).getTitulo());
+    }
+
+    @Test
+    public void test17AlEditarUnTemaGeneralNoSeModificanlosTemasDeReunionQueNoFueronGeneradosPorEl(){
+        Reunion reunion = Reunion.create(LocalDate.of(2017, 06, 26));
+        TemaDeReunion unTemaNoGenerado = new TemaDeReunion();
+        unTemaNoGenerado.setReunion(reunion);
+        unTemaNoGenerado.setTitulo("Título");
+        reunion.setTemasPropuestos(Arrays.asList(unTemaNoGenerado));
+
+        reunion = reunionService.save(reunion);
+        temaService.save(unTemaNoGenerado);
+
+        TemaGeneral unTemaGeneral = new TemaGeneral();
+        unTemaGeneral.setTitulo("Título 2");
+        unTemaGeneral = temaGeneralService.save(unTemaGeneral);
+        TemaGeneral otroTemaGeneral = new TemaGeneral();
+        otroTemaGeneral.setTitulo("Título 3");
+        temaGeneralService.save(otroTemaGeneral);
+
+        unTemaGeneral.setTitulo("Título modificado");
+        temaGeneralService.update(unTemaGeneral);
+        Assert.assertEquals("Título", reunionService.get(reunion.getId()).getTemasPropuestos().get(0).getTitulo());
+        Assert.assertEquals("Título modificado", reunionService.get(reunion.getId()).getTemasPropuestos().get(1).getTitulo());
+        Assert.assertEquals("Título 3", reunionService.get(reunion.getId()).getTemasPropuestos().get(2).getTitulo());
+    }
+
+    @Test
+    public void test18AlGuardarUnTemaGeneralLosTemasDeReunionGeneradosTienenComoUltimoModificadorAlDelTemaGeneral(){
+        Reunion reunion = Reunion.create(LocalDate.of(2017, 06, 26));
+        TemaGeneral temaGeneral = new TemaGeneral();
+
+        Usuario user = new Usuario();
+        user.setName("Sandro");
+        usuarioService.save(user);
+        temaGeneral.setUltimoModificador(user);
+
+        reunion = reunionService.save(reunion);
+        temaGeneralService.save(temaGeneral);
+
+        Assert.assertEquals("Sandro", reunionService.get(reunion.getId()).getTemasPropuestos().get(0).getUltimoModificador().getName());
+    }
+
+    @Test
+    public void test19AlEditarUnTemaGeneralSeActualizaElUltimoModificadorDeSusTemasDeRerunionAsociados(){
+        Reunion reunion = Reunion.create(LocalDate.of(2017, 06, 26));
+        TemaGeneral temaGeneral = new TemaGeneral();
+
+        reunion = reunionService.save(reunion);
+        temaGeneral = temaGeneralService.save(temaGeneral);
+
+        Usuario user = new Usuario();
+        user.setName("Sandro");
+        usuarioService.save(user);
+
+        temaGeneral.setUltimoModificador(user);
+        temaGeneralService.update(temaGeneral);
+
+        Assert.assertEquals("Sandro", reunionService.get(reunion.getId()).getTemasPropuestos().get(0).getUltimoModificador().getName());
+
     }
 
     private void startApplication(){

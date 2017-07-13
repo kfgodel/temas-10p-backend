@@ -1,6 +1,7 @@
 package convention.persistent;
 
 import javax.persistence.Entity;
+import java.util.Optional;
 
 /**
  * Created by sandro on 03/07/17.
@@ -16,6 +17,15 @@ public class TemaGeneral extends Tema {
         temaDeReunion.setDescripcion(this.getDescripcion());
         temaDeReunion.setAutor(this.getAutor());
         temaDeReunion.setDuracion(this.getDuracion());
+        temaDeReunion.setTemaGenerador(this);
+        temaDeReunion.setUltimoModificador(this.getUltimoModificador());
         return temaDeReunion;
+    }
+
+    public void actualizarTema(TemaDeReunion tema) {
+        tema.setTitulo(this.getTitulo());
+        tema.setDescripcion(this.getDescripcion());
+        tema.setDuracion(this.getDuracion());
+        tema.setUltimoModificador(this.getUltimoModificador());
     }
 }

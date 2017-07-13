@@ -62,6 +62,7 @@ public class UserResource extends Resource {
 
     @GET
     public List<UserTo> getAllUsers() {
+
         return convertir(userService.getAll(), LIST_OF_USER_TOS);
     }
 
