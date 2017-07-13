@@ -18,6 +18,7 @@ public class TemaGeneral extends Tema {
         temaDeReunion.setAutor(this.getAutor());
         temaDeReunion.setDuracion(this.getDuracion());
         temaDeReunion.setTemaGenerador(this);
+        temaDeReunion.setUltimoModificador(this.getUltimoModificador());
         return temaDeReunion;
     }
 
@@ -25,5 +26,6 @@ public class TemaGeneral extends Tema {
         tema.setTitulo(this.getTitulo());
         tema.setDescripcion(this.getDescripcion());
         tema.setDuracion(this.getDuracion());
+        tema.setUltimoModificador(this.getUltimoModificador());
     }
 }

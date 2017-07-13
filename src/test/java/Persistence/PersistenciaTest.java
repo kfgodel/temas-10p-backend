@@ -3,10 +3,7 @@ package Persistence;
 import ar.com.kfgodel.temas.application.Application;
 import ar.com.kfgodel.temas.filters.reuniones.AllReunionesUltimaPrimero;
 import convention.persistent.*;
-import convention.services.MinutaService;
-import convention.services.ReunionService;
-import convention.services.TemaGeneralService;
-import convention.services.TemaService;
+import convention.services.*;
 import helpers.TestConfig;
 import org.junit.After;
 import org.junit.Assert;
@@ -22,11 +19,12 @@ import java.util.List;
  */
 public class PersistenciaTest {
 
-    Application application;
-    ReunionService reunionService;
-    TemaService temaService;
+    private Application application;
+    private ReunionService reunionService;
+    private TemaService temaService;
     private TemaGeneralService temaGeneralService;
     private MinutaService minutaService;
+    private UsuarioService usuarioService;
 
     @Before
     public void setUp(){
@@ -35,11 +33,13 @@ public class PersistenciaTest {
         temaService = application.getInjector().createInjected(TemaService.class);
         temaGeneralService = application.getInjector().createInjected(TemaGeneralService.class);
         minutaService = application.getInjector().createInjected(MinutaService.class);
+        usuarioService = application.getInjector().createInjected(UsuarioService.class);
 
         application.getInjector().bindTo(ReunionService.class, reunionService);
         application.getInjector().bindTo(TemaService.class, temaService);
         application.getInjector().bindTo(TemaGeneralService.class, temaGeneralService);
         application.getInjector().bindTo(MinutaService.class, minutaService);
+        application.getInjector().bindTo(UsuarioService.class, usuarioService);
     }
     @After
     public void drop(){
@@ -294,6 +294,41 @@ public class PersistenciaTest {
         Assert.assertEquals("Título", reunionService.get(reunion.getId()).getTemasPropuestos().get(0).getTitulo());
         Assert.assertEquals("Título modificado", reunionService.get(reunion.getId()).getTemasPropuestos().get(1).getTitulo());
         Assert.assertEquals("Título 3", reunionService.get(reunion.getId()).getTemasPropuestos().get(2).getTitulo());
+    }
+
+    @Test
+    public void test18AlGuardarUnTemaGeneralLosTemasDeReunionGeneradosTienenComoUltimoModificadorAlDelTemaGeneral(){
+        Reunion reunion = Reunion.create(LocalDate.of(2017, 06, 26));
+        TemaGeneral temaGeneral = new TemaGeneral();
+
+        Usuario user = new Usuario();
+        user.setName("Sandro");
+        usuarioService.save(user);
+        temaGeneral.setUltimoModificador(user);
+
+        reunion = reunionService.save(reunion);
+        temaGeneralService.save(temaGeneral);
+
+        Assert.assertEquals("Sandro", reunionService.get(reunion.getId()).getTemasPropuestos().get(0).getUltimoModificador().getName());
+    }
+
+    @Test
+    public void test19AlEditarUnTemaGeneralSeActualizaElUltimoModificadorDeSusTemasDeRerunionAsociados(){
+        Reunion reunion = Reunion.create(LocalDate.of(2017, 06, 26));
+        TemaGeneral temaGeneral = new TemaGeneral();
+
+        reunion = reunionService.save(reunion);
+        temaGeneral = temaGeneralService.save(temaGeneral);
+
+        Usuario user = new Usuario();
+        user.setName("Sandro");
+        usuarioService.save(user);
+
+        temaGeneral.setUltimoModificador(user);
+        temaGeneralService.update(temaGeneral);
+
+        Assert.assertEquals("Sandro", reunionService.get(reunion.getId()).getTemasPropuestos().get(0).getUltimoModificador().getName());
+
     }
 
     private void startApplication(){
