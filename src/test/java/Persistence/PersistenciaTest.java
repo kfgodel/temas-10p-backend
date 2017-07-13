@@ -25,6 +25,7 @@ public class PersistenciaTest {
     private TemaGeneralService temaGeneralService;
     private MinutaService minutaService;
     private UsuarioService usuarioService;
+    private TemaDeMinutaService temaDeMinutaService;
 
     @Before
     public void setUp(){
@@ -34,7 +35,9 @@ public class PersistenciaTest {
         temaGeneralService = application.getInjector().createInjected(TemaGeneralService.class);
         minutaService = application.getInjector().createInjected(MinutaService.class);
         usuarioService = application.getInjector().createInjected(UsuarioService.class);
+        temaDeMinutaService=application.getInjector().createInjected(TemaDeMinutaService.class);
 
+        application.getInjector().bindTo(TemaDeMinutaService.class, temaDeMinutaService);
         application.getInjector().bindTo(ReunionService.class, reunionService);
         application.getInjector().bindTo(TemaService.class, temaService);
         application.getInjector().bindTo(TemaGeneralService.class, temaGeneralService);
@@ -330,7 +333,36 @@ public class PersistenciaTest {
         Assert.assertEquals("Sandro", reunionService.get(reunion.getId()).getTemasPropuestos().get(0).getUltimoModificador().getName());
 
     }
+    @Test
+    public void test20UnTemaDeMinutaSePuedePersistirConActionItems(){
+        TemaDeMinuta temaDeMinuta=new TemaDeMinuta();
+        temaDeMinuta.setConclusion("una conclusion");
+        ActionItem unActionItem=new ActionItem();
+        unActionItem.setDescripcion("unActionItem");
+        temaDeMinuta.setActionItems(Arrays.asList(unActionItem));
+        temaDeMinuta=temaDeMinutaService.save(temaDeMinuta);
+        temaDeMinuta=temaDeMinutaService.get(temaDeMinuta.getId());
 
+
+        Assert.assertEquals(temaDeMinuta.getActionItems().size(),1);
+
+    }
+    @Test
+    public void test21UnTemaDeMinutaPuedeUpdatearSusActionItems(){
+        TemaDeMinuta temaDeMinuta=new TemaDeMinuta();
+        temaDeMinuta.setConclusion("una conclusion");
+        ActionItem unActionItem=new ActionItem();
+        unActionItem.setDescripcion("unActionItem");
+        temaDeMinuta.setActionItems(Arrays.asList(unActionItem));
+        temaDeMinuta=temaDeMinutaService.save(temaDeMinuta);
+        unActionItem.setDescripcion("cambie");
+        temaDeMinutaService.update(temaDeMinuta);
+        temaDeMinuta=temaDeMinutaService.get(temaDeMinuta.getId());
+
+
+        Assert.assertEquals(temaDeMinuta.getActionItems().get(0).getDescripcion(),"cambie");
+
+    }
     private void startApplication(){
         application = TestApplication.create(TestConfig.create());
         application.start();
