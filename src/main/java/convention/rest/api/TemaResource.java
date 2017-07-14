@@ -5,6 +5,7 @@ import convention.persistent.TemaDeReunion;
 import convention.persistent.Usuario;
 import convention.rest.api.tos.TemaEnCreacionTo;
 import convention.rest.api.tos.TemaTo;
+import convention.services.TemaDeMinutaService;
 import convention.services.TemaGeneralService;
 import convention.services.TemaService;
 
@@ -101,6 +102,7 @@ public class TemaResource extends Resource {
     @DELETE
     @Path("/{resourceId}")
     public void delete(@PathParam("resourceId") Long id) {
+
         temaService.delete(id);
     }
 

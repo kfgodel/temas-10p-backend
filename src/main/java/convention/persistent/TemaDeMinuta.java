@@ -1,5 +1,9 @@
 package convention.persistent;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
+import javax.annotation.Nullable;
 import javax.persistence.*;
 import java.util.List;
 
@@ -13,8 +17,8 @@ public class TemaDeMinuta extends PersistableSupport {
     private Minuta minuta;
     public static final String minuta_FIELD = "minuta";
 
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(cascade = CascadeType.ALL)
     private List<ActionItem> actionItems;
 
     public static final String actionItems_FIELD = "actionItems";
@@ -22,11 +26,14 @@ public class TemaDeMinuta extends PersistableSupport {
     private TemaDeReunion tema;
     public static final String tema_FIELD = "tema";
 
-        private String conclusion;
+    private String conclusion;
     public static final String conclusion_FIELD = "conclusion";
 
-    public static TemaDeMinuta create(TemaDeReunion temaDeReunion,Minuta minuta) {
-        TemaDeMinuta nuevoTema=new TemaDeMinuta();
+    private boolean fueTratado;
+    public static final String fueTratado_FIELD = "fueTratado";
+
+    public static TemaDeMinuta create(TemaDeReunion temaDeReunion, Minuta minuta) {
+        TemaDeMinuta nuevoTema = new TemaDeMinuta();
         nuevoTema.setTema(temaDeReunion);
         nuevoTema.setMinuta(minuta);
         return nuevoTema;
@@ -62,5 +69,13 @@ public class TemaDeMinuta extends PersistableSupport {
 
     public void setActionItems(List<ActionItem> actionItems) {
         this.actionItems = actionItems;
+    }
+
+    public void setFueTratado(boolean fueTratado) {
+        this.fueTratado = fueTratado;
+    }
+
+    public boolean getFueTratado() {
+        return fueTratado;
     }
 }

@@ -2,6 +2,8 @@ package convention.persistent;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -16,7 +18,8 @@ import java.util.stream.Collectors;
 public class Minuta extends PersistableSupport {
 
     @Fetch(FetchMode.SELECT)
-    @ManyToMany(fetch = FetchType.EAGER)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @ManyToMany
     private List<Usuario> asistentes;
     public static final String asistentes_FIELD = "asistentes";
 
@@ -26,7 +29,8 @@ public class Minuta extends PersistableSupport {
 
     public static final String fecha_FIELD = "fecha";
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(cascade = CascadeType.ALL)
     private List<TemaDeMinuta> temas;
     public static final String temas_FIELD = "temas";
 
