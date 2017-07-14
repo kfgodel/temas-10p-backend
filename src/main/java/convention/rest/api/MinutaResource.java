@@ -24,8 +24,7 @@ public class MinutaResource extends Resource {
     @GET
     @Path("reunion/{reunionId}")
     public MinutaTo getParaReunion(@PathParam("reunionId") Long id){
-        reunionService.updateAndMapping(id,reunion ->{reunion.setStatus(StatusDeReunion.CON_MINUTA);
-                                                                                return reunion;});
+
         Minuta minuta = minutaService.getFromReunion(id);
         return convertir(minuta, MinutaTo.class);
     }

@@ -30,7 +30,7 @@ public class Minuta extends PersistableSupport {
     public static final String fecha_FIELD = "fecha";
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TemaDeMinuta> temas;
     public static final String temas_FIELD = "temas";
 
@@ -69,6 +69,12 @@ public class Minuta extends PersistableSupport {
     }
 
     public void setTemas(List<TemaDeMinuta> temas) {
-        this.temas = temas;
+        if(this.temas == null) {
+            this.temas = temas;
+        }else{
+            this.temas.clear();
+            this.temas.addAll(temas);
+        }
+
     }
 }

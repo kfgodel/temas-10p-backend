@@ -18,7 +18,7 @@ public class TemaDeMinuta extends PersistableSupport {
     public static final String minuta_FIELD = "minuta";
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ActionItem> actionItems;
 
     public static final String actionItems_FIELD = "actionItems";
@@ -68,7 +68,12 @@ public class TemaDeMinuta extends PersistableSupport {
     }
 
     public void setActionItems(List<ActionItem> actionItems) {
-        this.actionItems = actionItems;
+        if (actionItems == null) {
+            this.actionItems = actionItems;
+        } else {
+            this.actionItems.clear();
+            this.actionItems.addAll(actionItems);
+        }
     }
 
     public void setFueTratado(boolean fueTratado) {
