@@ -27,6 +27,7 @@ import java.util.stream.Stream;
  */
 public class TemaService extends Service<TemaDeReunion> {
 
+
     public List<TemaDeReunion> getAll() {
         return getAll(FindAll.of(TemaDeReunion.class));
     }
@@ -36,9 +37,10 @@ public class TemaService extends Service<TemaDeReunion> {
 
     @Override
     public void delete(Long id) {
-        createOperation()
+       createOperation()
                 .insideATransaction()
-                .apply(DeleteById.create(TemaDeReunion.class, id));
+                .apply(
+                        DeleteById.create(TemaDeReunion.class, id));
     }
 
     public void deleteAllForTemaGeneral(Long temaGeneralId) {

@@ -80,6 +80,7 @@ public class UserResource extends Resource {
         return convertir(usuarioUpdateado, UserTo.class);
     }
 
+
     @DELETE
     @Path("/{userId}")
     public void deleteUser(@PathParam("userId") Long userId) {

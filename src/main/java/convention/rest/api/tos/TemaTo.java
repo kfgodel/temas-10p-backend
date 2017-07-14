@@ -25,13 +25,13 @@ public class TemaTo extends PersistableToSupport {
   @CopyFromAndTo(TemaDeReunion.autor_FIELD)
   private Long idDeAutor;
 
-  @CopyFromAndTo(value= TemaDeReunion.ultimoModificador_FIELD + "." +Usuario.name_FIELD, whenMissing = MissingPropertyAction.TREAT_AS_NULL)
+  @CopyFrom(value= TemaDeReunion.ultimoModificador_FIELD + "." +Usuario.name_FIELD, whenMissing = MissingPropertyAction.TREAT_AS_NULL)
   private String ultimoModificador;
 
   @CopyFromAndTo(TemaDeReunion.reunion_FIELD)
   private Long idDeReunion;
 
-  @CopyFromAndTo(value = TemaDeReunion.autor_FIELD + "." + Usuario.name_FIELD, whenMissing = MissingPropertyAction.TREAT_AS_NULL)
+  @CopyFrom(value = TemaDeReunion.autor_FIELD + "." + Usuario.name_FIELD, whenMissing = MissingPropertyAction.TREAT_AS_NULL)
   private String autor;
 
   @CopyFromAndTo(TemaDeReunion.prioridad_FIELD)

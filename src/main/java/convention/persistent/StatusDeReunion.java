@@ -12,7 +12,9 @@ public enum StatusDeReunion {
   /**
    * Estado post cierre de votacion para ser realizada
    */
-  CERRADA
+  CERRADA,
+
+  CON_MINUTA,
 
 
 }

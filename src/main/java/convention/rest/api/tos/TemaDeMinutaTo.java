@@ -1,6 +1,7 @@
 package convention.rest.api.tos;
 
 import ar.com.kfgodel.appbyconvention.tos.PersistableToSupport;
+import convention.persistent.ActionItem;
 import convention.persistent.TemaDeMinuta;
 import convention.persistent.TemaDeReunion;
 import net.sf.kfgodel.bean2bean.annotations.CopyFromAndTo;
@@ -18,8 +19,14 @@ public class TemaDeMinutaTo extends PersistableToSupport {
     @CopyFromAndTo(TemaDeMinuta.tema_FIELD)
     private TemaTo tema;
 
+    @CopyFromAndTo(TemaDeMinuta.actionItems_FIELD)
+    private List<ActionItemTo> actionItems;
+
     @CopyFromAndTo(TemaDeMinuta.conclusion_FIELD)
     private String conclusion;
+
+    @CopyFromAndTo(TemaDeMinuta.fueTratado_FIELD)
+    private Boolean fueTratado;
 
     public TemaTo getTema() {
         return tema;
@@ -43,5 +50,22 @@ public class TemaDeMinutaTo extends PersistableToSupport {
 
     public void setIdDeMinuta(Long idDeMinuta) {
         this.idDeMinuta = idDeMinuta;
+    }
+
+
+    public List<ActionItemTo> getActionItems() {
+        return actionItems;
+    }
+
+    public void setActionItems(List<ActionItemTo> actionItems) {
+        this.actionItems = actionItems;
+    }
+    public Boolean getFueTratado() {
+        return fueTratado;
+    }
+
+    public void setFueTratado(Boolean fueTratado) {
+        this.fueTratado = fueTratado;
+
     }
 }

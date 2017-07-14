@@ -1,6 +1,8 @@
 package convention.persistent;
 
 import ar.com.kfgodel.temas.model.OrdenarPorVotos;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -23,8 +25,8 @@ public class Reunion extends PersistableSupport {
     private StatusDeReunion status = StatusDeReunion.PENDIENTE;
     public static final String status_FIELD = "status";
 
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = TemaDeReunion.reunion_FIELD)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany( cascade = CascadeType.ALL, mappedBy = TemaDeReunion.reunion_FIELD)
     @OrderBy(TemaDeReunion.prioridad_FIELD)
     private List<TemaDeReunion> temasPropuestos;
     public static final String temasPropuestos_FIELD = "temasPropuestos";

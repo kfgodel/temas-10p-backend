@@ -18,4 +18,9 @@ public class UsuarioService extends Service<Usuario> {
 
         return getAll(FindAllUsersOrderedByName.create());
     }
+
+    @Override
+    public Usuario update(Usuario newState){
+      return super.update(newState);
+    }
 }
