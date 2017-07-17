@@ -28,8 +28,8 @@ public class TemaResource extends Resource {
     @POST
     public TemaTo create(TemaEnCreacionTo newState,@Context SecurityContext securityContext) {
         TemaDeReunion temaCreado = convertir(newState, TemaDeReunion.class);
-                Usuario modificador=this.usuarioActual(securityContext);
-                temaCreado.setUltimoModificador(modificador);
+        Usuario modificador = this.usuarioActual(securityContext);
+        temaCreado.setUltimoModificador(modificador);
         temaService.save(temaCreado);
         return convertir(temaCreado, TemaTo.class);
     }
