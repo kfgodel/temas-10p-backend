@@ -2,13 +2,11 @@ package convention.rest.api;
 
 import ar.com.kfgodel.dependencies.api.DependencyInjector;
 import ar.com.kfgodel.diamond.api.types.reference.ReferenceOf;
-import convention.persistent.Minuta;
-import convention.persistent.Reunion;
-import convention.persistent.StatusDeReunion;
-import convention.persistent.TemaDeReunion;
+import convention.persistent.*;
 import convention.rest.api.tos.MinutaTo;
 import convention.rest.api.tos.ReunionTo;
 import convention.rest.api.tos.UserTo;
+import convention.services.MinutaService;
 import convention.services.ReunionService;
 import convention.services.UsuarioService;
 
@@ -30,6 +28,7 @@ public class ReunionResource extends Resource {
 
     @Inject
     private ReunionService reunionService;
+
 
     private static final Type LISTA_DE_REUNIONES_TO = new ReferenceOf<List<ReunionTo>>() {
     }.getReferencedType();
@@ -64,7 +63,7 @@ public class ReunionResource extends Resource {
                     reunion.cerrarVotacion();
                     return reunion;
                 });
-        return convertir(reunionCerrada, ReunionTo.class);
+         return convertir(reunionCerrada, ReunionTo.class);
     }
 
 
@@ -76,6 +75,7 @@ public class ReunionResource extends Resource {
                     reunion.reabrirVotacion();
                     return reunion;
                 });
+
         return convertir(reunionAbierta, ReunionTo.class);
     }
 

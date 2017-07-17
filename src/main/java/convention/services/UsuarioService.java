@@ -15,6 +15,12 @@ public class UsuarioService extends Service<Usuario> {
     }
 
     public List<Usuario> getAll() {
+
         return getAll(FindAllUsersOrderedByName.create());
+    }
+
+    @Override
+    public Usuario update(Usuario newState){
+      return super.update(newState);
     }
 }

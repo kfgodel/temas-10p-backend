@@ -5,6 +5,7 @@ import org.hibernate.annotations.Fetch;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -29,6 +30,10 @@ public class TemaDeReunion extends Tema {
   @Enumerated(EnumType.STRING)
   private ObligatoriedadDeTema obligatoriedad;
   public static final String obligatoriedad_FIELD = "obligatoriedad";
+
+  @ManyToOne
+  private TemaGeneral temaGenerador;
+  public static final String temaGenerador_FIELD = "temaGenerador";
 
   public TemaDeReunion(){
       //Es la obligatoriedad default
@@ -107,6 +112,7 @@ public class TemaDeReunion extends Tema {
     copia.setAutor(this.getAutor());
     copia.setDuracion(this.getDuracion());
     copia.setObligatoriedad(this.getObligatoriedad());
+    copia.setUltimoModificador(this.getUltimoModificador());
     return copia;
   }
 
@@ -146,5 +152,13 @@ public class TemaDeReunion extends Tema {
 
   public Boolean fueGeneradoPorUnTemaGeneral() {
     return this.getObligatoriedad().equals(ObligatoriedadDeTema.OBLIGATORIO_GENERAL);
+  }
+
+  public Optional<TemaGeneral> getTemaGenerador() {
+    return Optional.ofNullable(temaGenerador);
+  }
+
+  public void setTemaGenerador(TemaGeneral temaGenerador) {
+    this.temaGenerador = temaGenerador;
   }
 }

@@ -5,6 +5,8 @@ import convention.persistent.TemaDeReunion;
 import convention.persistent.Usuario;
 import convention.rest.api.tos.TemaEnCreacionTo;
 import convention.rest.api.tos.TemaTo;
+import convention.services.TemaDeMinutaService;
+import convention.services.TemaGeneralService;
 import convention.services.TemaService;
 
 import javax.inject.Inject;
@@ -24,9 +26,22 @@ public class TemaResource extends Resource {
     TemaService temaService;
 
     @POST
-    public TemaTo create(TemaEnCreacionTo newState) {
-        TemaDeReunion temaCreado = temaService.save(convertir(newState, TemaDeReunion.class));
+    public TemaTo create(TemaEnCreacionTo newState,@Context SecurityContext securityContext) {
+        TemaDeReunion temaCreado = convertir(newState, TemaDeReunion.class);
+        Usuario modificador = this.usuarioActual(securityContext);
+        temaCreado.setUltimoModificador(modificador);
+        temaService.save(temaCreado);
         return convertir(temaCreado, TemaTo.class);
+    }
+
+    @Path("/{resourceId}")
+    @PUT
+    public TemaTo update(TemaTo newState,@PathParam("resourceId") Long id,@Context SecurityContext securityContext) {
+        TemaDeReunion estadoNuevo=convertir(newState, TemaDeReunion.class);
+        Usuario modificador=this.usuarioActual(securityContext);
+                    estadoNuevo.setUltimoModificador(modificador);
+        TemaDeReunion temaUpdateado = temaService.update(estadoNuevo);
+        return convertir(temaUpdateado, TemaTo.class);
     }
     @GET
     @Path("/{resourceId}")
@@ -87,14 +102,15 @@ public class TemaResource extends Resource {
     @DELETE
     @Path("/{resourceId}")
     public void delete(@PathParam("resourceId") Long id) {
+
         temaService.delete(id);
     }
 
     public static TemaResource create(DependencyInjector appInjector) {
         TemaResource resource = new TemaResource();
         resource.appInjector = appInjector;
-        resource.temaService = resource.appInjector.createInjected(TemaService.class);
-
+        resource.temaService = appInjector.createInjected(TemaService.class);
+        appInjector.bindTo(TemaService.class, resource.temaService);
         return resource;
     }
 

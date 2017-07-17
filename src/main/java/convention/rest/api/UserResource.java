@@ -62,6 +62,7 @@ public class UserResource extends Resource {
 
     @GET
     public List<UserTo> getAllUsers() {
+
         return convertir(userService.getAll(), LIST_OF_USER_TOS);
     }
 
@@ -78,6 +79,7 @@ public class UserResource extends Resource {
         Usuario usuarioUpdateado = userService.update(convertir(newUserState, Usuario.class));
         return convertir(usuarioUpdateado, UserTo.class);
     }
+
 
     @DELETE
     @Path("/{userId}")

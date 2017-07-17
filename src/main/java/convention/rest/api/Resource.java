@@ -34,7 +34,9 @@ public abstract class Resource {
         return createOperation()
                 .insideASession()
                 .applying(FindById.create(Usuario.class, userId))
-                .mapping((encontrado) -> encontrado.orElse(null)).get();
+                .mapping((encontrado) ->
+                        encontrado.orElse(null))
+                .get();
     }
 
     protected <T> T convertir(Object objetoAConvertir, Class<T> claseHacia){

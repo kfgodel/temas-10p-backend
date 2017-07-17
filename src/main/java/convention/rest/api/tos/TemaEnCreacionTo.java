@@ -18,6 +18,7 @@ public class TemaEnCreacionTo {
     @CopyTo(TemaDeReunion.autor_FIELD)
     private Long idDeAutor;
 
+
     @CopyTo(TemaDeReunion.reunion_FIELD)
     private Long idDeReunion;
 
@@ -77,4 +78,5 @@ public class TemaEnCreacionTo {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
+
 }

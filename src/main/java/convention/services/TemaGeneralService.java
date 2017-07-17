@@ -13,6 +13,9 @@ import java.util.List;
  */
 public class TemaGeneralService extends Service<TemaGeneral> {
 
+    @Inject
+    private TemaService temaService;
+
     public TemaGeneralService(){
         setClasePrincipal(TemaGeneral.class);
     }
@@ -23,10 +26,23 @@ public class TemaGeneralService extends Service<TemaGeneral> {
 
     @Override
     public TemaGeneral save(TemaGeneral temaGeneral){
+        TemaGeneral temaGeneralGuardado = super.save(temaGeneral);
         ReunionService reunionService = appInjector.getImplementationFor(ReunionService.class).get();
         List<Reunion> reunionesAbiertas = reunionService.getAll(ReunionesAbiertas.create());
         reunionesAbiertas.forEach(reunion -> reunion.agregarTemaGeneral(temaGeneral));
         reunionService.updateAll(reunionesAbiertas);
-        return super.save(temaGeneral);
+        return temaGeneralGuardado;
+    }
+
+    @Override
+    public void delete(Long id){
+        temaService.deleteAllForTemaGeneral(id);
+        super.delete(id);
+    }
+
+    @Override
+    public TemaGeneral update(TemaGeneral newState){
+        temaService.updateAllForTemaGeneral(newState);
+        return super.update(newState);
     }
 }

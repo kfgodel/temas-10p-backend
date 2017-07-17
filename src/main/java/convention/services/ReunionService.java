@@ -18,8 +18,11 @@ import java.util.List;
  * Created by sandro on 21/06/17.
  */
 public class ReunionService extends Service<Reunion> {
-        @Inject
-        MinutaService minutaService;
+    @Inject
+    MinutaService minutaService;
+
+    @Inject
+    TemaGeneralService temaGeneralService;
     public Reunion getProxima() {
         return createOperation()
                 .insideATransaction()
@@ -36,16 +39,17 @@ public class ReunionService extends Service<Reunion> {
     public List<Reunion> getAll() {
         return getAll(AllReunionesUltimaPrimero.create());
     }
+
     @Override
-    public void delete(Long id){
-        Minuta minuta=minutaService.getFromReunion(id);
+    public void delete(Long id) {
+        Minuta minuta = minutaService.getFromReunion(id);
         minutaService.delete(minuta.getId());
         super.delete(id);
     }
+
     @Override
-    public Reunion save(Reunion nuevaReunion){
-        TemaGeneralService temaGeneralService = appInjector.getImplementationFor(TemaGeneralService.class).get();
-        List<TemaGeneral> temasGenerales = temaGeneralService.getAll();
+    public Reunion save(Reunion nuevaReunion) {
+         List<TemaGeneral> temasGenerales = temaGeneralService.getAll();
         nuevaReunion.agregarTemasGenerales(temasGenerales);
         return super.save(nuevaReunion);
     }

@@ -3,11 +3,16 @@ package convention.rest.api;
 import ar.com.kfgodel.dependencies.api.DependencyInjector;
 import com.google.inject.Inject;
 import convention.persistent.Minuta;
+import convention.persistent.Reunion;
+import convention.persistent.StatusDeReunion;
+import convention.persistent.Usuario;
 import convention.rest.api.tos.MinutaTo;
 import convention.services.MinutaService;
 import convention.services.ReunionService;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.SecurityContext;
 
 /**
  * Created by sandro on 07/07/17.
@@ -18,11 +23,14 @@ public class MinutaResource extends Resource {
 
     @Inject
     private MinutaService minutaService;
-
+    @Inject ReunionService reunionService;
     @GET
     @Path("reunion/{reunionId}")
-    public MinutaTo getParaReunion(@PathParam("reunionId") Long id){
+    public MinutaTo getParaReunion(@PathParam("reunionId") Long id, @Context SecurityContext securityContext){
+        Usuario ultimoMinuteador = this.usuarioActual(securityContext);
         Minuta minuta = minutaService.getFromReunion(id);
+        minuta.setMinuteador(ultimoMinuteador);
+        minutaService.update(minuta);
         return convertir(minuta, MinutaTo.class);
     }
 
