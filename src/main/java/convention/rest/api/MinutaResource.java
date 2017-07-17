@@ -23,7 +23,8 @@ public class MinutaResource extends Resource {
 
     @Inject
     private MinutaService minutaService;
-    @Inject ReunionService reunionService;
+    @Inject
+    private ReunionService reunionService;
     @GET
     @Path("reunion/{reunionId}")
     public MinutaTo getParaReunion(@PathParam("reunionId") Long id ){

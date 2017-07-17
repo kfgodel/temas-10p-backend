@@ -3,6 +3,7 @@ package Persistence;
 import ar.com.kfgodel.temas.application.Application;
 import ar.com.kfgodel.temas.filters.reuniones.AllReunionesUltimaPrimero;
 import convention.persistent.*;
+import convention.rest.api.ReunionResource;
 import convention.services.*;
 import helpers.TestConfig;
 import org.junit.After;
@@ -30,9 +31,10 @@ public class PersistenciaTest {
     @Before
     public void setUp(){
         startApplication();
-        reunionService = application.getInjector().createInjected(ReunionService.class);
-        temaService = application.getInjector().createInjected(TemaService.class);
+       temaService = application.getInjector().createInjected(TemaService.class);
         temaGeneralService = application.getInjector().createInjected(TemaGeneralService.class);
+        application.getInjector().createInjected(ReunionResource.class);
+        reunionService = application.getInjector().getImplementationFor(ReunionService.class).get();
         minutaService = application.getInjector().createInjected(MinutaService.class);
         usuarioService = application.getInjector().createInjected(UsuarioService.class);
 
