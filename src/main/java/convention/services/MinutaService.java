@@ -6,26 +6,32 @@ import ar.com.kfgodel.temas.acciones.UsarMinutaExistente;
 import ar.com.kfgodel.temas.filters.MinutaDeReunion;
 import convention.persistent.Minuta;
 import convention.persistent.Reunion;
+import convention.persistent.StatusDeReunion;
 
+import javax.inject.Inject;
 import java.util.List;
 
 /**
  * Created by sandro on 07/07/17.
  */
 public class MinutaService extends Service<Minuta> {
-
+        @Inject
+        ReunionService reunionService;
     public MinutaService(){
         setClasePrincipal(Minuta.class);
     }
     public Minuta getFromReunion(Long id){
-        ReunionService reunionService = appInjector.getImplementationFor(ReunionService.class).get();
-        Reunion reunion = reunionService.get(id);
+
         return createOperation()
                 .insideATransaction()
                 .applying(MinutaDeReunion.create(id))
                 .applyingResultOf((existente) ->
                         existente.mapOptional(UsarMinutaExistente::create)
-                                .orElseGet(() -> CrearMinuta.create(reunion))
+                                .orElseGet(() ->{   Reunion reunion = reunionService.get(id);
+                                             reunion.marcarComoMinuteada();
+                                             reunionService.update(reunion);
+                                        return CrearMinuta.create(reunion);
+                                })
                         ).get();
 
     }

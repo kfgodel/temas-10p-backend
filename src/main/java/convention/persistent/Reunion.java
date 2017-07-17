@@ -26,7 +26,7 @@ public class Reunion extends PersistableSupport {
     public static final String status_FIELD = "status";
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany( cascade = CascadeType.ALL, mappedBy = TemaDeReunion.reunion_FIELD)
+    @OneToMany( cascade = CascadeType.ALL, mappedBy = TemaDeReunion.reunion_FIELD, orphanRemoval = true)
     @OrderBy(TemaDeReunion.prioridad_FIELD)
     private List<TemaDeReunion> temasPropuestos;
     public static final String temasPropuestos_FIELD = "temasPropuestos";
@@ -107,7 +107,9 @@ public class Reunion extends PersistableSupport {
             temasPropuestos = new ArrayList<>();
         temasPropuestos.add(temaNuevo);
     }
-
+    public void marcarComoMinuteada(){
+        this.setStatus(StatusDeReunion.CON_MINUTA);
+    }
   public List<Usuario> usuariosQueVotaron(){
     return getTemasPropuestos().stream().
             map(temaDeReunion -> temaDeReunion.getInteresados())
