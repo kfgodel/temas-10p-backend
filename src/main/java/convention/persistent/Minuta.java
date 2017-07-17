@@ -34,6 +34,10 @@ public class Minuta extends PersistableSupport {
     private List<TemaDeMinuta> temas;
     public static final String temas_FIELD = "temas";
 
+    @ManyToOne
+    private Usuario minuteador;
+    public static final String minuteador_FIELD = "minuteador";
+
     public LocalDate getFecha() {
         return reunion.getFecha();
     }
@@ -76,5 +80,13 @@ public class Minuta extends PersistableSupport {
             this.temas.addAll(temas);
         }
 
+    }
+
+    public Usuario getMinuteador() {
+        return minuteador;
+    }
+
+    public void setMinuteador(Usuario minuteador) {
+        this.minuteador = minuteador;
     }
 }

@@ -15,11 +15,13 @@ import java.util.List;
  * Created by sandro on 07/07/17.
  */
 public class MinutaService extends Service<Minuta> {
-        @Inject
-        ReunionService reunionService;
+    @Inject
+    ReunionService reunionService;
+
     public MinutaService(){
         setClasePrincipal(Minuta.class);
     }
+
     public Minuta getFromReunion(Long id){
 
         return createOperation()
@@ -32,7 +34,7 @@ public class MinutaService extends Service<Minuta> {
                                              reunionService.update(reunion);
                                         return CrearMinuta.create(reunion);
                                 })
-                        ).get();
+                                ).get();
 
     }
     public List<Minuta> getAll() {

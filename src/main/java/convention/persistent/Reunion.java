@@ -107,15 +107,17 @@ public class Reunion extends PersistableSupport {
             temasPropuestos = new ArrayList<>();
         temasPropuestos.add(temaNuevo);
     }
+
     public void marcarComoMinuteada(){
         this.setStatus(StatusDeReunion.CON_MINUTA);
     }
-  public List<Usuario> usuariosQueVotaron(){
+
+    public List<Usuario> usuariosQueVotaron(){
     return getTemasPropuestos().stream().
             map(temaDeReunion -> temaDeReunion.getInteresados())
             .reduce((usuarios, usuarios2) -> {usuarios.addAll(usuarios2);
                                               return usuarios;})
             .orElse(new ArrayList<>());
-  }
+    }
 
 }
