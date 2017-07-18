@@ -54,11 +54,10 @@ public class ResourcesTemasTest {
     public void setUp() {
         app = TestApplication.create(TestConfig.create());
         app.start();
-
-        reunionService = app.getInjector().createInjected(ReunionService.class);
-        usuarioService = app.getInjector().createInjected(UsuarioService.class);
         temaService = app.getInjector().createInjected(TemaService.class);
+        usuarioService = app.getInjector().createInjected(UsuarioService.class);
         reunionResource = app.getInjector().createInjected(ReunionResource.class);
+        reunionService = app.getInjector().getImplementationFor(ReunionService.class).get();
         temaResource = app.getInjector().createInjected(TemaResource.class);
         duracionResource = app.getInjector().createInjected(DuracionesResource.class);
         temaGeneralResource = TemaGeneralResource.create(app.getInjector());

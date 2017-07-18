@@ -68,7 +68,7 @@ public class TemaDeMinuta extends PersistableSupport {
     }
 
     public void setActionItems(List<ActionItem> actionItems) {
-        if (actionItems == null) {
+        if (this.actionItems == null) {
             this.actionItems = actionItems;
         } else {
             this.actionItems.clear();

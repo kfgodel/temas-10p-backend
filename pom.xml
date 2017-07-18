@@ -264,6 +264,7 @@
       <artifactId>logback-classic</artifactId>
       <version>${version.logback}</version>
       <scope>compile</scope>
+
     </dependency>
 
     <!-- Spec for testing -->

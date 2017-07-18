@@ -23,21 +23,23 @@ public class MinutaResource extends Resource {
 
     @Inject
     private MinutaService minutaService;
-    @Inject ReunionService reunionService;
+    @Inject
+    private ReunionService reunionService;
     @GET
     @Path("reunion/{reunionId}")
-    public MinutaTo getParaReunion(@PathParam("reunionId") Long id, @Context SecurityContext securityContext){
-        Usuario ultimoMinuteador = this.usuarioActual(securityContext);
-        Minuta minuta = minutaService.getFromReunion(id);
-        minuta.setMinuteador(ultimoMinuteador);
+    public MinutaTo getParaReunion(@PathParam("reunionId") Long id ){
+         Minuta minuta = minutaService.getFromReunion(id);
         minutaService.update(minuta);
         return convertir(minuta, MinutaTo.class);
     }
 
     @PUT
     @Path("/{resourceId}")
-    public MinutaTo update(MinutaTo newState, @PathParam("resourceId") Long id){
-        Minuta minutaActualizada = minutaService.update(convertir(newState, Minuta.class));
+    public MinutaTo update(MinutaTo newState, @PathParam("resourceId") Long id, @Context SecurityContext securityContext){
+        Usuario ultimoMinuteador = this.usuarioActual(securityContext);
+        Minuta minuta=convertir(newState, Minuta.class);
+        minuta.setMinuteador(ultimoMinuteador);
+        Minuta minutaActualizada = minutaService.update(minuta);
         return convertir(minutaActualizada, MinutaTo.class);
     }
 
