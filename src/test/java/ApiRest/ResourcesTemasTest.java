@@ -4,6 +4,7 @@ import Persistence.TestApplication;
 
 import ar.com.kfgodel.appbyconvention.operation.api.ApplicationOperation;
 import ar.com.kfgodel.orm.api.operations.basic.Save;
+import ar.com.kfgodel.temas.acciones.CalculadorDeProximaFecha;
 import ar.com.kfgodel.temas.acciones.CrearProximaReunion;
 import ar.com.kfgodel.temas.application.Application;
 import convention.persistent.*;
@@ -141,7 +142,7 @@ public class ResourcesTemasTest {
     @Test
     public void crearProximaReunionDevuelveElTercerViernesDeEsteMesSiNoPasoTodavia() {
         LocalDate diaDeHoy = LocalDate.of(2017, 6, 1);
-        LocalDate proximaRoot = CrearProximaReunion.create().
+        LocalDate proximaRoot = new CalculadorDeProximaFecha().
                 calcularFechaDeRoots(diaDeHoy);
         Assert.assertEquals(proximaRoot, LocalDate.of(2017, 6, 16));
     }
@@ -149,7 +150,7 @@ public class ResourcesTemasTest {
     @Test
     public void crearProximaReunionDevuelveElTercerViernesDelProximoMesSiYaPasoElTercerViernesDeEsteMes() {
         LocalDate diaDeHoy = LocalDate.of(2017, 6, 27);
-        LocalDate proximaRoot = CrearProximaReunion.create().
+        LocalDate proximaRoot = new CalculadorDeProximaFecha().
                 calcularFechaDeRoots(diaDeHoy);
         Assert.assertEquals(proximaRoot, LocalDate.of(2017, 7, 21));
     }
@@ -157,7 +158,7 @@ public class ResourcesTemasTest {
     @Test
     public void crearProximaReunionDevuelveHoySiEsElTercerViernesDelMes() {
         LocalDate diaDeHoy = LocalDate.of(2017, 6, 16);
-        LocalDate proximaRoot = CrearProximaReunion.create().
+        LocalDate proximaRoot = new CalculadorDeProximaFecha().
                 calcularFechaDeRoots(diaDeHoy);
         Assert.assertEquals(proximaRoot, diaDeHoy);
 
