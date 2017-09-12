@@ -19,10 +19,11 @@ public class CalculadorDeProximaFecha {
     }
 
     private LocalDate calcularTercerViernesDelProximoMes(LocalDate hoy) {
-        if(hoy.with(tercerViernesDelMes()).isBefore(hoy)){
+        LocalDate tercerViernesDeEsteMes=hoy.with(tercerViernesDelMes());
+        if(tercerViernesDeEsteMes.isBefore(hoy)){
             return hoy.with(TemporalAdjusters.firstDayOfNextMonth()).with(tercerViernesDelMes());
         }
-        return hoy.with(tercerViernesDelMes());
+        return tercerViernesDeEsteMes;
     }
 
     private TemporalAdjuster tercerViernesDelMes() {
