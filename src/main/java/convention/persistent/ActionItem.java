@@ -22,7 +22,7 @@ public class ActionItem  extends PersistableSupport {
     private TemaDeMinuta tema;
     public static final String tema_FIELD = "tema";
 
-
+    @Lob
     private String descripcion;
     public static final String descripcion_FIELD = "descripcion";
 
