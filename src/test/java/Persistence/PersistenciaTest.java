@@ -1,6 +1,7 @@
 package Persistence;
 
 import ar.com.kfgodel.temas.application.Application;
+import ar.com.kfgodel.temas.application.TemasApplication;
 import ar.com.kfgodel.temas.filters.reuniones.AllReunionesUltimaPrimero;
 import convention.persistent.*;
 import convention.rest.api.ReunionResource;

@@ -38,8 +38,8 @@ import java.util.function.Function;
 public class TemasApplication implements Application {
   public static Logger LOG = LoggerFactory.getLogger(TemasApplication.class);
 
-  protected TemasConfiguration config;
-  protected DependencyInjector injector;
+  private TemasConfiguration config;
+  private DependencyInjector injector;
 
   @Override
   public WebServer getWebServerModule() {
@@ -69,7 +69,6 @@ public class TemasApplication implements Application {
   public static Application create(TemasConfiguration config) {
     TemasApplication application = new TemasApplication();
     application.config = config;
-    //TODO
     application.injector=config.getInjector();
     return application;
   }
@@ -110,7 +109,7 @@ public class TemasApplication implements Application {
     return B2BTransformer.create(configuration);
   }
 
-  protected void registerCleanupHook() {
+  private void registerCleanupHook() {
     Runtime.getRuntime().addShutdownHook(new Thread(() -> {
       LOG.info("Cleaning-up before shutdown");
       this.stop();
