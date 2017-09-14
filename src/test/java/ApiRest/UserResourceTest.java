@@ -1,6 +1,7 @@
 package ApiRest;
 
 import convention.persistent.Reunion;
+import convention.persistent.Tema;
 import convention.persistent.TemaDeReunion;
 import convention.rest.api.UserResource;
 import org.junit.Assert;
@@ -26,7 +27,7 @@ public class UserResourceTest extends ResourcesTemasTest {
     @Test
     public void AlPedirLosNoVotantesDeUnaReunionMeDevuelveTodosLosUsuariosQueNoVotaron() throws Exception {
         Reunion unaReunion = reunionService.save(new Reunion());
-        TemaDeReunion unTema = new TemaDeReunion();
+        TemaDeReunion unTema = TemaDeReunion.create();
         unTema.agregarInteresado(user);
         unTema.setReunion(unaReunion);
         unaReunion.setTemasPropuestos(Arrays.asList(unTema));

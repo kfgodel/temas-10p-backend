@@ -69,7 +69,7 @@ public class PersistenciaTest {
 
     @Test
     public void test02SePuedePersistirCorrectamenteUnTema(){
-        TemaDeReunion nuevoTema = new TemaDeReunion();
+        TemaDeReunion nuevoTema = TemaDeReunion.create();
 
         int cantidadDeTemasAnteriores = temaService.getAll().size();
 
@@ -83,9 +83,9 @@ public class PersistenciaTest {
     @Test
     public void test03AlObtenerUnaReunionSeTraenSoloSusTemas(){
        Reunion reunion = new Reunion();
-       TemaDeReunion temaDeLaReunion = new TemaDeReunion();
-       TemaDeReunion temaDeOtraReunion = new TemaDeReunion();
-
+       TemaDeReunion temaDeLaReunion = TemaDeReunion.create();
+       TemaDeReunion temaDeOtraReunion =TemaDeReunion.create();
+            temaService.save(temaDeOtraReunion);
        reunion = reunionService.save(reunion);
 
        temaDeLaReunion.setReunion(reunion);
@@ -104,7 +104,7 @@ public class PersistenciaTest {
 
     @Test
     public void test04LaObligatoriedadDeUnTemaSePersisteCorrectamente(){
-        TemaDeReunion tema = new TemaDeReunion();
+        TemaDeReunion tema =TemaDeReunion.create();
         tema.setObligatoriedad(ObligatoriedadDeTema.OBLIGATORIO);
 
         tema = temaService.save(tema);
@@ -179,7 +179,7 @@ public class PersistenciaTest {
     @Test
     public void test11SePuedePersistirUnaMinuta(){
         Reunion reunion = Reunion.create(LocalDate.of(2017, 06, 26));
-        TemaDeReunion unTema = new TemaDeReunion();
+        TemaDeReunion unTema = TemaDeReunion.create();
         reunion = reunionService.save(reunion);
         unTema.setReunion(reunion);
         temaService.save(unTema);
@@ -231,7 +231,7 @@ public class PersistenciaTest {
     @Test
     public void test14AlBorrarUnTemaGeneralNoSeBorranlosTemasDeReunionQueNoFueronGeneradosPorEl(){
         Reunion reunion = Reunion.create(LocalDate.of(2017, 06, 26));
-        TemaDeReunion unTemaNoGenerado = new TemaDeReunion();
+        TemaDeReunion unTemaNoGenerado = TemaDeReunion.create();
         unTemaNoGenerado.setReunion(reunion);
         reunion.setTemasPropuestos(Arrays.asList(unTemaNoGenerado));
 
@@ -283,7 +283,7 @@ public class PersistenciaTest {
     @Test
     public void test17AlEditarUnTemaGeneralNoSeModificanlosTemasDeReunionQueNoFueronGeneradosPorEl(){
         Reunion reunion = Reunion.create(LocalDate.of(2017, 06, 26));
-        TemaDeReunion unTemaNoGenerado = new TemaDeReunion();
+        TemaDeReunion unTemaNoGenerado = TemaDeReunion.create();
         unTemaNoGenerado.setReunion(reunion);
         unTemaNoGenerado.setTitulo("Título");
         reunion.setTemasPropuestos(Arrays.asList(unTemaNoGenerado));

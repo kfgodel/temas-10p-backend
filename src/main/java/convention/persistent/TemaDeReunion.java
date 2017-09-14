@@ -35,9 +35,10 @@ public class TemaDeReunion extends Tema {
   private TemaGeneral temaGenerador;
   public static final String temaGenerador_FIELD = "temaGenerador";
 
-  public TemaDeReunion(){
-      //Es la obligatoriedad default
-      this.obligatoriedad = ObligatoriedadDeTema.NO_OBLIGATORIO;
+  static public  TemaDeReunion create(){
+    TemaDeReunion unTema=new TemaDeReunion();
+      unTema.setObligatoriedad(ObligatoriedadDeTema.NO_OBLIGATORIO);
+      return unTema;
   }
 
   public ObligatoriedadDeTema getObligatoriedad(){
@@ -99,7 +100,7 @@ public class TemaDeReunion extends Tema {
 
 
   public TemaDeReunion copy(){
-    TemaDeReunion copia = new TemaDeReunion();
+    TemaDeReunion copia = TemaDeReunion.create();
     copia.setInteresados(this.getInteresados());
     copia.setPersistenceVersion(this.getPersistenceVersion());
     copia.setMomentoDeUltimaModificacion(this.getMomentoDeUltimaModificacion());

@@ -13,13 +13,13 @@ import java.time.LocalDate;
 public class TestHelper {
 
     public TemaDeReunion nuevoTemaObligatorio(){
-        TemaDeReunion tema = new TemaDeReunion();
+        TemaDeReunion tema = TemaDeReunion.create();
         tema.setObligatoriedad(ObligatoriedadDeTema.OBLIGATORIO);
         return tema;
     }
 
     public TemaDeReunion nuevoTemaNoObligatorio(){
-        TemaDeReunion tema = new TemaDeReunion();
+        TemaDeReunion tema = TemaDeReunion.create();
         tema.setObligatoriedad(ObligatoriedadDeTema.NO_OBLIGATORIO);
         return tema;
     }
