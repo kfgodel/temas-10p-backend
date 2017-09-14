@@ -67,6 +67,8 @@ public class Reunion extends PersistableSupport {
         Reunion reunion = new Reunion();
         reunion.fecha = fecha;
         reunion.status = StatusDeReunion.PENDIENTE;
+        if(reunion.getTemasPropuestos() == null)
+            reunion.setTemasPropuestos(new ArrayList<>());
         return reunion;
     }
 
@@ -105,8 +107,7 @@ public class Reunion extends PersistableSupport {
     }
 
     private void agregarTema(TemaDeReunion temaNuevo) {
-        if(temasPropuestos == null)
-            temasPropuestos = new ArrayList<>();
+
         temasPropuestos.add(temaNuevo);
     }
 
