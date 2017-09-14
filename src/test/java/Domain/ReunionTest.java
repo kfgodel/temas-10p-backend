@@ -10,6 +10,7 @@ import org.junit.Test;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -105,7 +106,7 @@ public class ReunionTest {
         tema5.agregarInteresado(unUsuario);
 
         List<TemaDeReunion> temas = Arrays.asList(tema1, tema2, tema3, tema4, tema5);
-        temas.sort(OrdenarPorVotos.create());
+        temas.sort(Collections.reverseOrder(OrdenarPorVotos.create()));
 
         Assert.assertEquals(tema1, temas.get(0));
         Assert.assertEquals(tema2, temas.get(1));
