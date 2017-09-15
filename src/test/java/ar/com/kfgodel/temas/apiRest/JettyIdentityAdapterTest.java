@@ -1,9 +1,6 @@
-package ApiRest;
+package ar.com.kfgodel.temas.apiRest;
 
-import helpers.TestConfig;
 import ar.com.kfgodel.webbyconvention.impl.auth.adapters.JettyIdentityAdapter;
-
-import java.security.Principal;
 
 /**
  * Created by fede on 22/06/17.

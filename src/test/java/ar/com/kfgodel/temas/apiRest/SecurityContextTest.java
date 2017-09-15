@@ -1,7 +1,4 @@
-package ApiRest;
-
-import ar.com.kfgodel.webbyconvention.impl.auth.adapters.JettyIdentityAdapter;
-import convention.services.Service;
+package ar.com.kfgodel.temas.apiRest;
 
 import javax.ws.rs.core.SecurityContext;
 import java.security.Principal;

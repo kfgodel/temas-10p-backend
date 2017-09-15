@@ -1,11 +1,10 @@
-package ApiRest;
+package ar.com.kfgodel.temas.apiRest;
 
-import Persistence.TestApplication;
+import ar.com.kfgodel.temas.persistence.TestApplication;
 
 import ar.com.kfgodel.appbyconvention.operation.api.ApplicationOperation;
 import ar.com.kfgodel.orm.api.operations.basic.Save;
 import ar.com.kfgodel.temas.acciones.CalculadorDeProximaFecha;
-import ar.com.kfgodel.temas.acciones.CrearProximaReunion;
 import ar.com.kfgodel.temas.application.Application;
 import convention.persistent.*;
 
@@ -18,7 +17,7 @@ import convention.rest.api.tos.TemaTo;
 import convention.services.ReunionService;
 import convention.services.TemaService;
 import convention.services.UsuarioService;
-import helpers.TestConfig;
+import ar.com.kfgodel.temas.helpers.TestConfig;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

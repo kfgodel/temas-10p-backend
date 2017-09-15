@@ -1,8 +1,8 @@
-package Domain;
+package ar.com.kfgodel.temas.domain;
 
 import ar.com.kfgodel.temas.model.OrdenarPorVotos;
 import convention.persistent.*;
-import helpers.TestHelper;
+import ar.com.kfgodel.temas.helpers.TestHelper;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package helpers;
+package ar.com.kfgodel.temas.helpers;
 
 import convention.persistent.ObligatoriedadDeTema;
 import convention.persistent.Reunion;

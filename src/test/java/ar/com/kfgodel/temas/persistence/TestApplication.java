@@ -1,4 +1,4 @@
-package Persistence;
+package ar.com.kfgodel.temas.persistence;
 
 import ar.com.kfgodel.temas.application.Application;
 import ar.com.kfgodel.temas.application.TemasApplication;

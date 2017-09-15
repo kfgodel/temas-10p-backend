@@ -1,12 +1,11 @@
-package Persistence;
+package ar.com.kfgodel.temas.persistence;
 
 import ar.com.kfgodel.temas.application.Application;
-import ar.com.kfgodel.temas.application.TemasApplication;
 import ar.com.kfgodel.temas.filters.reuniones.AllReunionesUltimaPrimero;
 import convention.persistent.*;
 import convention.rest.api.ReunionResource;
 import convention.services.*;
-import helpers.TestConfig;
+import ar.com.kfgodel.temas.helpers.TestConfig;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

@@ -1,7 +1,7 @@
-package Domain;
+package ar.com.kfgodel.temas.domain;
 
 import convention.persistent.*;
-import helpers.TestHelper;
+import ar.com.kfgodel.temas.helpers.TestHelper;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

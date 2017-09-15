@@ -1,11 +1,9 @@
-package ApiRest;
+package ar.com.kfgodel.temas.apiRest;
 
 import convention.persistent.Reunion;
-import convention.persistent.Tema;
 import convention.persistent.TemaDeReunion;
 import convention.rest.api.UserResource;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
