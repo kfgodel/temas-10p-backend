@@ -36,7 +36,7 @@ public interface Application {
   /**
    * @return The dependency injector used to wire application dependencies
    */
-  DependencyInjector getInjector();
+  DependencyInjector injector();
 
   /**
    * Starts this application and its modules

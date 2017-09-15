@@ -1,8 +1,6 @@
 package ar.com.kfgodel.temas.application;
 
-import ar.com.kfgodel.appbyconvention.operation.api.ApplicationOperation;
 import ar.com.kfgodel.dependencies.api.DependencyInjector;
-import ar.com.kfgodel.dependencies.impl.DependencyInjectorImpl;
 import ar.com.kfgodel.orm.api.HibernateOrm;
 import ar.com.kfgodel.orm.api.config.DbCoordinates;
 import ar.com.kfgodel.orm.impl.HibernateFacade;
@@ -32,17 +30,17 @@ public class TemasApplication implements Application {
 
     @Override
     public WebServer getWebServerModule() {
-        return this.getInjector().getImplementationFor(WebServer.class).get();
+        return this.injector().getImplementationFor(WebServer.class).get();
     }
 
     @Override
     public HibernateOrm getOrmModule() {
-        return this.getInjector().getImplementationFor(HibernateOrm.class).get();
+        return this.injector().getImplementationFor(HibernateOrm.class).get();
     }
 
     @Override
     public TypeTransformer getTransformerModule() {
-        return this.getInjector().getImplementationFor(TypeTransformer.class).get();
+        return this.injector().getImplementationFor(TypeTransformer.class).get();
     }
 
     @Override
@@ -55,7 +53,7 @@ public class TemasApplication implements Application {
     }
 
     @Override
-    public DependencyInjector getInjector() {
+    public DependencyInjector injector() {
         return config.getInjector();
     }
 
@@ -84,12 +82,12 @@ public class TemasApplication implements Application {
     }
 
     protected void initialize() {
-        this.getInjector().bindTo(Application.class, this);
+        this.injector().bindTo(Application.class, this);
 
-        this.getInjector().bindTo(HibernateOrm.class, createPersistenceLayer());
+        this.injector().bindTo(HibernateOrm.class, createPersistenceLayer());
         // Web server depends on hibernate, so it needs to be created after hibernate
-        this.getInjector().bindTo(WebServer.class, createWebServer());
-        this.getInjector().bindTo(TypeTransformer.class, createTransformer());
+        this.injector().bindTo(WebServer.class, createWebServer());
+        this.injector().bindTo(TypeTransformer.class, createTransformer());
 
         registerCleanupHook();
 
@@ -97,7 +95,7 @@ public class TemasApplication implements Application {
     }
 
     protected TypeTransformer createTransformer() {
-        TransformerConfigurationByConvention configuration = TransformerConfigurationByConvention.create(this.getInjector());
+        TransformerConfigurationByConvention configuration = TransformerConfigurationByConvention.create(this.injector());
         return B2BTransformer.create(configuration);
     }
 

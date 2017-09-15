@@ -31,23 +31,23 @@ public class PersistenciaTest {
     @Before
     public void setUp(){
         startApplication();
-       temaService = application.getInjector().createInjected(TemaService.class);
-        temaGeneralService = application.getInjector().createInjected(TemaGeneralService.class);
-        application.getInjector().createInjected(ReunionResource.class);
-        reunionService = application.getInjector().getImplementationFor(ReunionService.class).get();
-        minutaService = application.getInjector().createInjected(MinutaService.class);
-        usuarioService = application.getInjector().createInjected(UsuarioService.class);
+       temaService = application.injector().createInjected(TemaService.class);
+        temaGeneralService = application.injector().createInjected(TemaGeneralService.class);
+        application.injector().createInjected(ReunionResource.class);
+        reunionService = application.injector().getImplementationFor(ReunionService.class).get();
+        minutaService = application.injector().createInjected(MinutaService.class);
+        usuarioService = application.injector().createInjected(UsuarioService.class);
 
-        temaDeMinutaService=application.getInjector().createInjected(TemaDeMinutaService.class);
+        temaDeMinutaService=application.injector().createInjected(TemaDeMinutaService.class);
 
 
-        application.getInjector().bindTo(TemaDeMinutaService.class, temaDeMinutaService);
-        application.getInjector().bindTo(ReunionService.class, reunionService);
-        application.getInjector().bindTo(TemaService.class, temaService);
-        application.getInjector().bindTo(TemaGeneralService.class, temaGeneralService);
-        application.getInjector().bindTo(MinutaService.class, minutaService);
-        application.getInjector().bindTo(UsuarioService.class, usuarioService);
-        application.getInjector().bindTo(TemaDeMinutaService.class, temaDeMinutaService);
+        application.injector().bindTo(TemaDeMinutaService.class, temaDeMinutaService);
+        application.injector().bindTo(ReunionService.class, reunionService);
+        application.injector().bindTo(TemaService.class, temaService);
+        application.injector().bindTo(TemaGeneralService.class, temaGeneralService);
+        application.injector().bindTo(MinutaService.class, minutaService);
+        application.injector().bindTo(UsuarioService.class, usuarioService);
+        application.injector().bindTo(TemaDeMinutaService.class, temaDeMinutaService);
     }
     @After
     public void drop(){

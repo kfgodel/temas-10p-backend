@@ -18,8 +18,7 @@ public class UserResourceTest extends ResourcesTemasTest {
     @Override
     public void setUp() {
         super.setUp();
-        userResource = new UserResource();
-        app.getInjector().bindTo(UserResource.class, userResource);
+        userResource =  UserResource.create(app.injector());
     }
 
     @Test
