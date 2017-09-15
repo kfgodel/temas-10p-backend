@@ -1,5 +1,6 @@
 package convention.persistent;
 
+import ar.com.kfgodel.temas.exceptions.TemaDeReunionException;
 import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
@@ -79,11 +80,11 @@ public class TemaDeReunion extends Tema {
     }
   }
 
-  public void agregarInteresado(Usuario votante) throws Exception {
+  public void agregarInteresado(Usuario votante)  {
     if(this.puedeSerVotado())
       this.getInteresados().add(votante);
     else
-      throw new Exception(mensajeDeErrorAlAgregarInteresado());
+      throw new TemaDeReunionException(mensajeDeErrorAlAgregarInteresado());
   }
 
   public static String mensajeDeErrorAlAgregarInteresado() {

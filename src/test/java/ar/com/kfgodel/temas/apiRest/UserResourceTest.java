@@ -23,7 +23,7 @@ public class UserResourceTest extends ResourcesTemasTest {
     }
 
     @Test
-    public void AlPedirLosNoVotantesDeUnaReunionMeDevuelveTodosLosUsuariosQueNoVotaron() throws Exception {
+    public void AlPedirLosNoVotantesDeUnaReunionMeDevuelveTodosLosUsuariosQueNoVotaron(){
         Reunion unaReunion = reunionService.save(new Reunion());
         TemaDeReunion unTema = TemaDeReunion.create();
         unTema.agregarInteresado(user);

@@ -45,7 +45,7 @@ public class ReunionTest {
     }
 
     @Test
-    public void test04AlCerrarUnaReunionLosTemasPropuestosSeOrdenanPorCantidadDeVotos() throws Exception {
+    public void test04AlCerrarUnaReunionLosTemasPropuestosSeOrdenanPorCantidadDeVotos() {
         Reunion unaReunion = Reunion.create(LocalDate.of(2017, 06, 16));
         Usuario unUsuario = new Usuario();
         TemaDeReunion tema1 = helper.nuevoTemaNoObligatorio();
@@ -83,7 +83,7 @@ public class ReunionTest {
 
     // No estoy seguro de que vaya acá
     @Test
-    public void test06ElOrdenadorDeTemasOrdenaCorrectamenteUnConjuntoDeTemas() throws Exception {
+    public void test06ElOrdenadorDeTemasOrdenaCorrectamenteUnConjuntoDeTemas() {
         Usuario unUsuario = new Usuario();
 
         TemaDeReunion tema1 = helper.nuevoTemaObligatorio();

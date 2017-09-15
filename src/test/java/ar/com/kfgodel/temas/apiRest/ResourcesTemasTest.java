@@ -170,20 +170,14 @@ public class ResourcesTemasTest {
         unTema = temaService.save(unTema);
         Assert.assertEquals(temaService.getAll().size(), 1);
         temaService.updateAndMapping(unTema.getId(), temaDeReunion -> {
-            try {
-                temaDeReunion.agregarInteresado(otherUser);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return temaDeReunion;
-        });
+                    temaDeReunion.agregarInteresado(otherUser);
+
+                    return temaDeReunion;
+                });
         Assert.assertEquals(temaService.getAll().size(), 1);
         temaService.updateAndMapping(unTema.getId(), temaDeReunion -> {
-            try {
+
                 temaDeReunion.agregarInteresado(otherUser);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
             return temaDeReunion;
         });
         Assert.assertEquals(temaService.getAll().size(), 1);
