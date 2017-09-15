@@ -37,14 +37,14 @@ public class ApiV1Root {
   @Path("/duraciones")
   public DuracionesResource duraciones() {
     if (duraciones == null) {
-      duraciones = application.injector().createInjected(DuracionesResource.class);;
+      duraciones=DuracionesResource.create(application.injector());
     }
     return duraciones;
   }
   @Path("/temaDeMinuta")
   public TemaDeMinutaResource temasDeMinuta() {
     if (temasDeMinuta == null) {
-      temasDeMinuta = application.injector().createInjected(TemaDeMinutaResource.class);
+      temasDeMinuta = TemaDeMinutaResource.create(application.injector());
     }
     return temasDeMinuta;
   }
@@ -52,8 +52,7 @@ public class ApiV1Root {
   public UserResource users() {
     if (users == null) {
 
-
-      users = application.injector().createInjected(UserResource.class);
+      users = UserResource.create(application.injector());
     }
     return users;
   }
@@ -62,14 +61,14 @@ public class ApiV1Root {
     if (minutas == null) {
 
 
-      minutas = application.injector().createInjected(MinutaResource.class);
+      minutas = MinutaResource.create(application.injector());
     }
     return minutas;
   }
   @Path("/reuniones")
   public ReunionResource reuniones() {
     if (reuniones == null) {
-      reuniones = application.injector().createInjected(ReunionResource.class);
+      reuniones = ReunionResource.create(application.injector());
     }
     return reuniones;
   }
@@ -77,7 +76,7 @@ public class ApiV1Root {
   @Path("/temas")
   public TemaDeReunionResource temas() {
     if (temas == null) {
-      temas = application.injector().createInjected(TemaDeReunionResource.class);
+      temas = TemaDeReunionResource.create(application.injector());
     }
     return temas;
   }
@@ -85,7 +84,7 @@ public class ApiV1Root {
   @Path("/temas-generales")
   public TemaGeneralResource temasGenerales() {
     if (temasGenrales == null) {
-      temasGenrales = application.injector().createInjected(TemaGeneralResource.class);
+      temasGenrales = TemaGeneralResource.create(application.injector());
     }
     return temasGenrales;
   }

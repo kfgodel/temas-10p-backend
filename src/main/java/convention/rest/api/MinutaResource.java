@@ -24,8 +24,6 @@ public class MinutaResource{
 
     @Inject
     private MinutaService minutaService;
-    @Inject
-    private ReunionService reunionService;
 
     private ResourceHelper resourceHelper;
     @GET
@@ -50,7 +48,7 @@ public class MinutaResource{
         MinutaResource minutaResource = new MinutaResource();
         minutaResource.resourceHelper= ResourceHelper.create(appInjector);
         minutaResource. getResourceHelper().bindAppInjectorTo(MinutaResource.class, minutaResource);
-        minutaResource. getResourceHelper().bindAppInjectorTo(MinutaService.class,minutaResource.minutaService);
+        minutaResource.minutaService=appInjector.createInjected(MinutaService.class);
         return minutaResource;
     }
 

@@ -41,10 +41,11 @@ public class TemaDeMinutaResource{
         return  getResourceHelper().convertir(temaDeMinutaActualizada, TemaDeMinutaTo.class);
     }
     public static TemaDeMinutaResource create(DependencyInjector appInjector) {
-        TemaDeMinutaResource TemaDeMinutaResource = new TemaDeMinutaResource();
-                    TemaDeMinutaResource.resourceHelper= ResourceHelper.create(appInjector);
-        TemaDeMinutaResource. getResourceHelper().bindAppInjectorTo(TemaDeMinutaResource.class, TemaDeMinutaResource);
-        return TemaDeMinutaResource;
+        TemaDeMinutaResource temaDeMinutaResource = new TemaDeMinutaResource();
+        temaDeMinutaResource.resourceHelper= ResourceHelper.create(appInjector);
+        temaDeMinutaResource.temaDeMinutaService=appInjector.createInjected(TemaDeMinutaService.class);
+        temaDeMinutaResource. getResourceHelper().bindAppInjectorTo(TemaDeMinutaResource.class, temaDeMinutaResource);
+        return temaDeMinutaResource;
     }
 
     public ResourceHelper getResourceHelper() {
