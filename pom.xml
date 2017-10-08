@@ -12,7 +12,7 @@
 
   <groupId>ar.com.kfgodel</groupId>
   <artifactId>temas-10p-backend</artifactId>
-  <version>0.1-SNAPSHOT</version>
+  <version>1.0-SNAPSHOT</version>
 
   <name>Temas-10P</name>
   <description>Aplicacion muy simple para definir temas a tratar en la reunion de roots</description>
@@ -48,7 +48,7 @@
     <version.diamond>1.0.1-SNAPSHOT</version.diamond>
     <version.groovy>2.1.5</version.groovy>
     <version.h2>1.4.187</version.h2>
-    <version.frontend>0.1-SNAPSHOT</version.frontend>
+    <version.frontend>1.0-SNAPSHOT</version.frontend>
 
   </properties>
 
