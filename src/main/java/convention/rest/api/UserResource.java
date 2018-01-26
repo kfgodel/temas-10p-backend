@@ -1,6 +1,5 @@
 package convention.rest.api;
 
-import ar.com.kfgodel.appbyconvention.operation.api.ApplicationOperation;
 import ar.com.kfgodel.dependencies.api.DependencyInjector;
 import ar.com.kfgodel.diamond.api.types.reference.ReferenceOf;
 import ar.com.kfgodel.orm.api.operations.basic.DeleteById;
@@ -8,8 +7,12 @@ import ar.com.kfgodel.orm.api.operations.basic.FindById;
 import ar.com.kfgodel.orm.api.operations.basic.Save;
 import ar.com.kfgodel.temas.filters.users.FindAllUsersOrderedByName;
 import ar.com.kfgodel.webbyconvention.impl.auth.adapters.JettyIdentityAdapter;
+import convention.persistent.Reunion;
 import convention.persistent.Usuario;
 import convention.rest.api.tos.UserTo;
+import convention.services.ReunionService;
+import convention.services.TemaService;
+import convention.services.UsuarioService;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -17,6 +20,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * This type is the resource API for users
@@ -24,82 +28,76 @@ import java.util.List;
  */
 @Produces("application/json")
 @Consumes("application/json")
-public class UserResource {
-
-  @Inject
-  private DependencyInjector appInjector;
-
-  private static final Type LIST_OF_USER_TOS = new ReferenceOf<List<UserTo>>() {
-  }.getReferencedType();
-
-  @GET
-  @Path("current")
-  public UserTo getCurrent(@Context SecurityContext securityContext) {
-    JettyIdentityAdapter principal = (JettyIdentityAdapter) securityContext.getUserPrincipal();
-    Long currentUserId = principal.getApplicationIdentification();
-
-    return createOperation()
-      .insideASession()
-      .applying(FindById.create(Usuario.class, currentUserId))
-      .mapping((encontrado) -> encontrado.orElse(null))
-      .convertTo(UserTo.class);
-  }
-
-  @GET
-  public List<UserTo> getAllUsers() {
-    return createOperation()
-      .insideASession()
-      .applying(FindAllUsersOrderedByName.create())
-      .convertTo(LIST_OF_USER_TOS);
-  }
-
-  @GET
-  @Path("/{userId}")
-  public UserTo getSingleUser(@PathParam("userId") Long userId) {
-    return createOperation()
-      .insideASession()
-      .applying(FindById.create(Usuario.class, userId))
-      .mapping((encontrado) -> {
-        // Answer 404 if missing
-        return encontrado.orElseThrowRuntime(() -> new WebApplicationException("user not found", 404));
-      })
-      .convertTo(UserTo.class);
-  }
+public class UserResource{
 
 
-  @PUT
-  @Path("/{userId}")
-  public UserTo updateUser(UserTo newUserState, @PathParam("userId") Long userId) {
-    return createOperation()
-      .insideATransaction()
-      .taking(newUserState)
-      .convertingTo(Usuario.class)
-      .mapping((encontrado) -> {
-        // Answer 404 if missing
-        if (encontrado == null) {
-          throw new WebApplicationException("user not found", 404);
-        }
-        return encontrado;
-      }).applyingResultOf(Save::create)
-      .convertTo(UserTo.class);
-  }
+    @Inject
+    UsuarioService userService;
 
-  @DELETE
-  @Path("/{userId}")
-  public void deleteUser(@PathParam("userId") Long userId) {
-    createOperation()
-      .insideATransaction()
-      .apply(DeleteById.create(Usuario.class, userId));
-  }
+    @Inject
+    ReunionService reunionService;
 
-  public static UserResource create(DependencyInjector appInjector) {
-    UserResource resource = new UserResource();
-    resource.appInjector = appInjector;
-    return resource;
-  }
+    private ResourceHelper resourceHelper;
 
-  private ApplicationOperation createOperation() {
-    return ApplicationOperation.createFor(appInjector);
-  }
+    private static final Type LIST_OF_USER_TOS = new ReferenceOf<List<UserTo>>() {
+    }.getReferencedType();
 
+    @GET
+    @Path("current")
+    public UserTo getCurrent(@Context SecurityContext securityContext) {
+        Long currentUserId = getResourceHelper().idDeUsuarioActual(securityContext);
+        return getResourceHelper().convertir(userService.get(currentUserId), UserTo.class);
+    }
+
+    @GET
+    @Path("noVotaron/{reunionId}")
+    public List<UserTo> getUsersQueNoVotaron(@PathParam("reunionId") Long reunionId)
+    {
+
+                List<Usuario> usuarios=userService.getAll();
+        List<Usuario> votantes=reunionService.get(reunionId).usuariosQueVotaron();
+        usuarios=usuarios.stream().filter(usuario ->
+                !votantes.stream().anyMatch(votante -> votante.getId().equals(usuario.getId()) )).collect(Collectors.toList());
+        return getResourceHelper().convertir(usuarios, LIST_OF_USER_TOS);
+    }
+
+
+    @GET
+    public List<UserTo> getAllUsers() {
+
+        return getResourceHelper().convertir(userService.getAll(), LIST_OF_USER_TOS);
+    }
+
+    @GET
+    @Path("/{userId}")
+    public UserTo getSingleUser(@PathParam("userId") Long userId) {
+        return getResourceHelper().convertir(userService.get(userId), UserTo.class);
+    }
+
+
+    @PUT
+    @Path("/{userId}")
+    public UserTo updateUser(UserTo newUserState, @PathParam("userId") Long userId) {
+        Usuario usuarioUpdateado = userService.update(getResourceHelper().convertir(newUserState, Usuario.class));
+        return getResourceHelper().convertir(usuarioUpdateado, UserTo.class);
+    }
+
+
+    @DELETE
+    @Path("/{userId}")
+    public void deleteUser(@PathParam("userId") Long userId) {
+        userService.delete(userId);
+    }
+
+    public static UserResource create(DependencyInjector appInjector) {
+        UserResource userResource = new UserResource();
+        userResource.resourceHelper=ResourceHelper.create(appInjector);
+        userResource.userService = appInjector.createInjected(UsuarioService.class);
+        userResource.getResourceHelper().bindAppInjectorTo(UserResource.class,userResource);
+        return userResource;
+    }
+
+    public ResourceHelper getResourceHelper() {
+        return resourceHelper;
+    }
 }

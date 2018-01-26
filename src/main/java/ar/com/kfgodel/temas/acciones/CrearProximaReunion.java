@@ -9,6 +9,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
+import java.util.Arrays;
 
 /**
  * Esta clase representa el creador de reunion de proxima roots, que sabe calcular la fecha de la proxima
@@ -18,31 +19,13 @@ public class CrearProximaReunion implements TransactionOperation<Reunion> {
 
   @Override
   public Reunion applyWithTransactionOn(TransactionContext transactionContext) {
-    LocalDate fechaDeProximaRoots = calcularFechaDeRoots();
+    LocalDate fechaDeProximaRoots = new CalculadorDeProximaFecha().calcularFechaDeRoots(LocalDate.now());
     Reunion proximaRoots = Reunion.create(fechaDeProximaRoots);
     // La guardamos antes de devolverla para que quede persistida
     Save.create(proximaRoots).applyWithTransactionOn(transactionContext);
     return proximaRoots;
   }
 
-  private LocalDate calcularFechaDeRoots() {
-    LocalDate hoy = LocalDate.now();
-    LocalDate tercerViernesDeEsteMes = hoy.with(tercerViernesDelMes());
-    if (tercerViernesDeEsteMes.isBefore(hoy)) {
-      return calcularTercerViernesDelProximoMes(hoy);
-    }
-    return tercerViernesDeEsteMes;
-  }
-
-  private LocalDate calcularTercerViernesDelProximoMes(LocalDate hoy) {
-    LocalDate primerDiaDelProximoMes = hoy.with(TemporalAdjusters.firstDayOfMonth());
-    LocalDate tercerViernesDelProximoMes = primerDiaDelProximoMes.with(tercerViernesDelMes());
-    return tercerViernesDelProximoMes;
-  }
-
-  private TemporalAdjuster tercerViernesDelMes() {
-    return TemporalAdjusters.dayOfWeekInMonth(3, DayOfWeek.FRIDAY);
-  }
 
   public static CrearProximaReunion create() {
     CrearProximaReunion accion = new CrearProximaReunion();

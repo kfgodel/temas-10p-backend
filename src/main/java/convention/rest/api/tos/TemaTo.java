@@ -2,31 +2,39 @@ package convention.rest.api.tos;
 
 import ar.com.kfgodel.appbyconvention.tos.PersistableToSupport;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import convention.persistent.DuracionDeTema;
+import convention.persistent.Reunion;
 import convention.persistent.TemaDeReunion;
 import convention.persistent.Usuario;
 import net.sf.kfgodel.bean2bean.annotations.CopyFrom;
 import net.sf.kfgodel.bean2bean.annotations.CopyFromAndTo;
 import net.sf.kfgodel.bean2bean.annotations.MissingPropertyAction;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
  * Esta clase representa el TO de una tema para ser editado
  * Created by kfgodel on 08/10/16.
  */
-@JsonIgnoreProperties("usuarioActual")
+@JsonIgnoreProperties({"usuarioActual"})
 public class TemaTo extends PersistableToSupport {
-
-  @CopyFromAndTo(TemaDeReunion.reunion_FIELD)
-  private Long idDeReunion;
+  @CopyFromAndTo(TemaDeReunion.duracion_FIELD)
+  private String duracion;
 
   @CopyFromAndTo(TemaDeReunion.autor_FIELD)
   private Long idDeAutor;
 
+  @CopyFrom(value= TemaDeReunion.ultimoModificador_FIELD + "." +Usuario.name_FIELD, whenMissing = MissingPropertyAction.TREAT_AS_NULL)
+  private String ultimoModificador;
+
+  @CopyFromAndTo(TemaDeReunion.reunion_FIELD)
+  private Long idDeReunion;
+
   @CopyFrom(value = TemaDeReunion.autor_FIELD + "." + Usuario.name_FIELD, whenMissing = MissingPropertyAction.TREAT_AS_NULL)
   private String autor;
 
-  @CopyFrom(TemaDeReunion.prioridad_FIELD)
+  @CopyFromAndTo(TemaDeReunion.prioridad_FIELD)
   private Integer prioridad;
 
   @CopyFromAndTo(TemaDeReunion.titulo_FIELD)
@@ -37,6 +45,9 @@ public class TemaTo extends PersistableToSupport {
 
   @CopyFromAndTo(TemaDeReunion.interesados_FIELD)
   private List<Long> idsDeInteresados;
+
+  @CopyFromAndTo(TemaDeReunion.obligatoriedad_FIELD)
+  private String obligatoriedad;
 
   public String getAutor() {
     return autor;
@@ -62,13 +73,6 @@ public class TemaTo extends PersistableToSupport {
     this.descripcion = descripcion;
   }
 
-  public Long getIdDeReunion() {
-    return idDeReunion;
-  }
-
-  public void setIdDeReunion(Long idDeReunion) {
-    this.idDeReunion = idDeReunion;
-  }
 
   public Long getIdDeAutor() {
     return idDeAutor;
@@ -76,6 +80,33 @@ public class TemaTo extends PersistableToSupport {
 
   public void setIdDeAutor(Long idDeAutor) {
     this.idDeAutor = idDeAutor;
+  }
+
+  public Integer getPrioridad() {
+    return prioridad;
+  }
+
+  public void setPrioridad(Integer prioridad) {
+    this.prioridad = prioridad;
+  }
+
+
+
+  public String getDuracion() {
+    return duracion;
+  }
+
+  // TODO wtf?
+  public void String (String duracion) {
+    this.duracion = duracion;
+  }
+
+  public Long getIdDeReunion() {
+    return idDeReunion;
+  }
+
+  public void setIdDeReunion(Long idDeReunion) {
+    this.idDeReunion = idDeReunion;
   }
 
   public List<Long> getIdsDeInteresados() {
@@ -86,11 +117,20 @@ public class TemaTo extends PersistableToSupport {
     this.idsDeInteresados = idsDeInteresados;
   }
 
-  public Integer getPrioridad() {
-    return prioridad;
+  public String getObligatoriedad() {
+    return obligatoriedad;
   }
 
-  public void setPrioridad(Integer prioridad) {
-    this.prioridad = prioridad;
+  public void setObligatoriedad(String unaObligatoriedad) {
+    this.obligatoriedad = unaObligatoriedad;
   }
+
+  public String getUltimoModificador() {
+    return ultimoModificador;
+  }
+
+  public void setUltimoModificador(String idDeUltimoModificador) {
+    this.ultimoModificador = idDeUltimoModificador;
+  }
+
 }

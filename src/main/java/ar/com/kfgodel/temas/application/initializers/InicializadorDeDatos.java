@@ -19,13 +19,14 @@ public class InicializadorDeDatos {
   }
 
   public void inicializar() {
-    ApplicationOperation.createFor(application.getInjector())
+    ApplicationOperation.createFor(application.injector())
       .insideATransaction()
       .apply(this::inicializarBase);
   }
 
   private Void inicializarBase(TransactionContext transactionContext) {
-    return null;
+    return application.getConfiguration().inicializarDatos();
+
   }
 
 }
