@@ -1,4 +1,4 @@
-package Domain;
+package ar.com.kfgodel.temas.domain;
 
 import convention.persistent.ObligatoriedadDeTema;
 import convention.persistent.Reunion;

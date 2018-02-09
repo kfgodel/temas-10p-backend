@@ -1,7 +1,7 @@
-package Domain;
+package ar.com.kfgodel.temas.domain;
 
 import convention.persistent.*;
-import helpers.TestHelper;
+import ar.com.kfgodel.temas.helpers.TestHelper;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +26,7 @@ public class TemaDeReunionTest {
 
     @Test
     public void test01AlAgregarUnInteresadoAlTemaLaCantidadDeVotosAumentaEn1() throws Exception {
-        TemaDeReunion unTema = new TemaDeReunion();
+        TemaDeReunion unTema = TemaDeReunion.create();
         Usuario unUsuario = new Usuario();
         unTema.agregarInteresado(unUsuario);
         Assert.assertEquals(1, unTema.getCantidadDeVotos());
@@ -34,7 +34,7 @@ public class TemaDeReunionTest {
 
     @Test
     public void test02AlBorrarUnInteresadoDelTemaLaCantidadDeVotosDisminuyeEn1() throws Exception {
-        TemaDeReunion unTema = new TemaDeReunion();
+        TemaDeReunion unTema = TemaDeReunion.create();
         Usuario unUsuario = new Usuario();
         unTema.agregarInteresado(unUsuario);
         unTema.quitarInteresado(unUsuario);
@@ -123,7 +123,7 @@ public class TemaDeReunionTest {
 
     @Test
     public void test11UnTemaDeReunionSabeCuandoNoFueGeneradoPorUnTemaGeneral(){
-        TemaDeReunion temaDeReunion = new TemaDeReunion();
+        TemaDeReunion temaDeReunion = TemaDeReunion.create();
         Assert.assertFalse(temaDeReunion.fueGeneradoPorUnTemaGeneral());
     }
 

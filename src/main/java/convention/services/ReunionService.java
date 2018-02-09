@@ -1,14 +1,12 @@
 package convention.services;
 
 import ar.com.kfgodel.temas.acciones.CrearProximaReunion;
-import ar.com.kfgodel.temas.acciones.UsarExistente;
+import ar.com.kfgodel.temas.acciones.UsarReunionExistente;
 import ar.com.kfgodel.temas.filters.reuniones.AllReunionesUltimaPrimero;
 import ar.com.kfgodel.temas.filters.reuniones.ProximaReunion;
 import convention.persistent.Minuta;
 import convention.persistent.Reunion;
-import convention.persistent.TemaDeMinuta;
 import convention.persistent.TemaGeneral;
-import convention.rest.api.MinutaResource;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -28,7 +26,7 @@ public class ReunionService extends Service<Reunion> {
                 .insideATransaction()
                 .applying(ProximaReunion.create())
                 .applyingResultOf((existente) ->
-                        existente.mapOptional(UsarExistente::create)
+                        existente.mapOptional(UsarReunionExistente::create)
                                 .orElseGet(CrearProximaReunion::create)).get();
     }
 

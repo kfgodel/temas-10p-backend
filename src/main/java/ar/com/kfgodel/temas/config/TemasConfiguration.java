@@ -1,7 +1,6 @@
 package ar.com.kfgodel.temas.config;
 
 import ar.com.kfgodel.dependencies.api.DependencyInjector;
-import ar.com.kfgodel.dependencies.impl.DependencyInjectorImpl;
 import ar.com.kfgodel.orm.api.config.DbCoordinates;
 import ar.com.kfgodel.webbyconvention.api.auth.WebCredential;
 
@@ -13,7 +12,7 @@ import java.util.function.Function;
  * Created by kfgodel on 12/03/16.
  */
 public interface TemasConfiguration {
-    static DependencyInjector injector=DependencyInjectorImpl.create();
+
   /**
    * @return The database information to connect to it
    */
@@ -26,11 +25,8 @@ public interface TemasConfiguration {
 
   Function<WebCredential,Optional<Object>> autenticador();
 
-  default DependencyInjector getInjector(){
-
-    return injector;
-  }
-
+   DependencyInjector getInjector();
+//esto es por el tipo que espera el apply (esta funcion se pasa como parametro del apply en el inicializador de datos)
   default Void inicializarDatos(){
     return null;
   }

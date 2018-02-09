@@ -8,6 +8,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -65,11 +67,13 @@ public class Reunion extends PersistableSupport {
         Reunion reunion = new Reunion();
         reunion.fecha = fecha;
         reunion.status = StatusDeReunion.PENDIENTE;
+        if(reunion.getTemasPropuestos() == null)
+            reunion.setTemasPropuestos(new ArrayList<>());
         return reunion;
     }
 
     public void cerrarVotacion() {
-        this.getTemasPropuestos().sort(OrdenarPorVotos.create());
+    this.getTemasPropuestos().sort(Collections.reverseOrder(OrdenarPorVotos.create()));
         for (int i = 0; i < getTemasPropuestos().size(); i++) {
             TemaDeReunion tema = getTemasPropuestos().get(i);
             tema.setPrioridad(i + 1); // Queremos que empiece de 1 la prioridad
@@ -103,8 +107,7 @@ public class Reunion extends PersistableSupport {
     }
 
     private void agregarTema(TemaDeReunion temaNuevo) {
-        if(temasPropuestos == null)
-            temasPropuestos = new ArrayList<>();
+
         temasPropuestos.add(temaNuevo);
     }
 

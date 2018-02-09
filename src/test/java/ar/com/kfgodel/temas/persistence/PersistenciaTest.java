@@ -1,11 +1,11 @@
-package Persistence;
+package ar.com.kfgodel.temas.persistence;
 
 import ar.com.kfgodel.temas.application.Application;
 import ar.com.kfgodel.temas.filters.reuniones.AllReunionesUltimaPrimero;
 import convention.persistent.*;
 import convention.rest.api.ReunionResource;
 import convention.services.*;
-import helpers.TestConfig;
+import ar.com.kfgodel.temas.helpers.TestConfig;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -31,23 +31,23 @@ public class PersistenciaTest {
     @Before
     public void setUp(){
         startApplication();
-       temaService = application.getInjector().createInjected(TemaService.class);
-        temaGeneralService = application.getInjector().createInjected(TemaGeneralService.class);
-        application.getInjector().createInjected(ReunionResource.class);
-        reunionService = application.getInjector().getImplementationFor(ReunionService.class).get();
-        minutaService = application.getInjector().createInjected(MinutaService.class);
-        usuarioService = application.getInjector().createInjected(UsuarioService.class);
+       temaService = application.injector().createInjected(TemaService.class);
+        temaGeneralService = application.injector().createInjected(TemaGeneralService.class);
+        application.injector().createInjected(ReunionResource.class);
+        reunionService = application.injector().getImplementationFor(ReunionService.class).get();
+        minutaService = application.injector().createInjected(MinutaService.class);
+        usuarioService = application.injector().createInjected(UsuarioService.class);
 
-        temaDeMinutaService=application.getInjector().createInjected(TemaDeMinutaService.class);
+        temaDeMinutaService=application.injector().createInjected(TemaDeMinutaService.class);
 
 
-        application.getInjector().bindTo(TemaDeMinutaService.class, temaDeMinutaService);
-        application.getInjector().bindTo(ReunionService.class, reunionService);
-        application.getInjector().bindTo(TemaService.class, temaService);
-        application.getInjector().bindTo(TemaGeneralService.class, temaGeneralService);
-        application.getInjector().bindTo(MinutaService.class, minutaService);
-        application.getInjector().bindTo(UsuarioService.class, usuarioService);
-        application.getInjector().bindTo(TemaDeMinutaService.class, temaDeMinutaService);
+        application.injector().bindTo(TemaDeMinutaService.class, temaDeMinutaService);
+        application.injector().bindTo(ReunionService.class, reunionService);
+        application.injector().bindTo(TemaService.class, temaService);
+        application.injector().bindTo(TemaGeneralService.class, temaGeneralService);
+        application.injector().bindTo(MinutaService.class, minutaService);
+        application.injector().bindTo(UsuarioService.class, usuarioService);
+        application.injector().bindTo(TemaDeMinutaService.class, temaDeMinutaService);
     }
     @After
     public void drop(){
@@ -68,7 +68,7 @@ public class PersistenciaTest {
 
     @Test
     public void test02SePuedePersistirCorrectamenteUnTema(){
-        TemaDeReunion nuevoTema = new TemaDeReunion();
+        TemaDeReunion nuevoTema = TemaDeReunion.create();
 
         int cantidadDeTemasAnteriores = temaService.getAll().size();
 
@@ -82,9 +82,9 @@ public class PersistenciaTest {
     @Test
     public void test03AlObtenerUnaReunionSeTraenSoloSusTemas(){
        Reunion reunion = new Reunion();
-       TemaDeReunion temaDeLaReunion = new TemaDeReunion();
-       TemaDeReunion temaDeOtraReunion = new TemaDeReunion();
-
+       TemaDeReunion temaDeLaReunion = TemaDeReunion.create();
+       TemaDeReunion temaDeOtraReunion =TemaDeReunion.create();
+            temaService.save(temaDeOtraReunion);
        reunion = reunionService.save(reunion);
 
        temaDeLaReunion.setReunion(reunion);
@@ -103,7 +103,7 @@ public class PersistenciaTest {
 
     @Test
     public void test04LaObligatoriedadDeUnTemaSePersisteCorrectamente(){
-        TemaDeReunion tema = new TemaDeReunion();
+        TemaDeReunion tema =TemaDeReunion.create();
         tema.setObligatoriedad(ObligatoriedadDeTema.OBLIGATORIO);
 
         tema = temaService.save(tema);
@@ -178,7 +178,7 @@ public class PersistenciaTest {
     @Test
     public void test11SePuedePersistirUnaMinuta(){
         Reunion reunion = Reunion.create(LocalDate.of(2017, 06, 26));
-        TemaDeReunion unTema = new TemaDeReunion();
+        TemaDeReunion unTema = TemaDeReunion.create();
         reunion = reunionService.save(reunion);
         unTema.setReunion(reunion);
         temaService.save(unTema);
@@ -230,7 +230,7 @@ public class PersistenciaTest {
     @Test
     public void test14AlBorrarUnTemaGeneralNoSeBorranlosTemasDeReunionQueNoFueronGeneradosPorEl(){
         Reunion reunion = Reunion.create(LocalDate.of(2017, 06, 26));
-        TemaDeReunion unTemaNoGenerado = new TemaDeReunion();
+        TemaDeReunion unTemaNoGenerado = TemaDeReunion.create();
         unTemaNoGenerado.setReunion(reunion);
         reunion.setTemasPropuestos(Arrays.asList(unTemaNoGenerado));
 
@@ -282,7 +282,7 @@ public class PersistenciaTest {
     @Test
     public void test17AlEditarUnTemaGeneralNoSeModificanlosTemasDeReunionQueNoFueronGeneradosPorEl(){
         Reunion reunion = Reunion.create(LocalDate.of(2017, 06, 26));
-        TemaDeReunion unTemaNoGenerado = new TemaDeReunion();
+        TemaDeReunion unTemaNoGenerado = TemaDeReunion.create();
         unTemaNoGenerado.setReunion(reunion);
         unTemaNoGenerado.setTitulo("Título");
         reunion.setTemasPropuestos(Arrays.asList(unTemaNoGenerado));

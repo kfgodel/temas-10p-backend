@@ -1,8 +1,7 @@
-package Domain;
+package ar.com.kfgodel.temas.domain;
 
 import convention.persistent.Minuta;
 import convention.persistent.Reunion;
-import convention.persistent.Usuario;
 import org.junit.Assert;
 import org.junit.Test;
 

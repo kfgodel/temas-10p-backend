@@ -24,11 +24,12 @@ import java.util.stream.Collectors;
  */
 @Produces("application/json")
 @Consumes("application/json")
-public class ReunionResource extends Resource {
+public class ReunionResource {
 
     @Inject
     private ReunionService reunionService;
 
+    private ResourceHelper resourceHelper;
 
     private static final Type LISTA_DE_REUNIONES_TO = new ReferenceOf<List<ReunionTo>>() {
     }.getReferencedType();
@@ -63,7 +64,7 @@ public class ReunionResource extends Resource {
                     reunion.cerrarVotacion();
                     return reunion;
                 });
-         return convertir(reunionCerrada, ReunionTo.class);
+         return getResourceHelper().convertir(reunionCerrada, ReunionTo.class);
     }
 
 
@@ -76,39 +77,39 @@ public class ReunionResource extends Resource {
                     return reunion;
                 });
 
-        return convertir(reunionAbierta, ReunionTo.class);
+        return getResourceHelper().convertir(reunionAbierta, ReunionTo.class);
     }
 
     @GET
     public List<ReunionTo> getAll(@Context SecurityContext securityContext) {
-        Long userId = idDeUsuarioActual(securityContext);
+        Long userId = getResourceHelper().idDeUsuarioActual(securityContext);
         List<Reunion> reuniones = reunionService.getAll();
         List<Reunion> reunionesFiltradas = reuniones.stream()
                 .map(reunion -> muestreoDeReunion(reunion, userId, securityContext)).collect(Collectors.toList());
-        return convertir(reunionesFiltradas, LISTA_DE_REUNIONES_TO);
+        return getResourceHelper().convertir(reunionesFiltradas, LISTA_DE_REUNIONES_TO);
     }
 
     @POST
     public ReunionTo create(ReunionTo reunionNueva) {
 
-        Reunion reunionCreada = reunionService.save(convertir(reunionNueva, Reunion.class));
-        return convertir(reunionCreada, ReunionTo.class);
+        Reunion reunionCreada = reunionService.save(getResourceHelper().convertir(reunionNueva, Reunion.class));
+        return getResourceHelper().convertir(reunionCreada, ReunionTo.class);
     }
 
     @GET
     @Path("/{resourceId}")
     public ReunionTo getSingle(@PathParam("resourceId") Long id, @Context SecurityContext securityContext) {
-        Long userId = idDeUsuarioActual(securityContext);
+        Long userId = getResourceHelper().idDeUsuarioActual(securityContext);
         Reunion reunionFiltrada = reunionService.getAndMapping(id, reunion -> muestreoDeReunion(reunion, userId, securityContext));
-        return convertir(reunionFiltrada, ReunionTo.class);
+        return getResourceHelper().convertir(reunionFiltrada, ReunionTo.class);
     }
 
 
     @PUT
     @Path("/{resourceId}")
     public ReunionTo update(ReunionTo newState, @PathParam("resourceId") Long id) {
-        Reunion reunionActualizada = reunionService.update(convertir(newState, Reunion.class));
-        return convertir(reunionActualizada, ReunionTo.class);
+        Reunion reunionActualizada = reunionService.update(getResourceHelper().convertir(newState, Reunion.class));
+        return getResourceHelper().convertir(reunionActualizada, ReunionTo.class);
     }
 
     @DELETE
@@ -118,12 +119,15 @@ public class ReunionResource extends Resource {
     }
 
     public static ReunionResource create(DependencyInjector appInjector) {
-        ReunionResource resource = new ReunionResource();
-        resource.appInjector = appInjector;
-        resource.reunionService = appInjector.createInjected(ReunionService.class);
-        resource.appInjector.bindTo(ReunionService.class, resource.reunionService);
-        return resource;
+        ReunionResource reunionResource = new ReunionResource();
+        reunionResource.resourceHelper= ResourceHelper.create(appInjector);
+        reunionResource.getResourceHelper().bindAppInjectorTo(ReunionResource.class,reunionResource);
+        reunionResource.reunionService = appInjector.createInjected(ReunionService.class);
+        return reunionResource;
     }
 
+    public ResourceHelper getResourceHelper() {
+        return resourceHelper;
+    }
 
 }

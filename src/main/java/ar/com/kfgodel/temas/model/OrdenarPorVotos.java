@@ -14,10 +14,11 @@ public class OrdenarPorVotos implements Comparator<TemaDeReunion> {
 
   @Override
   public int compare(TemaDeReunion tema1, TemaDeReunion tema2) {
+    //el problema seguramente es que ordena de menor a mayor y necesitamos de mayor a menor
     if(tema1.tieneMayorPrioridadQue(tema2))
-      return -1;
-    else
       return 1;
+    else
+      return -1;
   }
 
   public static OrdenarPorVotos create() {

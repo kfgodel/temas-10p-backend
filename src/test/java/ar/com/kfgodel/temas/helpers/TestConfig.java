@@ -1,4 +1,4 @@
-package helpers;
+package ar.com.kfgodel.temas.helpers;
 
 import ar.com.kfgodel.appbyconvention.operation.api.ApplicationOperation;
 import ar.com.kfgodel.orm.api.config.DbCoordinates;

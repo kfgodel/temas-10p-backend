@@ -1,10 +1,9 @@
-package ApiRest;
+package ar.com.kfgodel.temas.apiRest;
 
 import convention.persistent.Reunion;
 import convention.persistent.TemaDeReunion;
 import convention.rest.api.UserResource;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -19,14 +18,13 @@ public class UserResourceTest extends ResourcesTemasTest {
     @Override
     public void setUp() {
         super.setUp();
-        userResource = new UserResource();
-        app.getInjector().bindTo(UserResource.class, userResource);
+        userResource =  UserResource.create(app.injector());
     }
 
     @Test
-    public void AlPedirLosNoVotantesDeUnaReunionMeDevuelveTodosLosUsuariosQueNoVotaron() throws Exception {
+    public void AlPedirLosNoVotantesDeUnaReunionMeDevuelveTodosLosUsuariosQueNoVotaron(){
         Reunion unaReunion = reunionService.save(new Reunion());
-        TemaDeReunion unTema = new TemaDeReunion();
+        TemaDeReunion unTema = TemaDeReunion.create();
         unTema.agregarInteresado(user);
         unTema.setReunion(unaReunion);
         unaReunion.setTemasPropuestos(Arrays.asList(unTema));
