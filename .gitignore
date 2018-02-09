@@ -25,3 +25,4 @@ dependency-reduced-pom.xml
 /bower_components
 
 /src/main/resources
+buildNumber.properties
