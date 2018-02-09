@@ -13,15 +13,18 @@ import java.util.List;
 @Entity
 public class ActionItem  extends PersistableSupport {
 
-    public static final String responsables_FIELD = "responsables";
-    public static final String tema_FIELD = "tema";
-    public static final String descripcion_FIELD = "descripcion";
     @Fetch(FetchMode.SELECT)
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Usuario> responsables;
+    public static final String responsables_FIELD = "responsables";
+
     @OneToOne
     private TemaDeMinuta tema;
+    public static final String tema_FIELD = "tema";
+
+    @Lob
     private String descripcion;
+    public static final String descripcion_FIELD = "descripcion";
 
     public List<Usuario> getResponsables() {
         return responsables;

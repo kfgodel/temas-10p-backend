@@ -1,8 +1,8 @@
-package Domain;
+package ar.com.kfgodel.temas.domain;
 
 import ar.com.kfgodel.temas.model.OrdenarPorVotos;
 import convention.persistent.*;
-import helpers.TestHelper;
+import ar.com.kfgodel.temas.helpers.TestHelper;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +10,7 @@ import org.junit.Test;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -44,7 +45,7 @@ public class ReunionTest {
     }
 
     @Test
-    public void test04AlCerrarUnaReunionLosTemasPropuestosSeOrdenanPorCantidadDeVotos() throws Exception {
+    public void test04AlCerrarUnaReunionLosTemasPropuestosSeOrdenanPorCantidadDeVotos() {
         Reunion unaReunion = Reunion.create(LocalDate.of(2017, 06, 16));
         Usuario unUsuario = new Usuario();
         TemaDeReunion tema1 = helper.nuevoTemaNoObligatorio();
@@ -82,7 +83,7 @@ public class ReunionTest {
 
     // No estoy seguro de que vaya acá
     @Test
-    public void test06ElOrdenadorDeTemasOrdenaCorrectamenteUnConjuntoDeTemas() throws Exception {
+    public void test06ElOrdenadorDeTemasOrdenaCorrectamenteUnConjuntoDeTemas() {
         Usuario unUsuario = new Usuario();
 
         TemaDeReunion tema1 = helper.nuevoTemaObligatorio();
@@ -105,7 +106,7 @@ public class ReunionTest {
         tema5.agregarInteresado(unUsuario);
 
         List<TemaDeReunion> temas = Arrays.asList(tema1, tema2, tema3, tema4, tema5);
-        temas.sort(OrdenarPorVotos.create());
+        temas.sort(Collections.reverseOrder(OrdenarPorVotos.create()));
 
         Assert.assertEquals(tema1, temas.get(0));
         Assert.assertEquals(tema2, temas.get(1));

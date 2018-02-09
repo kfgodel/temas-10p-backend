@@ -13,23 +13,31 @@ import java.lang.reflect.Type;
 /**
  * Created by fede on 27/06/17.
  */
-public abstract class Resource {
+public  class ResourceHelper {
 
 
     @Inject
-    protected DependencyInjector appInjector;
+    private DependencyInjector appInjector;
 
-    protected Long idDeUsuarioActual(SecurityContext securityContext){
+    public Long idDeUsuarioActual(SecurityContext securityContext){
         return ((JettyIdentityAdapter) securityContext.getUserPrincipal()).getApplicationIdentification();
 
     }
+    static ResourceHelper create(DependencyInjector appInjector){
+        ResourceHelper resourceHelper=new ResourceHelper();
+        resourceHelper.appInjector=appInjector;
+        return resourceHelper;
+    }
 
-    protected ApplicationOperation createOperation() {
+    public <T> void bindAppInjectorTo(Class<T> klass,T t){
+        appInjector.bindTo(klass,t);
+    }
+    public ApplicationOperation createOperation() {
 
         return ApplicationOperation.createFor(appInjector);
     }
 
-    protected Usuario usuarioActual(SecurityContext securityContext){
+    public Usuario usuarioActual(SecurityContext securityContext){
         Long userId=idDeUsuarioActual(securityContext);
         return createOperation()
                 .insideASession()
@@ -39,16 +47,18 @@ public abstract class Resource {
                 .get();
     }
 
-    protected <T> T convertir(Object objetoAConvertir, Class<T> claseHacia){
-        return createOperation()
-                .insideATransaction()
-                .taking(objetoAConvertir)
-                .convertTo(claseHacia);
-    }
-    protected <T> T convertir(Object objetoAConvertir, Type claseHacia){
+    public <T> T convertir(Object objetoAConvertir, Class<T> claseHacia){
         return (T) createOperation()
                 .insideATransaction()
                 .taking(objetoAConvertir)
                 .convertTo(claseHacia);
     }
+    public <T> T convertir(Object objetoAConvertir, Type claseHacia){
+        return (T) createOperation()
+                .insideATransaction()
+                .taking(objetoAConvertir)
+                .convertTo(claseHacia);
+    }
+
+
 }

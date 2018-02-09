@@ -5,8 +5,6 @@ import convention.persistent.TemaDeReunion;
 import convention.persistent.Usuario;
 import convention.rest.api.tos.TemaEnCreacionTo;
 import convention.rest.api.tos.TemaTo;
-import convention.services.TemaDeMinutaService;
-import convention.services.TemaGeneralService;
 import convention.services.TemaService;
 
 import javax.inject.Inject;
@@ -20,53 +18,45 @@ import javax.ws.rs.core.SecurityContext;
  */
 @Produces("application/json")
 @Consumes("application/json")
-public class TemaResource extends Resource {
+public class TemaDeReunionResource {
 
     @Inject
     TemaService temaService;
 
-    public static TemaResource create(DependencyInjector appInjector) {
-        TemaResource resource = new TemaResource();
-        resource.appInjector = appInjector;
-        resource.temaService = appInjector.createInjected(TemaService.class);
-        appInjector.bindTo(TemaService.class, resource.temaService);
-        return resource;
-    }
-
+    private ResourceHelper resourceHelper;
     @POST
     public TemaTo create(TemaEnCreacionTo newState,@Context SecurityContext securityContext) {
-        TemaDeReunion temaCreado = convertir(newState, TemaDeReunion.class);
-        Usuario modificador = this.usuarioActual(securityContext);
+        TemaDeReunion temaCreado = getResourceHelper().convertir(newState, TemaDeReunion.class);
+        Usuario modificador = getResourceHelper().usuarioActual(securityContext);
         temaCreado.setUltimoModificador(modificador);
         temaService.save(temaCreado);
-        return convertir(temaCreado, TemaTo.class);
+        return getResourceHelper().convertir(temaCreado, TemaTo.class);
     }
 
     @Path("/{resourceId}")
     @PUT
     public TemaTo update(TemaTo newState,@PathParam("resourceId") Long id,@Context SecurityContext securityContext) {
-        TemaDeReunion estadoNuevo=convertir(newState, TemaDeReunion.class);
-        Usuario modificador=this.usuarioActual(securityContext);
+        TemaDeReunion estadoNuevo=getResourceHelper().convertir(newState, TemaDeReunion.class);
+        Usuario modificador=getResourceHelper().usuarioActual(securityContext);
                     estadoNuevo.setUltimoModificador(modificador);
         TemaDeReunion temaUpdateado = temaService.update(estadoNuevo);
-        return convertir(temaUpdateado, TemaTo.class);
+        return getResourceHelper().convertir(temaUpdateado, TemaTo.class);
     }
-
     @GET
     @Path("/{resourceId}")
     public TemaTo getSingle(@PathParam("resourceId") Long id) {
-        return convertir(temaService.get(id), TemaTo.class);
+        return getResourceHelper().convertir(temaService.get(id), TemaTo.class);
     }
 
     @GET
     @Path("votar/{resourceId}")
     public TemaTo votar(@PathParam("resourceId") Long id, @Context SecurityContext securityContext) {
 
-        Usuario usuarioActual = usuarioActual(securityContext);
+        Usuario usuarioActual = getResourceHelper().usuarioActual(securityContext);
 
         TemaDeReunion temaVotado = temaService.updateAndMapping(id,
                 temaDeReunion -> votarTema(usuarioActual, temaDeReunion));
-        return convertir(temaVotado, TemaTo.class);
+        return getResourceHelper().convertir(temaVotado, TemaTo.class);
     }
 
     public TemaDeReunion votarTema(Usuario usuarioActual, TemaDeReunion temaDeReunion) {
@@ -88,12 +78,12 @@ public class TemaResource extends Resource {
     @Path("desvotar/{resourceId}")
     public TemaTo desvotar(@PathParam("resourceId") Long id, @Context SecurityContext securityContext) {
 
-        Usuario usuarioActual = usuarioActual(securityContext);
+        Usuario usuarioActual = getResourceHelper().usuarioActual(securityContext);
 
         TemaDeReunion temaVotado = temaService.updateAndMapping(id,
                 temaDeReunion -> desvotarTema(usuarioActual, temaDeReunion)
         );
-        return convertir(temaVotado, TemaTo.class);
+        return getResourceHelper().convertir(temaVotado, TemaTo.class);
 
     }
 
@@ -115,4 +105,15 @@ public class TemaResource extends Resource {
         temaService.delete(id);
     }
 
+    public static TemaDeReunionResource create(DependencyInjector appInjector) {
+        TemaDeReunionResource temaDeReunionResource = new TemaDeReunionResource();
+        temaDeReunionResource.resourceHelper= ResourceHelper.create(appInjector);
+        temaDeReunionResource.getResourceHelper().bindAppInjectorTo(TemaDeReunionResource.class,temaDeReunionResource);
+        temaDeReunionResource.temaService = appInjector.createInjected(TemaService.class);
+         return temaDeReunionResource;
+    }
+
+    public ResourceHelper getResourceHelper() {
+        return resourceHelper;
+    }
 }

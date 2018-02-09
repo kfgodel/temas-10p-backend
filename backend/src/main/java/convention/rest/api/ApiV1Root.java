@@ -1,8 +1,6 @@
 package convention.rest.api;
 
 import ar.com.kfgodel.temas.application.Application;
-import ar.com.kfgodel.webbyconvention.api.auth.WebCredential;
-import convention.persistent.TemaGeneral;
 
 import javax.inject.Inject;
 import javax.ws.rs.Path;
@@ -23,7 +21,7 @@ public class ApiV1Root {
   private UserResource users;
   private SessionResource session;
   private ReunionResource reuniones;
-  private TemaResource temas;
+  private TemaDeReunionResource temas;
   private DuracionesResource duraciones;
   private TemaGeneralResource temasGenrales;
   private MinutaResource minutas;
@@ -39,14 +37,14 @@ public class ApiV1Root {
   @Path("/duraciones")
   public DuracionesResource duraciones() {
     if (duraciones == null) {
-      duraciones = application.getInjector().createInjected(DuracionesResource.class);
+      duraciones=DuracionesResource.create(application.injector());
     }
     return duraciones;
   }
   @Path("/temaDeMinuta")
   public TemaDeMinutaResource temasDeMinuta() {
     if (temasDeMinuta == null) {
-      temasDeMinuta = application.getInjector().createInjected(TemaDeMinutaResource.class);
+      temasDeMinuta = TemaDeMinutaResource.create(application.injector());
     }
     return temasDeMinuta;
   }
@@ -54,8 +52,7 @@ public class ApiV1Root {
   public UserResource users() {
     if (users == null) {
 
-
-      users = application.getInjector().createInjected(UserResource.class);
+      users = UserResource.create(application.injector());
     }
     return users;
   }
@@ -64,22 +61,22 @@ public class ApiV1Root {
     if (minutas == null) {
 
 
-      minutas = application.getInjector().createInjected(MinutaResource.class);
+      minutas = MinutaResource.create(application.injector());
     }
     return minutas;
   }
   @Path("/reuniones")
   public ReunionResource reuniones() {
     if (reuniones == null) {
-      reuniones = application.getInjector().createInjected(ReunionResource.class);
+      reuniones = ReunionResource.create(application.injector());
     }
     return reuniones;
   }
 
   @Path("/temas")
-  public TemaResource temas() {
+  public TemaDeReunionResource temas() {
     if (temas == null) {
-      temas = application.getInjector().createInjected(TemaResource.class);
+      temas = TemaDeReunionResource.create(application.injector());
     }
     return temas;
   }
@@ -87,7 +84,7 @@ public class ApiV1Root {
   @Path("/temas-generales")
   public TemaGeneralResource temasGenerales() {
     if (temasGenrales == null) {
-      temasGenrales = application.getInjector().createInjected(TemaGeneralResource.class);
+      temasGenrales = TemaGeneralResource.create(application.injector());
     }
     return temasGenrales;
   }

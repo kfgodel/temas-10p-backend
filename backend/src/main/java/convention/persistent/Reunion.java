@@ -8,6 +8,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -17,24 +19,19 @@ import java.util.List;
 @Entity
 public class Reunion extends PersistableSupport {
 
-    public static final String fecha_FIELD = "fecha";
-    public static final String status_FIELD = "status";
-    public static final String temasPropuestos_FIELD = "temasPropuestos";
     @NotNull
     private LocalDate fecha;
+    public static final String fecha_FIELD = "fecha";
+
     @Enumerated(EnumType.STRING)
     private StatusDeReunion status = StatusDeReunion.PENDIENTE;
+    public static final String status_FIELD = "status";
+
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany( cascade = CascadeType.ALL, mappedBy = TemaDeReunion.reunion_FIELD, orphanRemoval = true)
     @OrderBy(TemaDeReunion.prioridad_FIELD)
     private List<TemaDeReunion> temasPropuestos;
-
-    public static Reunion create(LocalDate fecha) {
-        Reunion reunion = new Reunion();
-        reunion.fecha = fecha;
-        reunion.status = StatusDeReunion.PENDIENTE;
-        return reunion;
-    }
+    public static final String temasPropuestos_FIELD = "temasPropuestos";
 
     public LocalDate getFecha() {
         return fecha;
@@ -51,13 +48,6 @@ public class Reunion extends PersistableSupport {
         return temasPropuestos;
     }
 
-    public void setTemasPropuestos(List<TemaDeReunion> temasPropuestos) {
-        getTemasPropuestos().clear();
-        if (temasPropuestos != null) {
-            getTemasPropuestos().addAll(temasPropuestos);
-        }
-    }
-
     public StatusDeReunion getStatus() {
         return status;
     }
@@ -66,8 +56,24 @@ public class Reunion extends PersistableSupport {
         this.status = status;
     }
 
+    public void setTemasPropuestos(List<TemaDeReunion> temasPropuestos) {
+        getTemasPropuestos().clear();
+        if (temasPropuestos != null) {
+            getTemasPropuestos().addAll(temasPropuestos);
+        }
+    }
+
+    public static Reunion create(LocalDate fecha) {
+        Reunion reunion = new Reunion();
+        reunion.fecha = fecha;
+        reunion.status = StatusDeReunion.PENDIENTE;
+        if(reunion.getTemasPropuestos() == null)
+            reunion.setTemasPropuestos(new ArrayList<>());
+        return reunion;
+    }
+
     public void cerrarVotacion() {
-        this.getTemasPropuestos().sort(OrdenarPorVotos.create());
+    this.getTemasPropuestos().sort(Collections.reverseOrder(OrdenarPorVotos.create()));
         for (int i = 0; i < getTemasPropuestos().size(); i++) {
             TemaDeReunion tema = getTemasPropuestos().get(i);
             tema.setPrioridad(i + 1); // Queremos que empiece de 1 la prioridad
@@ -101,8 +107,7 @@ public class Reunion extends PersistableSupport {
     }
 
     private void agregarTema(TemaDeReunion temaNuevo) {
-        if(temasPropuestos == null)
-            temasPropuestos = new ArrayList<>();
+
         temasPropuestos.add(temaNuevo);
     }
 

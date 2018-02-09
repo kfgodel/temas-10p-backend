@@ -17,37 +17,19 @@ import java.util.Arrays;
  */
 public class CrearProximaReunion implements TransactionOperation<Reunion> {
 
-  public static CrearProximaReunion create() {
-    CrearProximaReunion accion = new CrearProximaReunion();
-    return accion;
-  }
-
   @Override
   public Reunion applyWithTransactionOn(TransactionContext transactionContext) {
-    LocalDate fechaDeProximaRoots = calcularFechaDeRoots(LocalDate.now());
+    LocalDate fechaDeProximaRoots = new CalculadorDeProximaFecha().calcularFechaDeRoots(LocalDate.now());
     Reunion proximaRoots = Reunion.create(fechaDeProximaRoots);
     // La guardamos antes de devolverla para que quede persistida
     Save.create(proximaRoots).applyWithTransactionOn(transactionContext);
     return proximaRoots;
   }
 
-  public  LocalDate calcularFechaDeRoots(LocalDate hoy) {
-    LocalDate tercerViernesDeEsteMes = hoy.with(tercerViernesDelMes());
-    if (tercerViernesDeEsteMes.isBefore(hoy)) {
-      return calcularTercerViernesDelProximoMes(hoy);
-    }
-    return tercerViernesDeEsteMes;
-  }
 
-  private LocalDate calcularTercerViernesDelProximoMes(LocalDate hoy) {
-    if(hoy.with(tercerViernesDelMes()).isBefore(hoy)){
-   return hoy.with(TemporalAdjusters.firstDayOfNextMonth()).with(tercerViernesDelMes());
-    }
-      return hoy.with(tercerViernesDelMes());
-  }
-
-  private TemporalAdjuster tercerViernesDelMes() {
-    return TemporalAdjusters.dayOfWeekInMonth(3, DayOfWeek.FRIDAY);
+  public static CrearProximaReunion create() {
+    CrearProximaReunion accion = new CrearProximaReunion();
+    return accion;
   }
 
 }

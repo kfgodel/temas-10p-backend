@@ -2,6 +2,7 @@ package ar.com.kfgodel.temas.config;
 
 import ar.com.kfgodel.appbyconvention.operation.api.ApplicationOperation;
 import ar.com.kfgodel.dependencies.api.DependencyInjector;
+import ar.com.kfgodel.dependencies.impl.DependencyInjectorImpl;
 import ar.com.kfgodel.diamond.api.types.reference.ReferenceOf;
 import ar.com.kfgodel.orm.api.config.DbCoordinates;
 import ar.com.kfgodel.orm.api.operations.basic.Save;
@@ -29,6 +30,7 @@ import java.util.function.Function;
  */
 public class DevelopmentConfig implements TemasConfiguration {
 
+  private DependencyInjector injector=DependencyInjectorImpl.create();
 
   public static DevelopmentConfig create() {
     DevelopmentConfig config = new DevelopmentConfig();
@@ -48,6 +50,11 @@ public class DevelopmentConfig implements TemasConfiguration {
   @Override
   public Function<WebCredential, Optional<Object>> autenticador() {
     return BackofficeCallbackAuthenticatorForAll.create(getInjector());
+  }
+
+  @Override
+  public DependencyInjector getInjector() {
+    return injector;
   }
 
   protected List<UserTo> getUsers() {

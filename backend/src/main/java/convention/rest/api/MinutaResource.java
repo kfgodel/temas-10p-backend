@@ -10,6 +10,7 @@ import convention.rest.api.tos.MinutaTo;
 import convention.services.MinutaService;
 import convention.services.ReunionService;
 
+import javax.naming.spi.ResolveResult;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
@@ -19,36 +20,39 @@ import javax.ws.rs.core.SecurityContext;
  */
 @Produces("application/json")
 @Consumes("application/json")
-public class MinutaResource extends Resource {
+public class MinutaResource{
 
     @Inject
     private MinutaService minutaService;
-    @Inject
-    private ReunionService reunionService;
 
-    public static MinutaResource create(DependencyInjector appInjector) {
-        MinutaResource resource = new MinutaResource();
-        resource.appInjector = appInjector;
-        resource.appInjector.bindTo(MinutaResource.class, resource);
-        resource.appInjector.bindTo(MinutaService.class,resource.minutaService);
-        return resource;
-    }
-
+    private ResourceHelper resourceHelper;
     @GET
     @Path("reunion/{reunionId}")
     public MinutaTo getParaReunion(@PathParam("reunionId") Long id ){
          Minuta minuta = minutaService.getFromReunion(id);
         minutaService.update(minuta);
-        return convertir(minuta, MinutaTo.class);
+        return  getResourceHelper().convertir(minuta, MinutaTo.class);
     }
 
     @PUT
     @Path("/{resourceId}")
     public MinutaTo update(MinutaTo newState, @PathParam("resourceId") Long id, @Context SecurityContext securityContext){
-        Usuario ultimoMinuteador = this.usuarioActual(securityContext);
-        Minuta minuta=convertir(newState, Minuta.class);
+        Usuario ultimoMinuteador = this. getResourceHelper().usuarioActual(securityContext);
+        Minuta minuta= getResourceHelper().convertir(newState, Minuta.class);
         minuta.setMinuteador(ultimoMinuteador);
         Minuta minutaActualizada = minutaService.update(minuta);
-        return convertir(minutaActualizada, MinutaTo.class);
+        return  getResourceHelper().convertir(minutaActualizada, MinutaTo.class);
+    }
+
+    public static MinutaResource create(DependencyInjector appInjector) {
+        MinutaResource minutaResource = new MinutaResource();
+        minutaResource.resourceHelper= ResourceHelper.create(appInjector);
+        minutaResource. getResourceHelper().bindAppInjectorTo(MinutaResource.class, minutaResource);
+        minutaResource.minutaService=appInjector.createInjected(MinutaService.class);
+        return minutaResource;
+    }
+
+    public ResourceHelper getResourceHelper() {
+        return resourceHelper;
     }
 }

@@ -2,10 +2,7 @@ package ar.com.kfgodel.temas.application.initializers;
 
 import ar.com.kfgodel.appbyconvention.operation.api.ApplicationOperation;
 import ar.com.kfgodel.orm.api.TransactionContext;
-import ar.com.kfgodel.orm.api.operations.basic.Save;
 import ar.com.kfgodel.temas.application.Application;
-import convention.persistent.Usuario;
-import convention.rest.api.tos.UserTo;
 
 /**
  * Esta clase representa el inicializador de datos que sabe definir el estado inicial de la base
@@ -22,7 +19,7 @@ public class InicializadorDeDatos {
   }
 
   public void inicializar() {
-    ApplicationOperation.createFor(application.getInjector())
+    ApplicationOperation.createFor(application.injector())
       .insideATransaction()
       .apply(this::inicializarBase);
   }

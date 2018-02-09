@@ -1,4 +1,4 @@
-package helpers;
+package ar.com.kfgodel.temas.helpers;
 
 import convention.persistent.ObligatoriedadDeTema;
 import convention.persistent.Reunion;
@@ -13,13 +13,13 @@ import java.time.LocalDate;
 public class TestHelper {
 
     public TemaDeReunion nuevoTemaObligatorio(){
-        TemaDeReunion tema = new TemaDeReunion();
+        TemaDeReunion tema = TemaDeReunion.create();
         tema.setObligatoriedad(ObligatoriedadDeTema.OBLIGATORIO);
         return tema;
     }
 
     public TemaDeReunion nuevoTemaNoObligatorio(){
-        TemaDeReunion tema = new TemaDeReunion();
+        TemaDeReunion tema = TemaDeReunion.create();
         tema.setObligatoriedad(ObligatoriedadDeTema.NO_OBLIGATORIO);
         return tema;
     }

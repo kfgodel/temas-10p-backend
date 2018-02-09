@@ -28,29 +28,25 @@ import java.util.stream.Collectors;
  */
 @Produces("application/json")
 @Consumes("application/json")
-public class UserResource extends Resource {
+public class UserResource{
 
 
-    private static final Type LIST_OF_USER_TOS = new ReferenceOf<List<UserTo>>() {
-    }.getReferencedType();
     @Inject
     UsuarioService userService;
+
     @Inject
     ReunionService reunionService;
 
-    public static UserResource create(DependencyInjector appInjector) {
-        UserResource resource = new UserResource();
-        resource.appInjector = appInjector;
-        resource.userService = resource.appInjector.createInjected(UsuarioService.class);
-        resource.appInjector.bindTo(UsuarioService.class,resource.userService);
-        return resource;
-    }
+    private ResourceHelper resourceHelper;
+
+    private static final Type LIST_OF_USER_TOS = new ReferenceOf<List<UserTo>>() {
+    }.getReferencedType();
 
     @GET
     @Path("current")
     public UserTo getCurrent(@Context SecurityContext securityContext) {
-        Long currentUserId = idDeUsuarioActual(securityContext);
-        return convertir(userService.get(currentUserId), UserTo.class);
+        Long currentUserId = getResourceHelper().idDeUsuarioActual(securityContext);
+        return getResourceHelper().convertir(userService.get(currentUserId), UserTo.class);
     }
 
     @GET
@@ -62,27 +58,30 @@ public class UserResource extends Resource {
         List<Usuario> votantes=reunionService.get(reunionId).usuariosQueVotaron();
         usuarios=usuarios.stream().filter(usuario ->
                 !votantes.stream().anyMatch(votante -> votante.getId().equals(usuario.getId()) )).collect(Collectors.toList());
-        return convertir(usuarios, LIST_OF_USER_TOS);
+        return getResourceHelper().convertir(usuarios, LIST_OF_USER_TOS);
     }
+
 
     @GET
     public List<UserTo> getAllUsers() {
 
-        return convertir(userService.getAll(), LIST_OF_USER_TOS);
+        return getResourceHelper().convertir(userService.getAll(), LIST_OF_USER_TOS);
     }
 
     @GET
     @Path("/{userId}")
     public UserTo getSingleUser(@PathParam("userId") Long userId) {
-        return convertir(userService.get(userId), UserTo.class);
+        return getResourceHelper().convertir(userService.get(userId), UserTo.class);
     }
+
 
     @PUT
     @Path("/{userId}")
     public UserTo updateUser(UserTo newUserState, @PathParam("userId") Long userId) {
-        Usuario usuarioUpdateado = userService.update(convertir(newUserState, Usuario.class));
-        return convertir(usuarioUpdateado, UserTo.class);
+        Usuario usuarioUpdateado = userService.update(getResourceHelper().convertir(newUserState, Usuario.class));
+        return getResourceHelper().convertir(usuarioUpdateado, UserTo.class);
     }
+
 
     @DELETE
     @Path("/{userId}")
@@ -90,4 +89,15 @@ public class UserResource extends Resource {
         userService.delete(userId);
     }
 
+    public static UserResource create(DependencyInjector appInjector) {
+        UserResource userResource = new UserResource();
+        userResource.resourceHelper=ResourceHelper.create(appInjector);
+        userResource.userService = appInjector.createInjected(UsuarioService.class);
+        userResource.getResourceHelper().bindAppInjectorTo(UserResource.class,userResource);
+        return userResource;
+    }
+
+    public ResourceHelper getResourceHelper() {
+        return resourceHelper;
+    }
 }

@@ -1,4 +1,4 @@
-package helpers;
+package ar.com.kfgodel.temas.helpers;
 
 import ar.com.kfgodel.appbyconvention.operation.api.ApplicationOperation;
 import ar.com.kfgodel.orm.api.config.DbCoordinates;
@@ -17,16 +17,15 @@ import convention.rest.api.tos.UserTo;
 **/
 public class TestConfig extends DevelopmentConfig {
 
-    public static TestConfig create() {
-        TestConfig config = new TestConfig();
-        return config;
-    }
-
     @Override
     public DbCoordinates getDatabaseCoordinates() {
         return ImmutableDbCoordinates.createDeductingDialect("jdbc:h2:mem:file:./db/testDB", "sa", "");
     }
 
+    public static TestConfig create() {
+        TestConfig config = new TestConfig();
+        return config;
+    }
     @Override
     public Void inicializarDatos(){
         if(getUsers().isEmpty()) {
