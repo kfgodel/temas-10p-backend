@@ -30,8 +30,6 @@ import java.util.function.Function;
 public class DevelopmentConfig implements TemasConfiguration {
 
 
-  public static final int DEFAULT_PORT = 9090;
-
   public static DevelopmentConfig create() {
     DevelopmentConfig config = new DevelopmentConfig();
     return config;
@@ -44,11 +42,7 @@ public class DevelopmentConfig implements TemasConfiguration {
 
   @Override
   public int getHttpPort() {
-    try {
-      return Integer.parseInt(System.getenv("PORT"));
-    } catch (NumberFormatException e) {
-      return DEFAULT_PORT;
-    }
+    return 9090;
   }
 
   @Override
