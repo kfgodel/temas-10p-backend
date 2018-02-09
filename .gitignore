@@ -26,3 +26,5 @@ dependency-reduced-pom.xml
 
 /src/main/resources
 buildNumber.properties
+
+.env
