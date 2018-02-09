@@ -4,5 +4,10 @@
   "image": "heroku/java",
   "addons": [
     "heroku-4postgresql"
-  ]
+  ],
+  "buildpacks": [
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-java"
+    }
+  ],
 }

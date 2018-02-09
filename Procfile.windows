@@ -1,1 +1,1 @@
-web:  java $JAVA_OPTS -cp target\classes;target\dependency\* ar.com.kfgodel.temas.TemasMain
+web:  java $JAVA_OPTS -cp java -cp backend\target\temas-10p-backend-1.0-SNAPSHOT.jar ar.com.kfgodel.temas.TemasMain
