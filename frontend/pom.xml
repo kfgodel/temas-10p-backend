@@ -34,6 +34,7 @@
 
   <properties>
     <version.plugin.assembly>2.4</version.plugin.assembly>
+    <backend.out>${basedir}/../backend/src/main/resources/convention/web</backend.out>
   </properties>
 
   <build>
@@ -96,22 +97,34 @@
         <executions>
           <execution>
             <id>copy-resource-one</id>
-            <phase>install</phase>
+            <phase>package</phase>
             <goals>
               <goal>copy-resources</goal>
             </goals>
 
             <configuration>
-              <outputDirectory>${basedir}../temas-10p-backend/backend/src/main/resources/convention/web</outputDirectory>
+              <outputDirectory>${backend.out}</outputDirectory>
               <resources>
                 <resource>
-                  <directory>/dist</directory>
-                  <filtering>true</filtering>
+                  <directory>dist/</directory>
+                  <filtering>false</filtering>
                 </resource>
               </resources>
             </configuration>
           </execution>
         </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>3.0.0</version>
+        <configuration>
+          <filesets>
+            <fileset>
+              <directory>${backend.out}</directory>
+            </fileset>
+          </filesets>
+        </configuration>
       </plugin>
     </plugins>
 

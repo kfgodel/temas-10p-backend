@@ -23,7 +23,8 @@
     </properties>
 
     <modules>
-        <module>../backend</module>
+        <!--EL ORDEN es altamente importante!-->
         <module>../frontend</module>
+        <module>../backend</module>
     </modules>
 </project>
