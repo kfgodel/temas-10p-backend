@@ -35,6 +35,7 @@
   <properties>
     <version.plugin.assembly>2.4</version.plugin.assembly>
     <backend.out>${basedir}/../backend/src/main/resources/convention/web</backend.out>
+    <frontend.out>dist/</frontend.out>
   </properties>
 
   <build>
@@ -106,7 +107,7 @@
               <outputDirectory>${backend.out}</outputDirectory>
               <resources>
                 <resource>
-                  <directory>dist/</directory>
+                  <directory>${frontend.out}</directory>
                   <filtering>false</filtering>
                 </resource>
               </resources>
@@ -122,6 +123,7 @@
           <filesets>
             <fileset>
               <directory>${backend.out}</directory>
+              <directory>${frontend.out}</directory>
             </fileset>
           </filesets>
         </configuration>
