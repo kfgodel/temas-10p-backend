@@ -152,6 +152,14 @@ public class TemaDeReunion extends Tema {
     return this.getObligatoriedad().equals(ObligatoriedadDeTema.OBLIGATORIO_GENERAL);
   }
 
+  public Boolean fueModificado(){
+    TemaGeneral temaGenerador=getTemaGenerador().orElseThrow(() -> new TemaDeReunionException("no tiene tema generador"));
+      return !getDescripcion().equals(temaGenerador.getDescripcion())
+       || !getTitulo().equals( temaGenerador.getTitulo())
+       || getDuracion()!=temaGenerador.getDuracion()
+       || getObligatoriedad()!=ObligatoriedadDeTema.OBLIGATORIO;
+  }
+
   public Optional<TemaGeneral> getTemaGenerador() {
     return Optional.ofNullable(temaGenerador);
   }
