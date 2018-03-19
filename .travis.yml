@@ -3,3 +3,8 @@ jdk:
   - oraclejdk8
 script: 
   - mvn -Dmaven.javadoc.skip=true test
+cache:
+  directories:
+    - $HOME/.m2
+    - frontend/node_modules
+    - frontend/bower_components
