@@ -8,7 +8,6 @@ import convention.persistent.QUsuario;
 
 /**
  * This type represents filter that counts the number of users in the database
- * <p>
  * Created by kfgodel on 04/04/15.
  */
 public class UserCount implements SessionOperation<Nary<Long>> {
