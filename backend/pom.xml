@@ -48,16 +48,40 @@
     <version.diamond>1.0.1-SNAPSHOT</version.diamond>
     <version.groovy>2.1.5</version.groovy>
     <version.h2>1.4.187</version.h2>
-
+    <flyway.version>1.4.191</flyway.version>
   </properties>
 
   <build>
     <plugins>
+      <!-- MIGRACIONES-->
+      <plugin>
+          <groupId>org.flywaydb</groupId>
+          <artifactId>flyway-maven-plugin</artifactId>
+          <version>5.0.7</version>
+          <configuration>
+            <url>jdbc:${flyway.url}</url>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>com.h2database</groupId>
+              <artifactId>h2</artifactId>
+              <version>${flyway.version}</version>
+            </dependency>
+          </dependencies>
+        </plugin>
 
       <!-- Generates Queryable types for querydsl (inherited) -->
       <plugin>
         <groupId>com.mysema.maven</groupId>
         <artifactId>apt-maven-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
       </plugin>
 
       <!-- Genera un sólo jar con todas las dependencias -->
@@ -189,7 +213,37 @@
       <artifactId>java-spec</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-core</artifactId>
+      <version>5.0.7</version>
+    </dependency>
+
   </dependencies>
 
+  <profiles>
+    <profile>
+      <id>heroku-profile</id>
+      <activation>
+        <property>
+          <name>env.DATABASE_URL</name>
+        </property>
+      </activation>
+      <properties>
+        <flyway.url> {$env.DATABASE_URL} </flyway.url>
+      </properties>
+    </profile>
 
+    <profile>
+      <id>development-profile</id>
+      <activation>
+        <property>
+          <name>!env.DATABASE_URL</name>
+        </property>
+      </activation>
+      <properties>
+        <flyway.url>h2:file:../db/h2;USER=sa</flyway.url>
+      </properties>
+    </profile>
+  </profiles>
 </project>
