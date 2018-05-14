@@ -25,7 +25,6 @@ import java.util.function.Function;
 
 /**
  * This type represents the configuration for a development environment
- * <p>
  * Created by kfgodel on 12/03/16.
  */
 public class DevelopmentConfig implements TemasConfiguration {

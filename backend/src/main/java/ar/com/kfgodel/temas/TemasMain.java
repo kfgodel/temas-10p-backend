@@ -7,7 +7,6 @@ import ar.com.kfgodel.temas.config.TemasConfiguration;
 
 /**
  * Punto de entrada del proceso java
- * <p>
  * Created by kfgodel on 21/08/16.
  */
 public class TemasMain {

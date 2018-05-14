@@ -11,7 +11,6 @@ import java.util.List;
 
 /**
  * This type represents the filter that searches for all users and list them ordered by name
- * <p>
  * Created by kfgodel on 04/04/15.
  */
 public class FindAllUsersOrderedByName implements SessionOperation<Nary<Usuario>> {

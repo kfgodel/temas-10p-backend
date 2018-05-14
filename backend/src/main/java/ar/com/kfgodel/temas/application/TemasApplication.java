@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 /**
  * This type represents the whole application as a single object.<br>
  * From this instance you can access the application components
- * <p/>
  * Created by kfgodel on 22/03/15.
  */
 public class TemasApplication implements Application {
