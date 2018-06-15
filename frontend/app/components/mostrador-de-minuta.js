@@ -9,7 +9,7 @@ export default Ember.Component.extend({
     let minuta = this.get('minuta');
 
     let fecha = "Fecha: " + minuta.fecha + enter;
-    let minuteador = "Minuteador: " + minuta.minuteador + enter;
+    let minuteador = "Minuteador: " + (minuta.minuteador || "") + enter;
 
     let asistentes = "Asistentes:" + enter;
     minuta.asistentes.forEach(function(asistente){
@@ -26,13 +26,16 @@ export default Ember.Component.extend({
     minuta.temas.forEach(function(tema, index){
       let indice = index + 1;
       temaTratado = tab + indice + ". " + tema.tema.titulo + enter;
-      temaTratado += tab + tab + "Conclusión:" + enter;
-      let conclusionIdentada = tema.conclusion.replace(/\n/g, "\n" + tab + tab + tab);
+      temaTratado += tab + tab + "Conclusión:";
+      let conclusionIdentada = "" + enter;
+      if(tema.conclusion){
+        conclusionIdentada = tema.conclusion.replace(/\n/g, "\n" + tab + tab + tab) + enter;
+      }
       temaTratado += tab + tab + tab + conclusionIdentada + enter;
       temaTratado += tab + tab + "Action Items:" + enter;
 
       tema.actionItems.forEach(function(actionItem){
-        temaTratado += tab + tab + tab + "- " + actionItem.descripcion + enter;
+        temaTratado += tab + tab + tab + "- " + actionItem.descripcion + enter +  enter;
         temaTratado += tab + tab + tab + "  Responsables:" + enter;
 
         actionItem.responsables.forEach(function(responsable){
