@@ -8,12 +8,13 @@
     {{#power-select-multiple
       options=usuariosSeleccionables
       selected=unAction-item.responsables
+      searchField="name"
       placeholder="Seleccione los responsables del action item"
       noMatchesMessage="No more pinos"
       onchange=(action (mut unAction-item.responsables))
     as |usuario|
     }}
-      {{usuario.login}}
+      {{usuario.name}}
     {{/power-select-multiple}}
   </div>
 </div>

@@ -9,12 +9,13 @@
       {{#power-select-multiple
         options=usuariosSeleccionables
         selected=usuariosSeleccionados
+        searchField="name"
         placeholder="Seleccione los asistentes a la reunión"
         noMatchesMessage="No more pinos"
         onchange=(action (mut usuariosSeleccionados))
         as |usuario|
       }}
-        {{usuario.login}}
+        {{usuario.name}}
       {{/power-select-multiple}}
   </div>
 </div>
