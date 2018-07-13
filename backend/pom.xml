@@ -17,12 +17,6 @@
   <name>Temas-10P Backend</name>
   <description>Aplicacion muy simple para definir temas a tratar en la reunion de roots</description>
 
-  <scm>
-    <connection>scm:git:ssh://github.com/kfgodel/temas-10p-backend.git</connection>
-    <developerConnection>scm:git:ssh://github.com/kfgodel/temas-10p-backend.git</developerConnection>
-    <url>https://github.com/kfgodel/temas-10p-backend</url>
-  </scm>
-
   <repositories>
     <repository>
       <id>kfgodel_mosquito</id>
@@ -50,6 +44,8 @@
     <version.h2>1.4.187</version.h2>
     <flyway.version>1.4.191</flyway.version>
     <maven.javadoc.skip>true</maven.javadoc.skip>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
 
   <build>
