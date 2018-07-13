@@ -38,7 +38,7 @@ public class DevelopmentConfig implements TemasConfiguration {
 
   @Override
   public DbCoordinates getDatabaseCoordinates() {
-    return ImmutableDbCoordinates.createDeductingDialect("jdbc:h2:file:./db/h2", "sa", "");
+    return ImmutableDbCoordinates.createDeductingDialect("jdbc:postgresql://localhost:5433/votacion","user","password");
   }
 
   @Override
