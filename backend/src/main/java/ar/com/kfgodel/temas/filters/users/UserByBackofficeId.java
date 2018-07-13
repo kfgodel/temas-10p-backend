@@ -3,10 +3,8 @@ package ar.com.kfgodel.temas.filters.users;
 import ar.com.kfgodel.nary.api.Nary;
 import ar.com.kfgodel.orm.api.SessionContext;
 import ar.com.kfgodel.orm.api.operations.SessionOperation;
-
 import com.querydsl.core.NonUniqueResultException;
 import com.querydsl.jpa.hibernate.HibernateQueryFactory;
-
 import convention.persistent.QUsuario;
 import convention.persistent.Usuario;
 
