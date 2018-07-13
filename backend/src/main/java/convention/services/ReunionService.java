@@ -31,7 +31,7 @@ public class ReunionService extends Service<Reunion> {
                 .applying(ProximaReunion.create())
                 .applyingResultOf((existente) ->
                         existente.mapOptional(UsarReunionExistente::create)
-                                .orElseGet(CrearProximaReunion::create)).get();
+                                .orElseGet(() -> CrearProximaReunion.create(this))).get();
     }
 
     public List<Reunion> getAll() {

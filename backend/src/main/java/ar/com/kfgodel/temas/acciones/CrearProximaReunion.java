@@ -2,14 +2,10 @@ package ar.com.kfgodel.temas.acciones;
 
 import ar.com.kfgodel.orm.api.TransactionContext;
 import ar.com.kfgodel.orm.api.operations.TransactionOperation;
-import ar.com.kfgodel.orm.api.operations.basic.Save;
 import convention.persistent.Reunion;
+import convention.services.ReunionService;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.temporal.TemporalAdjuster;
-import java.time.temporal.TemporalAdjusters;
-import java.util.Arrays;
 
 /**
  * Esta clase representa el creador de reunion de proxima roots, que sabe calcular la fecha de la proxima
@@ -17,18 +13,23 @@ import java.util.Arrays;
  */
 public class CrearProximaReunion implements TransactionOperation<Reunion> {
 
+  private ReunionService reunionService;
+
   @Override
   public Reunion applyWithTransactionOn(TransactionContext transactionContext) {
     LocalDate fechaDeProximaRoots = new CalculadorDeProximaFecha().calcularFechaDeRoots(LocalDate.now());
     Reunion proximaRoots = Reunion.create(fechaDeProximaRoots);
-    // La guardamos antes de devolverla para que quede persistida
-    Save.create(proximaRoots).applyWithTransactionOn(transactionContext);
+    proximaRoots = reunionService.save(proximaRoots);
     return proximaRoots;
   }
 
+  public void setReunionService(ReunionService reunionService) {
+    this.reunionService = reunionService;
+  }
 
-  public static CrearProximaReunion create() {
+  public static CrearProximaReunion create(ReunionService reunionService) {
     CrearProximaReunion accion = new CrearProximaReunion();
+    accion.setReunionService(reunionService);
     return accion;
   }
 

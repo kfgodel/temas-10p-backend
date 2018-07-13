@@ -2,16 +2,9 @@ package convention.rest.api;
 
 import ar.com.kfgodel.dependencies.api.DependencyInjector;
 import ar.com.kfgodel.diamond.api.types.reference.ReferenceOf;
-import ar.com.kfgodel.orm.api.operations.basic.DeleteById;
-import ar.com.kfgodel.orm.api.operations.basic.FindById;
-import ar.com.kfgodel.orm.api.operations.basic.Save;
-import ar.com.kfgodel.temas.filters.users.FindAllUsersOrderedByName;
-import ar.com.kfgodel.webbyconvention.impl.auth.adapters.JettyIdentityAdapter;
-import convention.persistent.Reunion;
 import convention.persistent.Usuario;
 import convention.rest.api.tos.UserTo;
 import convention.services.ReunionService;
-import convention.services.TemaService;
 import convention.services.UsuarioService;
 
 import javax.inject.Inject;
