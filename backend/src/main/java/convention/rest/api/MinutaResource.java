@@ -3,14 +3,10 @@ package convention.rest.api;
 import ar.com.kfgodel.dependencies.api.DependencyInjector;
 import com.google.inject.Inject;
 import convention.persistent.Minuta;
-import convention.persistent.Reunion;
-import convention.persistent.StatusDeReunion;
 import convention.persistent.Usuario;
 import convention.rest.api.tos.MinutaTo;
 import convention.services.MinutaService;
-import convention.services.ReunionService;
 
-import javax.naming.spi.ResolveResult;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;

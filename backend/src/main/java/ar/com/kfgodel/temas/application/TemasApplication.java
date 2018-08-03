@@ -13,7 +13,6 @@ import ar.com.kfgodel.webbyconvention.api.WebServer;
 import ar.com.kfgodel.webbyconvention.api.config.WebServerConfiguration;
 import ar.com.kfgodel.webbyconvention.impl.JettyWebServer;
 import ar.com.kfgodel.webbyconvention.impl.config.ConfigurationByConvention;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

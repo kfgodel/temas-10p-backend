@@ -1,6 +1,9 @@
 package ar.com.kfgodel.temas.helpers;
 
-import convention.persistent.*;
+import convention.persistent.ObligatoriedadDeTema;
+import convention.persistent.Reunion;
+import convention.persistent.TemaDeReunion;
+import convention.persistent.TemaGeneral;
 
 import java.time.LocalDate;
 

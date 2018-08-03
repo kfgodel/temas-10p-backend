@@ -1,9 +1,7 @@
 package convention.rest.api.tos;
 
 import ar.com.kfgodel.appbyconvention.tos.PersistableToSupport;
-import convention.persistent.ActionItem;
 import convention.persistent.TemaDeMinuta;
-import convention.persistent.TemaDeReunion;
 import net.sf.kfgodel.bean2bean.annotations.CopyFromAndTo;
 
 import java.util.List;

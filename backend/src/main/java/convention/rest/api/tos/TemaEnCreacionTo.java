@@ -1,9 +1,7 @@
 package convention.rest.api.tos;
 
-import ar.com.kfgodel.appbyconvention.tos.PersistableToSupport;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import convention.persistent.TemaDeReunion;
-import net.sf.kfgodel.bean2bean.annotations.CopyFromAndTo;
 import net.sf.kfgodel.bean2bean.annotations.CopyTo;
 
 /**
