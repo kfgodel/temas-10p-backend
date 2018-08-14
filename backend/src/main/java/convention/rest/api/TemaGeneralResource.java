@@ -2,17 +2,11 @@ package convention.rest.api;
 
 import ar.com.kfgodel.dependencies.api.DependencyInjector;
 import ar.com.kfgodel.diamond.api.types.reference.ReferenceOf;
-import convention.persistent.Reunion;
-import convention.persistent.TemaDeReunion;
 import convention.persistent.TemaGeneral;
 import convention.persistent.Usuario;
-import convention.rest.api.tos.ReunionTo;
-import convention.rest.api.tos.TemaEnCreacionTo;
 import convention.rest.api.tos.TemaGeneralTo;
-import convention.rest.api.tos.TemaTo;
 import convention.services.TemaGeneralService;
 
-import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;

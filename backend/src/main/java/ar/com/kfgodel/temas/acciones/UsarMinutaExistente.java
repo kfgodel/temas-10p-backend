@@ -3,7 +3,6 @@ package ar.com.kfgodel.temas.acciones;
 import ar.com.kfgodel.orm.api.TransactionContext;
 import ar.com.kfgodel.orm.api.operations.TransactionOperation;
 import convention.persistent.Minuta;
-import convention.persistent.Reunion;
 
 public class UsarMinutaExistente implements TransactionOperation<Minuta> {
   private Minuta minuta;

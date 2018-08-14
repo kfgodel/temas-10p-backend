@@ -46,7 +46,7 @@
 }
 
 .text-viewer {
-  white-space: pre
+  white-space: pre-wrap;
 }
 
 @import "ember-power-select";

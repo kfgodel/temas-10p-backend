@@ -9,7 +9,6 @@ import ar.com.kfgodel.orm.api.operations.basic.Delete;
 import ar.com.kfgodel.orm.api.operations.basic.FindById;
 import ar.com.kfgodel.orm.api.operations.basic.Save;
 import convention.persistent.PersistableSupport;
-import convention.persistent.Reunion;
 
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;

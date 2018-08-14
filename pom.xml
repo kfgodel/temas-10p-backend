@@ -15,7 +15,7 @@
     <scm>
         <connection>scm:git:ssh://github.com/10PinesLabs/votacion-roots.git</connection>
         <developerConnection>scm:git:ssh://github.com/10PinesLabs/votacion-roots.git</developerConnection>
-        <url>https://github.com/10PinesLabs/votacion-roots</url>
+        <url>https://github.com/10PinesLabs/votacion-roots.git</url>
     </scm>
 
     <properties>

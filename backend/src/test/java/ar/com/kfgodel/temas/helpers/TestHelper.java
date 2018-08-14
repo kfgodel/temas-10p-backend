@@ -24,7 +24,7 @@ public class TestHelper {
         return tema;
     }
 
-    public TemaDeReunion nuevoTemaObligatorioGeneral(){
+    public TemaDeReunion nuevoTemaAPartirDeUnTemaGeneral(){
         Reunion reunion = Reunion.create(LocalDate.of(2017, 06, 26));
         TemaGeneral temaGeneral = new TemaGeneral();
         return temaGeneral.generarTemaPara(reunion);

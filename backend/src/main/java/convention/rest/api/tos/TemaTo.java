@@ -2,15 +2,12 @@ package convention.rest.api.tos;
 
 import ar.com.kfgodel.appbyconvention.tos.PersistableToSupport;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import convention.persistent.DuracionDeTema;
-import convention.persistent.Reunion;
 import convention.persistent.TemaDeReunion;
 import convention.persistent.Usuario;
 import net.sf.kfgodel.bean2bean.annotations.CopyFrom;
 import net.sf.kfgodel.bean2bean.annotations.CopyFromAndTo;
 import net.sf.kfgodel.bean2bean.annotations.MissingPropertyAction;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**

@@ -6,7 +6,6 @@ import ar.com.kfgodel.temas.acciones.UsarMinutaExistente;
 import ar.com.kfgodel.temas.filters.MinutaDeReunion;
 import convention.persistent.Minuta;
 import convention.persistent.Reunion;
-import convention.persistent.StatusDeReunion;
 
 import javax.inject.Inject;
 import java.util.List;
