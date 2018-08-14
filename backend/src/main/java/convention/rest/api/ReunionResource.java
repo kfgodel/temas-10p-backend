@@ -2,20 +2,20 @@ package convention.rest.api;
 
 import ar.com.kfgodel.dependencies.api.DependencyInjector;
 import ar.com.kfgodel.diamond.api.types.reference.ReferenceOf;
-import convention.persistent.*;
-import convention.rest.api.tos.MinutaTo;
+import convention.persistent.Reunion;
+import convention.persistent.StatusDeReunion;
+import convention.persistent.TemaDeReunion;
 import convention.rest.api.tos.ReunionTo;
-import convention.rest.api.tos.UserTo;
-import convention.services.MinutaService;
 import convention.services.ReunionService;
-import convention.services.UsuarioService;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 /**

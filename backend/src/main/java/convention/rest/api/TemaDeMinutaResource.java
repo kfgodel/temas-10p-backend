@@ -1,20 +1,12 @@
 package convention.rest.api;
 
 import ar.com.kfgodel.dependencies.api.DependencyInjector;
-import com.sun.org.apache.regexp.internal.RE;
-import convention.persistent.Reunion;
-import convention.persistent.Tema;
 import convention.persistent.TemaDeMinuta;
-import convention.rest.api.tos.ReunionTo;
 import convention.rest.api.tos.TemaDeMinutaTo;
 import convention.services.TemaDeMinutaService;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.SecurityContext;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by fede on 07/07/17.

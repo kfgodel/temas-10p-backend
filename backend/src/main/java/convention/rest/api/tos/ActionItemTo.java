@@ -2,8 +2,6 @@ package convention.rest.api.tos;
 
 import ar.com.kfgodel.appbyconvention.tos.PersistableToSupport;
 import convention.persistent.ActionItem;
-import convention.persistent.Minuta;
-import net.sf.kfgodel.bean2bean.annotations.CopyFrom;
 import net.sf.kfgodel.bean2bean.annotations.CopyFromAndTo;
 
 import java.util.List;

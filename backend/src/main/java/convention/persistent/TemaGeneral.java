@@ -1,7 +1,6 @@
 package convention.persistent;
 
 import javax.persistence.Entity;
-import java.util.Optional;
 
 /**
  * Created by sandro on 03/07/17.
